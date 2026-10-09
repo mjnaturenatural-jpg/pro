@@ -170,7 +170,7 @@ export function ShopPageClient({ categories }: { categories: Category[] }) {
 
       <button
         onClick={() => router.push(pathname, { scroll: false })}
-        className="text-xs font-medium text-caramel-400 hover:text-caramel-300"
+        className="text-xs font-medium text-caramel-600 hover:text-caramel-700"
       >
         Clear all filters
       </button>

@@ -63,7 +63,7 @@ export default async function AdminOrderDetailPage({ params }: { params: { id: s
           <StatusBadge status={order.status} />
           <span
             className={`text-sm font-semibold ${
-              order.paymentStatus === "PAID" ? "text-leaf-400" : "text-caramel-400"
+              order.paymentStatus === "PAID" ? "text-leaf-600" : "text-caramel-600"
             }`}
           >
             {order.paymentStatus}
@@ -104,7 +104,7 @@ export default async function AdminOrderDetailPage({ params }: { params: { id: s
                 <dd>{formatINR(order.subtotal)}</dd>
               </div>
               {order.couponDiscount > 0 && (
-                <div className="flex justify-between text-leaf-400">
+                <div className="flex justify-between text-leaf-600">
                   <dt>Coupon {order.couponCode}</dt>
                   <dd>−{formatINR(order.couponDiscount)}</dd>
                 </div>
@@ -168,7 +168,7 @@ export default async function AdminOrderDetailPage({ params }: { params: { id: s
                         href={order.trackingUrl}
                         target="_blank"
                         rel="noopener noreferrer"
-                        className="text-caramel-400 hover:underline"
+                        className="text-caramel-600 hover:underline"
                       >
                         Open tracking
                       </a>

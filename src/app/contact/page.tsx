@@ -59,7 +59,7 @@ export default async function ContactPage() {
   return (
     <>
       {/* Hero band */}
-      <section className="border-b border-bark-800/10 bg-gradient-to-r from-forest-800 via-ivory-50 to-caramel-500/15">
+      <section className="border-b border-bark-800/10 bg-gradient-to-r from-leaf-50 via-ivory-50 to-caramel-50">
         <div className="container-site py-14 text-center sm:py-18">
           <p className="eyebrow mb-3">Contact</p>
           <h1 className="mx-auto max-w-2xl font-serif text-3xl leading-tight text-bark-900 sm:text-4xl">
@@ -77,8 +77,8 @@ export default async function ContactPage() {
           {/* Form */}
           <div>
             <ContactForm />
-            <div className="mt-5 flex items-center gap-3 rounded-xl border border-leaf-600/30 bg-leaf-600/10 px-5 py-4">
-              <Clock size={18} className="shrink-0 text-leaf-400" />
+            <div className="mt-5 flex items-center gap-3 rounded-xl border border-leaf-200 bg-leaf-50 px-5 py-4">
+              <Clock size={18} className="shrink-0 text-leaf-600" />
               <p className="text-sm text-bark-700">
                 We usually respond within <span className="font-semibold text-bark-900">one business day</span>.
                 For order issues, keep your order number handy.
@@ -145,7 +145,7 @@ export default async function ContactPage() {
               </a>
             )}
 
-            <div className="rounded-xl border border-caramel-500/30 bg-caramel-500/10 px-5 py-4">
+            <div className="rounded-xl border border-caramel-100 bg-caramel-50 px-5 py-4">
               <p className="text-sm leading-relaxed text-bark-700">
                 <span className="font-semibold text-bark-900">Looking for order help?</span>{" "}
                 Mention your order number in the message and we will get right on it.
@@ -165,10 +165,10 @@ export default async function ContactPage() {
               <details key={q} className="card group px-5 py-4 sm:col-span-1 [&_summary::-webkit-details-marker]:hidden">
                 <summary className="flex cursor-pointer items-center justify-between gap-3 text-sm font-semibold text-bark-900">
                   <span className="flex items-center gap-2.5">
-                    <Icon size={16} className="shrink-0 text-leaf-400" />
+                    <Icon size={16} className="shrink-0 text-leaf-600" />
                     {q}
                   </span>
-                  <span className="text-lg font-light text-caramel-400 transition group-open:rotate-45">
+                  <span className="text-lg font-light text-caramel-600 transition group-open:rotate-45">
                     +
                   </span>
                 </summary>

@@ -158,7 +158,7 @@ export function CouponManager({ coupons }: { coupons: Coupon[] }) {
                   <td className="px-4 py-3">
                     <div className="flex justify-end gap-1">
                       <button onClick={() => toggle(c)} className="rounded p-1.5 text-bark-500 hover:bg-bark-800/10" title="Toggle active">
-                        {c.active ? <ToggleRight size={16} className="text-leaf-400" /> : <ToggleLeft size={16} />}
+                        {c.active ? <ToggleRight size={16} className="text-leaf-600" /> : <ToggleLeft size={16} />}
                       </button>
                       <button onClick={() => remove(c)} className="rounded p-1.5 text-bark-500 hover:bg-red-50 hover:text-red-600" title="Delete">
                         <Trash2 size={15} />

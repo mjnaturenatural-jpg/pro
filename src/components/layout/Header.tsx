@@ -54,7 +54,7 @@ export function Header({ announcement }: { announcement: { enabled: boolean; tex
               <span className="font-serif text-lg font-semibold text-bark-900 sm:text-xl">
                 MJ Nature
               </span>
-              <span className="text-[10px] font-medium uppercase tracking-[0.28em] text-caramel-400">
+              <span className="text-[10px] font-medium uppercase tracking-[0.28em] text-caramel-600">
                 Naturals
               </span>
             </span>

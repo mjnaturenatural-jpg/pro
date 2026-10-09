@@ -122,7 +122,7 @@ export default async function AdminOrdersPage({
                     <td className="px-4 py-3">
                       <Link
                         href={`/admin/orders/${o._id}`}
-                        className="font-mono text-xs font-semibold text-bark-800 hover:text-caramel-400"
+                        className="font-mono text-xs font-semibold text-bark-800 hover:text-caramel-600"
                       >
                         {orderNumber(o._id)}
                       </Link>
@@ -137,12 +137,12 @@ export default async function AdminOrdersPage({
                       <span
                         className={`text-xs font-semibold ${
                           o.paymentStatus === "PAID"
-                            ? "text-leaf-400"
+                            ? "text-leaf-600"
                             : o.paymentStatus === "FAILED"
                               ? "text-red-500"
                               : o.paymentStatus === "REFUNDED"
                                 ? "text-blue-600"
-                                : "text-caramel-400"
+                                : "text-caramel-600"
                         }`}
                       >
                         {o.paymentStatus}

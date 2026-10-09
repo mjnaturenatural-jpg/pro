@@ -86,7 +86,7 @@ export default async function AdminProductsPage({
                 return (
                   <tr key={p._id} className="hover:bg-ivory-50">
                     <td className="px-4 py-3">
-                      <Link href={`/admin/products/${p._id}`} className="font-medium text-bark-900 hover:text-caramel-400">
+                      <Link href={`/admin/products/${p._id}`} className="font-medium text-bark-900 hover:text-caramel-600">
                         {p.name}
                       </Link>
                       <p className="text-[11px] text-bark-400">{p.packSizes.length} pack sizes</p>
@@ -110,7 +110,7 @@ export default async function AdminProductsPage({
                           {p.published ? "Published" : "Draft"}
                         </span>
                         {p.featured && (
-                          <span className="rounded-full bg-caramel-400/15 px-2 py-0.5 text-[10px] font-semibold text-caramel-300">
+                          <span className="rounded-full bg-caramel-100 px-2 py-0.5 text-[10px] font-semibold text-caramel-700">
                             Featured
                           </span>
                         )}

@@ -50,7 +50,7 @@ export function ToastProvider({ children }: { children: React.ReactNode }) {
                 "flex h-7 w-7 shrink-0 items-center justify-center rounded-full",
                 t.type === "success" && "bg-leaf-100 text-leaf-700",
                 t.type === "error" && "bg-red-50 text-red-600",
-                t.type === "info" && "bg-sand-50 text-caramel-400"
+                t.type === "info" && "bg-sand-50 text-caramel-600"
               )}
             >
               <Check size={14} />
@@ -59,7 +59,7 @@ export function ToastProvider({ children }: { children: React.ReactNode }) {
             {t.action && (
               <Link
                 href={t.action.href}
-                className="text-xs font-semibold text-caramel-400 hover:text-caramel-300"
+                className="text-xs font-semibold text-caramel-600 hover:text-caramel-700"
                 onClick={() => setToasts((prev) => prev.filter((x) => x.id !== t.id))}
               >
                 {t.action.label}

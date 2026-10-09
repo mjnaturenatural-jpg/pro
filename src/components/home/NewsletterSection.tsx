@@ -67,7 +67,7 @@ export function NewsletterSection({
             href={instagramUrl}
             target="_blank"
             rel="noopener noreferrer"
-            className="mt-6 inline-block text-sm font-medium text-caramel-400 hover:text-caramel-300"
+            className="mt-6 inline-block text-sm font-medium text-caramel-600 hover:text-caramel-700"
           >
             Follow us on Instagram →
           </a>

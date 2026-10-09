@@ -48,7 +48,7 @@ export function CouponBox({
       <p className="label">Have a coupon?</p>
       {applied ? (
         <div className="flex items-center justify-between rounded-lg bg-leaf-50 px-3 py-2.5">
-          <div className="flex items-center gap-2 text-sm text-leaf-400">
+          <div className="flex items-center gap-2 text-sm text-leaf-600">
             <Tag size={14} />
             <span className="font-medium">{applied.code}</span>
             <span className="text-xs">−{applied.discount > 0 ? "applied" : ""}</span>

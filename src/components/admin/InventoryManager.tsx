@@ -150,7 +150,7 @@ export function InventoryManager({
                             aria-label={`Stock for ${ps.label}`}
                           />
                           {savingId === key && (
-                            <span className="text-[9px] text-caramel-400">…</span>
+                            <span className="text-[9px] text-caramel-600">…</span>
                           )}
                         </div>
                       </div>

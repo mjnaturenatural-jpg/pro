@@ -90,9 +90,9 @@ export default async function AdminDashboardPage() {
 
   const CARD_ACCENTS = [
     "border-l-leaf-500",
-    "border-l-honey-400",
-    "border-l-caramel-400",
-    "border-l-berry-400",
+    "border-l-honey-500",
+    "border-l-caramel-500",
+    "border-l-berry-500",
   ];
 
   const cards = [
@@ -154,7 +154,7 @@ export default async function AdminDashboardPage() {
                 <li key={p._id} className="flex items-center justify-between gap-3">
                   <Link
                     href={`/product/${p.slug}`}
-                    className="truncate text-sm text-bark-700 hover:text-caramel-400"
+                    className="truncate text-sm text-bark-700 hover:text-caramel-600"
                   >
                     {p.name}
                   </Link>
@@ -174,7 +174,7 @@ export default async function AdminDashboardPage() {
             <h2 className="text-sm font-semibold uppercase tracking-wide text-bark-700">
               Recent Orders
             </h2>
-            <Link href="/admin/orders" className="text-xs font-medium text-caramel-400 hover:text-caramel-300">
+            <Link href="/admin/orders" className="text-xs font-medium text-caramel-600 hover:text-caramel-700">
               View all
             </Link>
           </div>
@@ -198,7 +198,7 @@ export default async function AdminDashboardPage() {
                       <td className="py-2.5 pr-3">
                         <Link
                           href={`/admin/orders/${o._id}`}
-                          className="font-mono text-xs font-semibold text-bark-800 hover:text-caramel-400"
+                          className="font-mono text-xs font-semibold text-bark-800 hover:text-caramel-600"
                         >
                           {orderNumber(o._id)}
                         </Link>
@@ -210,10 +210,10 @@ export default async function AdminDashboardPage() {
                         <span
                           className={`text-xs font-semibold ${
                             o.paymentStatus === "PAID"
-                              ? "text-leaf-400"
+                              ? "text-leaf-600"
                               : o.paymentStatus === "FAILED"
                                 ? "text-red-500"
-                                : "text-caramel-400"
+                                : "text-caramel-600"
                           }`}
                         >
                           {o.paymentStatus}
@@ -235,7 +235,7 @@ export default async function AdminDashboardPage() {
             <h2 className="text-sm font-semibold uppercase tracking-wide text-bark-700">
               Recent Customers
             </h2>
-            <Link href="/admin/customers" className="text-xs font-medium text-caramel-400 hover:text-caramel-300">
+            <Link href="/admin/customers" className="text-xs font-medium text-caramel-600 hover:text-caramel-700">
               View all
             </Link>
           </div>

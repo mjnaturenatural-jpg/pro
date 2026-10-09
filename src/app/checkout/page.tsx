@@ -356,7 +356,7 @@ export default function CheckoutPage() {
                 <dd>{formatINR(subtotal)}</dd>
               </div>
               {coupon && couponDiscount > 0 && (
-                <div className="flex justify-between text-leaf-400">
+                <div className="flex justify-between text-leaf-600">
                   <dt>Coupon ({coupon.code})</dt>
                   <dd>−{formatINR(couponDiscount)}</dd>
                 </div>

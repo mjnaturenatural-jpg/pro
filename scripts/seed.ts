@@ -47,7 +47,7 @@ type SeedProduct = {
   description: string;
   ingredients: string;
   allergenInfo?: string;
-  badges: { pureGhee: boolean; noMaida: boolean; noAddedSugar: boolean };
+  badges: { pureGhee: boolean; eggless: boolean; noMaida: boolean; noAddedSugar: boolean };
   featured: boolean;
   packs: Pack[];
 };
@@ -61,7 +61,7 @@ const products: SeedProduct[] = [
     description:
       "A traditional-style laddu made with roasted coconut, assorted dry fruits and jaggery. Enjoy as an everyday treat or share with family.",
     ingredients: "Roasted coconut, dry fruits, jaggery, ghee.",
-    badges: { pureGhee: true, noMaida: true, noAddedSugar: true },
+    badges: { pureGhee: true, eggless: true, noMaida: true, noAddedSugar: true },
     featured: true,
     packs: packs([["250g", 399, 299.25], ["500g", 798, 598.5], ["1kg", 1596, 1197]], "RCDL"),
   },
@@ -73,7 +73,7 @@ const products: SeedProduct[] = [
     description:
       "Roasted coconut flakes combined with jaggery to create a soft, naturally sweet laddu that feels familiar and comforting.",
     ingredients: "Roasted coconut, jaggery, ghee.",
-    badges: { pureGhee: true, noMaida: true, noAddedSugar: true },
+    badges: { pureGhee: true, eggless: true, noMaida: true, noAddedSugar: true },
     featured: false,
     packs: packs([["250g", 349, 279.2], ["500g", 698, 558.4], ["1kg", 1396, 1116.8]], "RCJL"),
   },
@@ -85,7 +85,7 @@ const products: SeedProduct[] = [
     description:
       "Layers of white and dark chocolate baked into a rich brownie for a deeply satisfying chocolate experience.",
     ingredients: "Chocolate, butter, sugar, flour, eggs, cocoa.",
-    badges: { pureGhee: false, noMaida: false, noAddedSugar: false },
+    badges: { pureGhee: false, eggless: false, noMaida: false, noAddedSugar: false },
     featured: true,
     packs: packs([["250g", 559, 436], ["500g", 1118, 872], ["750g", 1677, 1308], ["1kg", 2236, 1744]], "WBBB"),
   },
@@ -97,7 +97,7 @@ const products: SeedProduct[] = [
     description:
       "A millet-forward brownie made with ragi flour, jaggery and a generous helping of dry fruits.",
     ingredients: "Ragi flour, jaggery, dry fruits, butter, cocoa.",
-    badges: { pureGhee: false, noMaida: true, noAddedSugar: true },
+    badges: { pureGhee: false, eggless: false, noMaida: true, noAddedSugar: true },
     featured: true,
     packs: packs([["250g", 599, 479], ["500g", 1198, 958], ["750g", 1797, 1438], ["1kg", 2396, 1917]], "RJDB"),
   },
@@ -109,7 +109,7 @@ const products: SeedProduct[] = [
     description:
       "A chocolate brownie made with jowar flour and dry fruits — a modern twist on a classic favourite.",
     ingredients: "Jowar flour, chocolate, dry fruits, butter, sugar.",
-    badges: { pureGhee: false, noMaida: true, noAddedSugar: false },
+    badges: { pureGhee: false, eggless: false, noMaida: true, noAddedSugar: false },
     featured: false,
     packs: packs([["250g", 599, 479], ["500g", 1198, 958], ["750g", 1797, 1438], ["1kg", 2396, 1917]], "JCDB"),
   },
@@ -121,7 +121,7 @@ const products: SeedProduct[] = [
     description:
       "A rich, fudgy brownie packed with chocolate chips for chocolate lovers who want every bite to count.",
     ingredients: "Chocolate, chocolate chips, butter, sugar, flour, cocoa, eggs.",
-    badges: { pureGhee: false, noMaida: false, noAddedSugar: false },
+    badges: { pureGhee: false, eggless: false, noMaida: false, noAddedSugar: false },
     featured: true,
     packs: packs([["250g", 549, 428], ["500g", 1098, 856], ["750g", 1647, 1285], ["1kg", 2196, 1713]], "DCCB"),
   },
@@ -133,7 +133,7 @@ const products: SeedProduct[] = [
     description:
       "Classic red velvet flavour in a soft-baked cookie, finished with a chocolatey touch.",
     ingredients: "Flour, sugar, butter, cocoa, red velvet flavour, chocolate.",
-    badges: { pureGhee: false, noMaida: false, noAddedSugar: false },
+    badges: { pureGhee: false, eggless: false, noMaida: false, noAddedSugar: false },
     featured: false,
     packs: packs([["250g", 499, 349], ["500g", 998, 699], ["750g", 1497, 1048], ["1kg", 1996, 1397]], "RVCC"),
   },
@@ -145,7 +145,7 @@ const products: SeedProduct[] = [
     description:
       "A crunchy cookie packed with a mix of dry fruits and sweetened naturally with jaggery.",
     ingredients: "Flour, dry fruits mix, jaggery, butter, ghee.",
-    badges: { pureGhee: true, noMaida: false, noAddedSugar: true },
+    badges: { pureGhee: true, eggless: true, noMaida: false, noAddedSugar: true },
     featured: true,
     packs: packs([["250g", 549, 412], ["500g", 1098, 824], ["750g", 1647, 1235], ["1kg", 2196, 1647]], "DFMJ"),
   },
@@ -157,7 +157,7 @@ const products: SeedProduct[] = [
     description:
       "Hearty oats cookies with dry fruits, sweetened with jaggery for a comforting everyday biscuit.",
     ingredients: "Oats, flour, dry fruits, jaggery, butter.",
-    badges: { pureGhee: false, noMaida: false, noAddedSugar: true },
+    badges: { pureGhee: false, eggless: false, noMaida: false, noAddedSugar: true },
     featured: false,
     packs: packs([["250g", 599, 449], ["500g", 1198, 899], ["750g", 1797, 1348], ["1kg", 2396, 1797]], "OJDC"),
   },
@@ -169,7 +169,7 @@ const products: SeedProduct[] = [
     description:
       "Traditional bajra flour cookies sweetened with jaggery — crisp, earthy and satisfying.",
     ingredients: "Bajra flour, jaggery, butter/ghee.",
-    badges: { pureGhee: true, noMaida: true, noAddedSugar: true },
+    badges: { pureGhee: true, eggless: true, noMaida: true, noAddedSugar: true },
     featured: false,
     packs: packs([["250g", 520, 390], ["500g", 1040, 780], ["750g", 1560, 1170], ["1kg", 2080, 1560]], "BJC"),
   },
@@ -181,7 +181,7 @@ const products: SeedProduct[] = [
     description:
       "Aromatic elaichi-infused ragi cookies with dry fruits and jaggery for a fragrant, naturally sweet bite.",
     ingredients: "Ragi flour, dry fruits, elaichi, jaggery, ghee.",
-    badges: { pureGhee: true, noMaida: true, noAddedSugar: true },
+    badges: { pureGhee: true, eggless: true, noMaida: true, noAddedSugar: true },
     featured: true,
     packs: packs([["250g", 599, 479], ["500g", 1198, 958], ["750g", 1797, 1438], ["1kg", 2396, 1917]], "REJ"),
   },
@@ -193,7 +193,7 @@ const products: SeedProduct[] = [
     description:
       "Light, crisp cookies made with jowar flour and jaggery — a simple everyday treat.",
     ingredients: "Jowar flour, jaggery, butter/ghee.",
-    badges: { pureGhee: true, noMaida: true, noAddedSugar: true },
+    badges: { pureGhee: true, eggless: true, noMaida: true, noAddedSugar: true },
     featured: false,
     packs: packs([["250g", 499, 374], ["500g", 998, 749], ["750g", 1497, 1123], ["1kg", 1996, 1497]], "JJC"),
   },
@@ -205,7 +205,7 @@ const products: SeedProduct[] = [
     description:
       "A chocolatey twist on jowar cookies, finished with sliced almonds for extra crunch.",
     ingredients: "Jowar flour, chocolate, almonds, sugar/butter.",
-    badges: { pureGhee: false, noMaida: true, noAddedSugar: false },
+    badges: { pureGhee: false, eggless: false, noMaida: true, noAddedSugar: false },
     featured: false,
     packs: packs([["250g", 499, 399], ["500g", 998, 798], ["750g", 1497, 1198], ["1kg", 1996, 1597]], "JCA"),
   },
@@ -217,7 +217,7 @@ const products: SeedProduct[] = [
     description:
       "A blend of millet flours and jaggery, baked into a crisp cookie that works for any time of day.",
     ingredients: "Millet flour blend, jaggery, butter/ghee.",
-    badges: { pureGhee: true, noMaida: true, noAddedSugar: true },
+    badges: { pureGhee: true, eggless: true, noMaida: true, noAddedSugar: true },
     featured: true,
     packs: packs([["250g", 499, 399], ["500g", 998, 798], ["750g", 1497, 1198], ["1kg", 1996, 1597]], "MJC"),
   },
@@ -229,7 +229,7 @@ const products: SeedProduct[] = [
     description:
       "Bite-sized chocolate cookies made with ragi and millet flours, sweetened with jaggery.",
     ingredients: "Ragi flour, millet flour, chocolate, jaggery, ghee.",
-    badges: { pureGhee: true, noMaida: true, noAddedSugar: true },
+    badges: { pureGhee: true, eggless: true, noMaida: true, noAddedSugar: true },
     featured: false,
     packs: packs([["250g", 599, 389], ["500g", 1198, 779], ["750g", 1797, 1168], ["1kg", 2396, 1557]], "RMMC"),
   },
@@ -241,7 +241,7 @@ const products: SeedProduct[] = [
     description:
       "Full-sized chocolate cookies made with ragi and millet flours, naturally sweetened with jaggery.",
     ingredients: "Ragi flour, millet flour, chocolate, jaggery, ghee.",
-    badges: { pureGhee: true, noMaida: true, noAddedSugar: true },
+    badges: { pureGhee: true, eggless: true, noMaida: true, noAddedSugar: true },
     featured: true,
     packs: packs([["250g", 499, 349], ["500g", 998, 699], ["750g", 1497, 1049], ["1kg", 1996, 1397]], "RMJC"),
   },
@@ -255,7 +255,7 @@ const products: SeedProduct[] = [
     description:
       "Classic kaju chikki made the traditional way — roasted cashews set in slow-cooked jaggery. A crisp, naturally sweet bite.",
     ingredients: "Cashews, jaggery.",
-    badges: { pureGhee: false, noMaida: false, noAddedSugar: false },
+    badges: { pureGhee: false, eggless: false, noMaida: false, noAddedSugar: false },
     featured: false,
     packs: packs([["250 g", 499, 389.22], ["500 g", 998, 778.44], ["750 g", 1497, 1167.66], ["1 kg", 1996, 1556.88]], "KJC"),
   },
@@ -267,7 +267,7 @@ const products: SeedProduct[] = [
     description:
       "Roasted peanuts and pistachios set in jaggery — crunchy, nutty and perfectly balanced.",
     ingredients: "Peanuts, pistachios, jaggery.",
-    badges: { pureGhee: false, noMaida: false, noAddedSugar: false },
+    badges: { pureGhee: false, eggless: false, noMaida: false, noAddedSugar: false },
     featured: false,
     packs: packs([["250 g", 599, 479.2], ["500 g", 1198, 958.4], ["750 g", 1797, 1437.6], ["1 kg", 2396, 1916.8]], "PPJC"),
   },
@@ -279,7 +279,7 @@ const products: SeedProduct[] = [
     description:
       "Toasted black sesame seeds and sliced almonds held together with jaggery for a nutty, earthy brittle.",
     ingredients: "Black sesame, almonds, jaggery.",
-    badges: { pureGhee: false, noMaida: false, noAddedSugar: false },
+    badges: { pureGhee: false, eggless: false, noMaida: false, noAddedSugar: false },
     featured: false,
     packs: packs([["250 g", 499, 399.2], ["500 g", 998, 798.4], ["750 g", 1497, 1197.6], ["1 kg", 1996, 1596.8]], "BSAC"),
   },
@@ -291,7 +291,7 @@ const products: SeedProduct[] = [
     description:
       "A twist on the classic — black sesame paired with roasted cashews, set in jaggery.",
     ingredients: "Black sesame, cashews, jaggery.",
-    badges: { pureGhee: false, noMaida: false, noAddedSugar: false },
+    badges: { pureGhee: false, eggless: false, noMaida: false, noAddedSugar: false },
     featured: false,
     packs: packs([["250 g", 499, 399.2], ["500 g", 998, 798.4], ["750 g", 1497, 1197.6], ["1 kg", 1996, 1596.8]], "BSKC"),
   },
@@ -303,7 +303,7 @@ const products: SeedProduct[] = [
     description:
       "White sesame seeds loaded with pistachios and almonds, set in jaggery for a rich, crunchy chikki.",
     ingredients: "White sesame, pistachios, almonds, jaggery.",
-    badges: { pureGhee: false, noMaida: false, noAddedSugar: false },
+    badges: { pureGhee: false, eggless: false, noMaida: false, noAddedSugar: false },
     featured: false,
     packs: packs([["250 g", 549, 439.2], ["500 g", 1098, 878.4], ["750 g", 1647, 1317.6], ["1 kg", 2196, 1756.8]], "WSPA"),
   },
@@ -315,7 +315,7 @@ const products: SeedProduct[] = [
     description:
       "A hearty brittle of flax seeds and almonds held together with jaggery — crisp and lightly sweet.",
     ingredients: "Flax seeds, almonds, jaggery.",
-    badges: { pureGhee: false, noMaida: false, noAddedSugar: false },
+    badges: { pureGhee: false, eggless: false, noMaida: false, noAddedSugar: false },
     featured: false,
     packs: packs([["250 g", 399, 319.2], ["500 g", 798, 638.4], ["750 g", 1197, 957.6], ["1 kg", 1596, 1276.8]], "FSJA"),
   },
@@ -327,7 +327,7 @@ const products: SeedProduct[] = [
     description:
       "Pumpkin seeds, almonds and cashews combined in a dry fruit brittle for a nutty, crunchy treat.",
     ingredients: "Pumpkin seeds, almonds, cashews, jaggery, dry fruits.",
-    badges: { pureGhee: false, noMaida: false, noAddedSugar: false },
+    badges: { pureGhee: false, eggless: false, noMaida: false, noAddedSugar: false },
     featured: false,
     packs: packs([["250 g", 599, 449.25], ["500 g", 1198, 898.5], ["750 g", 1797, 1347.75], ["1 kg", 2396, 1797]], "DPPK"),
   },
@@ -339,7 +339,7 @@ const products: SeedProduct[] = [
     description:
       "Flattened rice (poha) and dry fruits set in jaggery for a light, crispy chikki.",
     ingredients: "Poha (flattened rice), dry fruits, jaggery.",
-    badges: { pureGhee: false, noMaida: false, noAddedSugar: false },
+    badges: { pureGhee: false, eggless: false, noMaida: false, noAddedSugar: false },
     featured: false,
     packs: packs([["250 g", 399, 279.3], ["500 g", 798, 558.6], ["750 g", 1197, 837.9], ["1 kg", 1596, 1117.2]], "PDCF"),
   },
@@ -353,7 +353,7 @@ const products: SeedProduct[] = [
     description:
       "Roasted dry fruits and nuts tossed in a light spice blend — a savoury snack with a gentle kick.",
     ingredients: "Mixed dry fruits, nuts, spices, salt.",
-    badges: { pureGhee: false, noMaida: false, noAddedSugar: false },
+    badges: { pureGhee: false, eggless: false, noMaida: false, noAddedSugar: false },
     featured: false,
     packs: packs([["250 g", 599, 479.2], ["500 g", 1198, 958.4], ["750 g", 1797, 1437.6], ["1 kg", 2396, 1916.8]], "DFMS"),
   },
@@ -365,7 +365,7 @@ const products: SeedProduct[] = [
     description:
       "Crunchy poha, coconut and dry fruits roasted together with spices for a flavourful savoury mixture.",
     ingredients: "Poha, coconut, dry fruits, spices, salt.",
-    badges: { pureGhee: false, noMaida: false, noAddedSugar: false },
+    badges: { pureGhee: false, eggless: false, noMaida: false, noAddedSugar: false },
     featured: false,
     packs: packs([["250 g", 399, 279.3], ["500 g", 798, 558.6], ["750 g", 1197, 837.9], ["1 kg", 1596, 1117.2]], "PCDM"),
   },
@@ -380,7 +380,7 @@ const products: SeedProduct[] = [
       "Fine coconut powder for curries, sweets, baking and everyday cooking.",
     ingredients: "Coconut.",
     allergenInfo: "Contains coconut. Made in a facility that also handles other allergens.",
-    badges: { pureGhee: false, noMaida: false, noAddedSugar: false },
+    badges: { pureGhee: false, eggless: false, noMaida: false, noAddedSugar: false },
     featured: false,
     packs: packs([["250 g", 299, 239.2], ["500 g", 598, 478.4], ["750 g", 897, 717.6], ["1 kg", 1196, 956.8]], "COPW"),
   },
@@ -393,7 +393,7 @@ const products: SeedProduct[] = [
       "Red chilli powder blended with a measured mix of masala spices for colour, heat and depth.",
     ingredients: "Red chilli, masala spices.",
     allergenInfo: "Made in a facility that also handles nuts, milk and other allergens.",
-    badges: { pureGhee: false, noMaida: false, noAddedSugar: false },
+    badges: { pureGhee: false, eggless: false, noMaida: false, noAddedSugar: false },
     featured: false,
     packs: packs([["500 g", 399, 339.15], ["1 kg", 798, 678.3]], "RCPM"),
   },
@@ -406,7 +406,7 @@ const products: SeedProduct[] = [
       "Dried amla (Indian gooseberry) pieces, prepared simply without any added flavouring.",
     ingredients: "Amla (Indian gooseberry).",
     allergenInfo: "Made in a facility that also handles nuts, milk and other allergens.",
-    badges: { pureGhee: false, noMaida: false, noAddedSugar: false },
+    badges: { pureGhee: false, eggless: false, noMaida: false, noAddedSugar: false },
     featured: false,
     packs: packs([["250 g", 299, 224.25], ["500 g", 598, 448.5], ["750 g", 897, 672.75], ["1 kg", 1196, 897]], "DRAM"),
   },
@@ -419,7 +419,7 @@ const products: SeedProduct[] = [
       "Versatile coconut oil for cooking, baking and everyday kitchen use.",
     ingredients: "Coconut.",
     allergenInfo: "Contains coconut. Made in a facility that also handles other allergens.",
-    badges: { pureGhee: false, noMaida: false, noAddedSugar: false },
+    badges: { pureGhee: false, eggless: false, noMaida: false, noAddedSugar: false },
     featured: false,
     packs: packs([["500 ml", 300, 300], ["1 L", 600, 600]], "COWL"),
   },
@@ -434,7 +434,7 @@ const products: SeedProduct[] = [
       "Plain, traditional jaggery for sweets, beverages and everyday cooking.",
     ingredients: "Jaggery.",
     allergenInfo: "Made in a facility that also handles nuts, milk and other allergens.",
-    badges: { pureGhee: false, noMaida: false, noAddedSugar: false },
+    badges: { pureGhee: false, eggless: false, noMaida: false, noAddedSugar: false },
     featured: false,
     packs: packs([["1 kg", 139, 139]], "ORJG"),
   },
@@ -447,7 +447,7 @@ const products: SeedProduct[] = [
       "Jaggery infused with elaichi, black pepper and dry ginger for a warm, spiced bite.",
     ingredients: "Jaggery, elaichi, black pepper, dry ginger.",
     allergenInfo: "Made in a facility that also handles nuts, milk and other allergens.",
-    badges: { pureGhee: false, noMaida: false, noAddedSugar: false },
+    badges: { pureGhee: false, eggless: false, noMaida: false, noAddedSugar: false },
     featured: false,
     packs: packs([["500 g", 150, 150]], "EBDJ"),
   },
@@ -462,7 +462,7 @@ function placeholderImage(name: string): string {
     .map((w) => w[0])
     .join("")
     .toUpperCase();
-  const svg = `<svg xmlns="http://www.w3.org/2000/svg" width="800" height="800"><rect width="100%" height="100%" fill="#226C57"/><circle cx="400" cy="360" r="140" fill="#2A7863"/><text x="400" y="385" font-family="Georgia,serif" font-size="72" fill="#6FD8CC" text-anchor="middle" font-weight="600">${initials}</text><text x="400" y="560" font-family="Georgia,serif" font-size="28" fill="#C8D6D0" text-anchor="middle">MJ Nature Naturals</text></svg>`;
+  const svg = `<svg xmlns="http://www.w3.org/2000/svg" width="800" height="800"><rect width="100%" height="100%" fill="#E5F4EB"/><circle cx="400" cy="360" r="140" fill="#CCE9D8"/><text x="400" y="385" font-family="Georgia,serif" font-size="72" fill="#0E8079" text-anchor="middle" font-weight="600">${initials}</text><text x="400" y="560" font-family="Georgia,serif" font-size="28" fill="#536461" text-anchor="middle">MJ Nature Naturals</text></svg>`;
   return `data:image/svg+xml;base64,${Buffer.from(svg).toString("base64")}`;
 }
 

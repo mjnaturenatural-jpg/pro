@@ -330,7 +330,7 @@ export function ProductEditor({
                 </button>
               </div>
               {p.mrp > p.price && p.price > 0 && (
-                <p className="col-span-full text-xs text-leaf-400">
+                <p className="col-span-full text-xs text-leaf-600">
                   Discount: {Math.round(((p.mrp - p.price) / p.mrp) * 100)}% · Customer pays {formatINR(p.price)}
                 </p>
               )}
@@ -365,7 +365,7 @@ export function ProductEditor({
             </div>
           ))}
           <label className={cn(
-            "flex h-24 w-24 cursor-pointer flex-col items-center justify-center rounded-lg border-2 border-dashed border-bark-800/15 text-bark-400 transition hover:border-caramel-500 hover:text-caramel-400",
+            "flex h-24 w-24 cursor-pointer flex-col items-center justify-center rounded-lg border-2 border-dashed border-bark-800/15 text-bark-400 transition hover:border-caramel-500 hover:text-caramel-600",
             uploading && "pointer-events-none opacity-50"
           )}>
             <Upload size={18} />

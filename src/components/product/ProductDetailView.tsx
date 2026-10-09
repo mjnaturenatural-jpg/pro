@@ -179,8 +179,8 @@ export function ProductDetailView({
                     size={15}
                     className={
                       i < Math.round(product.averageRating)
-                        ? "fill-caramel-400 text-caramel-400"
-                        : "text-white/30"
+                        ? "fill-caramel-600 text-caramel-600"
+                        : "text-bark-300"
                     }
                   />
                 ))}
@@ -201,7 +201,7 @@ export function ProductDetailView({
             {pack.mrp > pack.price && (
               <span className="text-base text-bark-400 line-through">{formatINR(pack.mrp)}</span>
             )}
-            {pct > 0 && <span className="text-sm font-semibold text-leaf-400">Save {pct}%</span>}
+            {pct > 0 && <span className="text-sm font-semibold text-leaf-600">Save {pct}%</span>}
           </div>
 
           {/* Pack selector */}
@@ -248,7 +248,7 @@ export function ProductDetailView({
               </button>
             </div>
             {pack.stock > 0 && pack.stock <= 10 && (
-              <p className="mt-2 text-xs text-caramel-400">Only {pack.stock} left in stock</p>
+              <p className="mt-2 text-xs text-caramel-600">Only {pack.stock} left in stock</p>
             )}
           </div>
 

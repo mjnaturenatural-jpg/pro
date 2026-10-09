@@ -10,24 +10,24 @@ export const revalidate = 60;
 const ICONS = [Leaf, Heart, Sparkles, Truck];
 
 const ICON_COLORS = [
-  "bg-leaf-50 text-leaf-600",
+  "bg-leaf-100 text-leaf-700",
   "bg-berry-100 text-berry-600",
   "bg-honey-100 text-honey-600",
   "bg-caramel-100 text-caramel-600",
 ];
 
 const STEP_COLORS = [
-  "text-caramel-400/90",
-  "text-leaf-400/90",
-  "text-honey-400/90",
-  "text-berry-400/90",
+  "text-caramel-600/90",
+  "text-leaf-600/90",
+  "text-honey-600/90",
+  "text-berry-500/90",
 ];
 
 const CAT_ACCENTS = [
   "border-b-leaf-500",
-  "border-b-caramel-400",
-  "border-b-honey-400",
-  "border-b-berry-400",
+  "border-b-caramel-500",
+  "border-b-honey-500",
+  "border-b-berry-500",
 ];
 
 export default async function HomePage() {
@@ -53,8 +53,8 @@ export default async function HomePage() {
   return (
     <>
       {/* HERO */}
-      <section className="relative overflow-hidden bg-gradient-to-br from-forest-800 via-ivory-50 to-caramel-500/15">
-        <div className="pointer-events-none absolute inset-0 bg-gradient-to-tr from-honey-500/10 via-transparent to-transparent" />
+      <section className="relative overflow-hidden bg-gradient-to-br from-leaf-50 via-ivory-50 to-caramel-50">
+        <div className="pointer-events-none absolute inset-0 bg-gradient-to-tr from-honey-300/25 via-transparent to-transparent" />
         <div className="container-site grid items-center gap-10 py-14 sm:py-20 lg:grid-cols-2 lg:gap-16 lg:py-28">
           <div className="animate-fadeUp">
             <p className="eyebrow mb-4">{hero.eyebrow || "MJ NATURE NATURALS"}</p>
@@ -75,13 +75,13 @@ export default async function HomePage() {
             </div>
             <ul className="mt-7 flex flex-wrap gap-x-6 gap-y-2.5 text-xs font-medium text-bark-600">
               <li className="flex items-center gap-1.5">
-                <Leaf size={14} className="text-leaf-400" /> Small-batch kitchen
+                <Leaf size={14} className="text-leaf-600" /> Small-batch kitchen
               </li>
               <li className="flex items-center gap-1.5">
                 <Sparkles size={14} className="text-caramel-500" /> Packed fresh
               </li>
               <li className="flex items-center gap-1.5">
-                <Truck size={14} className="text-leaf-400" /> Ships across India
+                <Truck size={14} className="text-leaf-600" /> Ships across India
               </li>
             </ul>
           </div>
@@ -137,7 +137,7 @@ export default async function HomePage() {
             <p className="eyebrow mb-2">Our Favourites</p>
             <h2 className="section-title">Shop Our Favourites</h2>
           </div>
-          <Link href="/shop" className="hidden items-center gap-1 text-sm font-medium text-caramel-400 hover:text-caramel-300 sm:flex">
+          <Link href="/shop" className="hidden items-center gap-1 text-sm font-medium text-caramel-600 hover:text-caramel-700 sm:flex">
             View all <ArrowRight size={15} />
           </Link>
         </div>
@@ -227,7 +227,7 @@ export default async function HomePage() {
       </section>
 
       {/* OUR PROCESS */}
-      <section className="bg-forest-800 py-16 sm:py-20">
+      <section className="bg-leaf-100 py-16 sm:py-20">
         <div className="container-site">
           <div className="mb-10 text-center">
             <p className="eyebrow mb-2">How We Work</p>
@@ -308,7 +308,7 @@ export default async function HomePage() {
               </Link>
             )}
           </div>
-          <div className="relative aspect-[4/3] overflow-hidden rounded-2xl bg-forest-700">
+          <div className="relative aspect-[4/3] overflow-hidden rounded-2xl bg-leaf-100">
             {highlight.image ? (
               <Image
                 src={highlight.image}
@@ -422,8 +422,8 @@ function StoryFallbackArt() {
 
 function HighlightFallbackArt() {
   return (
-    <div className="flex h-full w-full items-center justify-center bg-forest-700">
-      <Sparkles size={48} className="text-caramel-400" />
+    <div className="flex h-full w-full items-center justify-center bg-leaf-100">
+      <Sparkles size={48} className="text-caramel-600" />
     </div>
   );
 }

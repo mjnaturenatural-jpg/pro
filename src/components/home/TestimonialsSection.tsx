@@ -34,7 +34,7 @@ export function TestimonialsSection({
                   <Star
                     key={s}
                     size={14}
-                    className={s < t.rating! ? "fill-caramel-400 text-caramel-400" : "text-white/30"}
+                    className={s < t.rating! ? "fill-caramel-600 text-caramel-600" : "text-bark-300"}
                   />
                 ))}
               </div>
