@@ -8,11 +8,12 @@ export const revalidate = 60;
 export const metadata: Metadata = {
   title: "About",
   description:
-    "Learn about MJ Nature Naturals — a premium natural food brand crafting laddus, brownies, cookies and millet treats with pure ghee, real butter and original jaggery — no maida, no added sugar.",
+    "Learn about MJ Nature Naturals — a premium natural food brand crafting 100% eggless laddus, brownies, cookies and millet treats with pure ghee, real butter and original jaggery — no maida, no added sugar.",
 };
 
 const BRAND_PILLARS = [
   "Pure ghee & real butter",
+  "100% eggless",
   "Original jaggery",
   "No maida, no sugar",
   "Small-batch craft",
@@ -49,9 +50,10 @@ export default async function AboutPage() {
             <div className="mt-6 space-y-4 text-[15px] leading-relaxed text-bark-600">
               <p>
                 {brandName} was born from a simple idea: everyday snacks should be made
-                from things you can recognise and pronounce. No maida, no sugar, no
-                shortcuts — just wholesome millets, original jaggery, pure ghee, real
-                butter and plenty of patience.
+                from things you can recognise and pronounce. Everything is 100%
+                eggless, with no maida, no sugar and no shortcuts — just wholesome
+                millets, original jaggery, pure ghee, real butter and plenty of
+                patience.
               </p>
               <p>
                 From our laddus and cookies to our brownies, every recipe is developed

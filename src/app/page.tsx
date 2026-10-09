@@ -9,6 +9,27 @@ export const revalidate = 60;
 
 const ICONS = [Leaf, Heart, Sparkles, Truck];
 
+const ICON_COLORS = [
+  "bg-leaf-50 text-leaf-600",
+  "bg-berry-100 text-berry-600",
+  "bg-honey-100 text-honey-600",
+  "bg-caramel-100 text-caramel-600",
+];
+
+const STEP_COLORS = [
+  "text-caramel-400/90",
+  "text-leaf-400/90",
+  "text-honey-400/90",
+  "text-berry-400/90",
+];
+
+const CAT_ACCENTS = [
+  "border-b-leaf-500",
+  "border-b-caramel-400",
+  "border-b-honey-400",
+  "border-b-berry-400",
+];
+
 export default async function HomePage() {
   const [content, categories, featured] = await Promise.all([
     getHomepageContent(),
@@ -33,6 +54,7 @@ export default async function HomePage() {
     <>
       {/* HERO */}
       <section className="relative overflow-hidden bg-gradient-to-br from-forest-800 via-ivory-50 to-caramel-500/15">
+        <div className="pointer-events-none absolute inset-0 bg-gradient-to-tr from-honey-500/10 via-transparent to-transparent" />
         <div className="container-site grid items-center gap-10 py-14 sm:py-20 lg:grid-cols-2 lg:gap-16 lg:py-28">
           <div className="animate-fadeUp">
             <p className="eyebrow mb-4">{hero.eyebrow || "MJ NATURE NATURALS"}</p>
@@ -41,7 +63,7 @@ export default async function HomePage() {
             </h1>
             <p className="mt-5 max-w-lg text-base leading-relaxed text-bark-600 sm:text-lg">
               {hero.subheading ||
-                "Crafted with pure ghee, real butter and original jaggery — no maida, no added sugar. Natural foods for everyday moments that deserve a little more care."}
+                "Crafted with pure ghee, real butter and original jaggery — 100% eggless, no maida, no added sugar. Natural foods for everyday moments that deserve a little more care."}
             </p>
             <div className="mt-8 flex flex-wrap gap-3">
               <Link href={hero.ctaHref || "/shop"} className="btn-primary">
@@ -90,7 +112,9 @@ export default async function HomePage() {
               const Icon = ICONS[i % ICONS.length];
               return (
                 <div key={t.title} className="flex items-start gap-3">
-                  <span className="flex h-10 w-10 shrink-0 items-center justify-center rounded-full bg-leaf-50 text-leaf-600">
+                  <span
+                    className={`flex h-10 w-10 shrink-0 items-center justify-center rounded-full ${ICON_COLORS[i % ICON_COLORS.length]}`}
+                  >
                     <Icon size={18} />
                   </span>
                   <div>
@@ -138,11 +162,11 @@ export default async function HomePage() {
               <h2 className="section-title">Shop by Category</h2>
             </div>
             <div className="grid grid-cols-2 gap-3 sm:gap-5 lg:grid-cols-4">
-              {categories.map((c) => (
+              {categories.map((c, i) => (
                 <Link
                   key={c.slug}
                   href={`/shop?category=${c.slug}`}
-                  className="group relative overflow-hidden rounded-xl border border-bark-800/10 bg-ivory-100 shadow-soft transition hover:shadow-lift"
+                  className={`group relative overflow-hidden rounded-xl border border-bark-800/10 border-b-4 ${CAT_ACCENTS[i % CAT_ACCENTS.length]} bg-ivory-100 shadow-soft transition hover:shadow-lift`}
                 >
                   <div className="relative aspect-[4/3] overflow-hidden bg-sand-50">
                     {c.image ? (
@@ -238,9 +262,11 @@ export default async function HomePage() {
                 title: "Delivered With Care",
                 body: "Orders are shipped to your doorstep with tracking, and we are here if you need anything after delivery.",
               },
-            ].map(({ step, Icon, title, body }) => (
+            ].map(({ step, Icon, title, body }, i) => (
               <div key={step} className="card relative p-6">
-                <span className="absolute right-5 top-5 font-serif text-2xl font-semibold text-caramel-500/70">
+                <span
+                  className={`absolute right-5 top-5 font-serif text-2xl font-semibold ${STEP_COLORS[i % STEP_COLORS.length]}`}
+                >
                   {step}
                 </span>
                 <span className="mb-4 flex h-11 w-11 items-center justify-center rounded-full bg-leaf-600 text-white">
@@ -318,7 +344,9 @@ export default async function HomePage() {
               const Icon = ICONS[i % ICONS.length];
               return (
                 <div key={w.title} className="card p-6 text-center">
-                  <span className="mx-auto mb-4 flex h-12 w-12 items-center justify-center rounded-full bg-leaf-50 text-leaf-600">
+                  <span
+                    className={`mx-auto mb-4 flex h-12 w-12 items-center justify-center rounded-full ${ICON_COLORS[i % ICON_COLORS.length]}`}
+                  >
                     <Icon size={20} />
                   </span>
                   <h3 className="text-sm font-semibold text-bark-900">{w.title}</h3>

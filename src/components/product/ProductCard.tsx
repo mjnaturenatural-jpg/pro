@@ -8,7 +8,7 @@ import { ShoppingBag, Zap } from "lucide-react";
 import { formatINR, discountPercent, cn } from "@/lib/utils";
 import { useCart } from "@/store/cart";
 import { useToast } from "@/components/ui/Toast";
-import { BADGES } from "@/lib/constants";
+import { BADGES, BADGE_STYLES } from "@/lib/constants";
 
 export interface ProductCardData {
   _id: string;
@@ -17,7 +17,7 @@ export interface ProductCardData {
   shortDescription: string;
   images: string[];
   packSizes: { label: string; mrp: number; price: number; stock: number }[];
-  badges?: { pureGhee?: boolean; noMaida?: boolean; noAddedSugar?: boolean };
+  badges?: { pureGhee?: boolean; eggless?: boolean; noMaida?: boolean; noAddedSugar?: boolean };
   averageRating?: number;
   reviewCount?: number;
 }
@@ -95,7 +95,12 @@ export function ProductCard({ product, priority = false }: { product: ProductCar
             </span>
           )}
           {activeBadge && (
-            <span className="rounded-full bg-leaf-100 px-2.5 py-1 text-[10px] font-semibold text-leaf-700">
+            <span
+              className={cn(
+                "rounded-full px-2.5 py-1 text-[10px] font-semibold",
+                BADGE_STYLES[activeBadge.key] ?? "bg-leaf-100 text-leaf-700"
+              )}
+            >
               {activeBadge.label}
             </span>
           )}

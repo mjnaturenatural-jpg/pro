@@ -8,7 +8,7 @@ import { ShoppingBag, Zap, Star, ChevronRight } from "lucide-react";
 import { formatINR, discountPercent, cn } from "@/lib/utils";
 import { useCart } from "@/store/cart";
 import { useToast } from "@/components/ui/Toast";
-import { BADGES } from "@/lib/constants";
+import { BADGES, BADGE_STYLES } from "@/lib/constants";
 
 export interface ProductDetailViewData {
   _id: string;
@@ -24,7 +24,7 @@ export interface ProductDetailViewData {
   returnInfo: string;
   images: string[];
   packSizes: { label: string; mrp: number; price: number; stock: number; sku: string }[];
-  badges: { pureGhee: boolean; noMaida: boolean; noAddedSugar: boolean };
+  badges: { pureGhee: boolean; eggless: boolean; noMaida: boolean; noAddedSugar: boolean };
   averageRating: number;
   reviewCount: number;
   category?: { name: string; slug: string };
@@ -155,7 +155,10 @@ export function ProductDetailView({
               {activeBadges.map((b) => (
                 <span
                   key={b.key}
-                  className="rounded-full bg-leaf-100 px-3 py-1 text-xs font-semibold text-leaf-700"
+                  className={cn(
+                    "rounded-full px-3 py-1 text-xs font-semibold",
+                    BADGE_STYLES[b.key] ?? "bg-leaf-100 text-leaf-700"
+                  )}
                 >
                   {b.label}
                 </span>

@@ -40,7 +40,7 @@ export async function generateMetadata(): Promise<Metadata> {
       template: `%s | ${brandName}`,
     },
     description:
-      "Shop premium natural foods from MJ Nature Naturals — laddus, brownies, cookies and millet treats crafted with pure ghee, real butter and original jaggery — no maida, no added sugar.",
+      "Shop premium natural foods from MJ Nature Naturals — 100% eggless laddus, brownies, cookies and millet treats crafted with pure ghee, real butter and original jaggery — no maida, no added sugar.",
     openGraph: {
       type: "website",
       siteName: brandName,

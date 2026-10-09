@@ -88,6 +88,13 @@ export default async function AdminDashboardPage() {
     })
     .filter(Boolean) as { name: string; slug: string; packSizes: { label: string; stock: number }[] }[];
 
+  const CARD_ACCENTS = [
+    "border-l-leaf-500",
+    "border-l-honey-400",
+    "border-l-caramel-400",
+    "border-l-berry-400",
+  ];
+
   const cards = [
     { label: "Total Orders", value: totalOrders.toString(), href: "/admin/orders" },
     { label: "Total Revenue", value: formatINR(revenue), href: "/admin/orders?payment=PAID" },
@@ -107,11 +114,11 @@ export default async function AdminDashboardPage() {
       </div>
 
       <div className="grid grid-cols-2 gap-3 sm:gap-4 lg:grid-cols-4">
-        {cards.map((c) => (
+        {cards.map((c, i) => (
           <Link
             key={c.label}
             href={c.href}
-            className="card p-4 transition hover:shadow-lift sm:p-5"
+            className={`card border-l-4 p-4 transition hover:shadow-lift sm:p-5 ${CARD_ACCENTS[i % CARD_ACCENTS.length]}`}
           >
             <p className="text-[11px] font-medium uppercase tracking-wide text-bark-500">
               {c.label}

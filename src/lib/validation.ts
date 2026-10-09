@@ -26,11 +26,12 @@ export const productInputSchema = z.object({
   badges: z
     .object({
       pureGhee: z.boolean().default(false),
+      eggless: z.boolean().default(false),
       noMaida: z.boolean().default(false),
       noAddedSugar: z.boolean().default(false),
     })
     .optional()
-    .default({ pureGhee: false, noMaida: false, noAddedSugar: false }),
+    .default({ pureGhee: false, eggless: false, noMaida: false, noAddedSugar: false }),
   featured: z.boolean().default(false),
   published: z.boolean().default(true),
   keywords: z.array(z.string()).optional().default([]),

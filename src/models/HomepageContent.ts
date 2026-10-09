@@ -7,7 +7,7 @@ const HeroSchema = new Schema(
     subheading: {
       type: String,
       default:
-        "Crafted with pure ghee, real butter and original jaggery — no maida, no added sugar. Natural foods for everyday moments that deserve a little more care.",
+        "Crafted with pure ghee, real butter and original jaggery — 100% eggless, no maida, no added sugar. Natural foods for everyday moments that deserve a little more care.",
     },
     ctaText: { type: String, default: "Shop Now" },
     ctaHref: { type: String, default: "/shop" },
@@ -95,6 +95,7 @@ const HomepageContentSchema = new Schema(
       type: [TrustPointSchema],
       default: [
         { title: "100% Pure Ghee", description: "Every batch is cooked in pure ghee for rich, authentic flavour." },
+        { title: "100% Eggless", description: "Everything we make is completely eggless — always." },
         { title: "No Maida", description: "No refined flour in any recipe — ever." },
         { title: "No Added Sugar", description: "Sweetened the traditional way with original jaggery, never white sugar." },
         { title: "Real Butter & Original Jaggery", description: "Real butter and slow-set original jaggery for a familiar homemade taste." },

@@ -32,7 +32,7 @@ interface ProductData {
   returnInfo: string;
   images: string[];
   packSizes: { label: string; mrp: number; price: number; stock: number; sku: string }[];
-  badges: { pureGhee: boolean; noMaida: boolean; noAddedSugar: boolean };
+  badges: { pureGhee: boolean; eggless: boolean; noMaida: boolean; noAddedSugar: boolean };
   averageRating: number;
   reviewCount: number;
   category: { name: string; slug: string } | string;

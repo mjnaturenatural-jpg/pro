@@ -29,6 +29,7 @@ const ProductSchema = new Schema(
     packSizes: { type: [PackSizeSchema], required: true, validate: (v: unknown[]) => v.length > 0 },
     badges: {
       pureGhee: { type: Boolean, default: false },
+      eggless: { type: Boolean, default: false },
       noMaida: { type: Boolean, default: false },
       noAddedSugar: { type: Boolean, default: false },
     },

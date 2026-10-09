@@ -52,7 +52,7 @@ export type ProductCardData = {
   images: string[];
   category: { _id: string; name: string; slug: string } | string;
   packSizes: { label: string; mrp: number; price: number; stock: number; sku?: string }[];
-  badges: { pureGhee: boolean; noMaida: boolean; noAddedSugar: boolean };
+  badges: { pureGhee: boolean; eggless: boolean; noMaida: boolean; noAddedSugar: boolean };
   featured: boolean;
   published: boolean;
   averageRating: number;

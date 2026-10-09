@@ -14,9 +14,17 @@ export const CATEGORIES = [
 
 export const BADGES = [
   { key: "pureGhee", label: "100% Pure Ghee" },
+  { key: "eggless", label: "100% Eggless" },
   { key: "noMaida", label: "No Maida" },
   { key: "noAddedSugar", label: "No Added Sugar" },
 ] as const;
+
+export const BADGE_STYLES: Record<string, string> = {
+  pureGhee: "bg-honey-100 text-honey-700",
+  eggless: "bg-leaf-100 text-leaf-700",
+  noMaida: "bg-caramel-100 text-caramel-700",
+  noAddedSugar: "bg-berry-100 text-berry-700",
+};
 
 export const ORDER_STATUSES = [
   "PENDING",

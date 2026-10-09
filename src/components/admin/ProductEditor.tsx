@@ -31,7 +31,7 @@ interface ProductData {
   category: { _id?: string; name?: string } | string;
   images: string[];
   packSizes: PackSize[];
-  badges: { pureGhee: boolean; noMaida: boolean; noAddedSugar: boolean };
+  badges: { pureGhee: boolean; eggless: boolean; noMaida: boolean; noAddedSugar: boolean };
   featured: boolean;
   published: boolean;
   keywords: string[];
@@ -45,6 +45,7 @@ const DEFAULT_PACKS: PackSize[] = [
 
 const BADGE_OPTIONS = [
   { key: "pureGhee" as const, label: "100% Pure Ghee" },
+  { key: "eggless" as const, label: "100% Eggless" },
   { key: "noMaida" as const, label: "No Maida" },
   { key: "noAddedSugar" as const, label: "No Added Sugar" },
 ];
@@ -79,7 +80,7 @@ export function ProductEditor({
           : categories[0]?._id || "",
     images: product?.images || ([] as string[]),
     packSizes: product?.packSizes?.length ? product.packSizes : DEFAULT_PACKS,
-    badges: product?.badges || { pureGhee: false, noMaida: false, noAddedSugar: false },
+    badges: product?.badges || { pureGhee: false, eggless: false, noMaida: false, noAddedSugar: false },
     featured: product?.featured || false,
     published: product?.published ?? true,
     keywords: product?.keywords?.join(", ") || "",
