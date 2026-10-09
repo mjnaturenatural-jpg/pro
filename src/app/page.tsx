@@ -227,7 +227,7 @@ export default async function HomePage() {
       </section>
 
       {/* OUR PROCESS */}
-      <section className="bg-forest-900 py-16 sm:py-20">
+      <section className="bg-forest-800 py-16 sm:py-20">
         <div className="container-site">
           <div className="mb-10 text-center">
             <p className="eyebrow mb-2">How We Work</p>

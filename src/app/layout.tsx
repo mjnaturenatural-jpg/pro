@@ -14,7 +14,7 @@ const inter = Inter({ subsets: ["latin"], variable: "--font-sans", display: "swa
 const fraunces = Fraunces({ subsets: ["latin"], variable: "--font-serif", display: "swap" });
 
 export const viewport: Viewport = {
-  themeColor: "#052E22",
+  themeColor: "#1D624D",
   width: "device-width",
   initialScale: 1,
 };
