@@ -209,7 +209,7 @@ function Integration({ label, ok }: { label: string; ok: boolean }) {
       }`}
     >
       {ok ? (
-        <CheckCircle2 size={17} className="text-leaf-600" />
+        <CheckCircle2 size={17} className="text-leaf-400" />
       ) : (
         <XCircle size={17} className="text-bark-400" />
       )}

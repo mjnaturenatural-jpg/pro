@@ -8,13 +8,13 @@ export const revalidate = 60;
 export const metadata: Metadata = {
   title: "About",
   description:
-    "Learn about MJ Nature Naturals — a premium natural food brand crafting laddus, brownies, cookies and millet treats with care.",
+    "Learn about MJ Nature Naturals — a premium natural food brand crafting laddus, brownies, cookies and millet treats with pure ghee, real butter and original jaggery — no maida, no added sugar.",
 };
 
 const BRAND_PILLARS = [
-  "Wholesome millets",
-  "Traditional jaggery",
-  "No maida baking",
+  "Pure ghee & real butter",
+  "Original jaggery",
+  "No maida, no sugar",
   "Small-batch craft",
 ];
 
@@ -49,9 +49,9 @@ export default async function AboutPage() {
             <div className="mt-6 space-y-4 text-[15px] leading-relaxed text-bark-600">
               <p>
                 {brandName} was born from a simple idea: everyday snacks should be made
-                from things you can recognise and pronounce. No maida, no shortcuts —
-                just wholesome millets, traditional jaggery, real ghee and plenty of
-                patience.
+                from things you can recognise and pronounce. No maida, no sugar, no
+                shortcuts — just wholesome millets, original jaggery, pure ghee, real
+                butter and plenty of patience.
               </p>
               <p>
                 From our laddus and cookies to our brownies, every recipe is developed
@@ -87,7 +87,7 @@ export default async function AboutPage() {
                 className="object-cover"
               />
             ) : (
-              <div className="flex h-full w-full flex-col items-center justify-center gap-3 bg-gradient-to-br from-leaf-100 to-sand-100 text-leaf-600">
+              <div className="flex h-full w-full flex-col items-center justify-center gap-3 bg-gradient-to-br from-forest-800 to-ivory-100 text-leaf-400">
                 <Leaf size={56} />
                 <span className="text-xs font-semibold uppercase tracking-[0.2em]">
                   Made with care
@@ -102,10 +102,10 @@ export default async function AboutPage() {
       <section className="bg-cream py-16 sm:py-20">
         <div className="container-site">
           <div className="grid items-center gap-10 lg:grid-cols-2 lg:gap-16">
-            <div className="order-2 flex aspect-[4/3] items-center justify-center rounded-2xl bg-gradient-to-br from-leaf-200 to-ivory-200 lg:order-1">
+            <div className="order-2 flex aspect-[4/3] items-center justify-center rounded-2xl bg-gradient-to-br from-forest-700 to-ivory-100 lg:order-1">
               {/* Replace with a real founder photo: swap this block for <Image src="/founder.jpg" ... /> */}
               <div className="text-center">
-                <span className="mx-auto flex h-20 w-20 items-center justify-center rounded-full bg-white font-serif text-2xl font-bold text-leaf-700 shadow-soft">
+                <span className="mx-auto flex h-20 w-20 items-center justify-center rounded-full bg-ivory-100 font-serif text-2xl font-bold text-leaf-400 shadow-soft">
                   MJ
                 </span>
                 <p className="mt-4 text-xs font-semibold uppercase tracking-[0.2em] text-bark-500">

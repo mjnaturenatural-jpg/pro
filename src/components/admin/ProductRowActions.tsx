@@ -30,7 +30,7 @@ export function ProductRowActions({ productId }: { productId: string }) {
 
   return (
     <div className="flex items-center justify-end gap-1">
-      <Link href={`/admin/products/${productId}`} className="rounded p-1.5 text-bark-500 hover:bg-sand-50 hover:text-bark-800" title="Edit">
+      <Link href={`/admin/products/${productId}`} className="rounded p-1.5 text-bark-500 hover:bg-bark-800/10 hover:text-bark-800" title="Edit">
         <Pencil size={15} />
       </Link>
       <button onClick={remove} disabled={deleting} className="rounded p-1.5 text-bark-500 hover:bg-red-50 hover:text-red-600" title="Delete">

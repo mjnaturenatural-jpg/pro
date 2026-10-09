@@ -75,7 +75,7 @@ export function ProductCard({ product, priority = false }: { product: ProductCar
   return (
     <Link
       href={`/product/${product.slug}`}
-      className="group relative flex flex-col overflow-hidden rounded-xl border border-bark-800/10 bg-white shadow-soft transition duration-300 hover:shadow-lift"
+      className="group relative flex flex-col overflow-hidden rounded-xl border border-bark-800/10 bg-ivory-100 shadow-soft transition duration-300 hover:shadow-lift"
     >
       <div className="relative aspect-square overflow-hidden bg-sand-50">
         {product.images[0] && (
@@ -90,7 +90,7 @@ export function ProductCard({ product, priority = false }: { product: ProductCar
         )}
         <div className="absolute left-3 top-3 flex flex-col gap-1.5">
           {pct > 0 && (
-            <span className="rounded-full bg-bark-800 px-2.5 py-1 text-[10px] font-bold tracking-wide text-ivory-50">
+            <span className="rounded-full bg-forest-800 px-2.5 py-1 text-[10px] font-bold tracking-wide text-white">
               {pct}% OFF
             </span>
           )}
@@ -130,7 +130,7 @@ export function ProductCard({ product, priority = false }: { product: ProductCar
                 className={cn(
                   "rounded-md border px-2 py-1 text-[11px] font-medium transition",
                   p.label === selectedPack
-                    ? "border-bark-800 bg-bark-800 text-ivory-50"
+                    ? "border-caramel-500 bg-caramel-500 text-forest-900"
                     : "border-bark-800/15 text-bark-600 hover:border-bark-800/40",
                   p.stock <= 0 && "opacity-50"
                 )}

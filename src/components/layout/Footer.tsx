@@ -47,17 +47,17 @@ export async function Footer() {
           </p>
           <div className="flex gap-3">
             {instagram && (
-              <a href={instagram} target="_blank" rel="noopener noreferrer" aria-label="Instagram" className="text-bark-600 hover:text-caramel-600">
+              <a href={instagram} target="_blank" rel="noopener noreferrer" aria-label="Instagram" className="text-bark-600 hover:text-caramel-400">
                 <Instagram size={18} />
               </a>
             )}
             {facebook && (
-              <a href={facebook} target="_blank" rel="noopener noreferrer" aria-label="Facebook" className="text-bark-600 hover:text-caramel-600">
+              <a href={facebook} target="_blank" rel="noopener noreferrer" aria-label="Facebook" className="text-bark-600 hover:text-caramel-400">
                 <Facebook size={18} />
               </a>
             )}
             {youtube && (
-              <a href={youtube} target="_blank" rel="noopener noreferrer" aria-label="YouTube" className="text-bark-600 hover:text-caramel-600">
+              <a href={youtube} target="_blank" rel="noopener noreferrer" aria-label="YouTube" className="text-bark-600 hover:text-caramel-400">
                 <Youtube size={18} />
               </a>
             )}

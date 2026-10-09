@@ -32,7 +32,7 @@ export default async function HomePage() {
   return (
     <>
       {/* HERO */}
-      <section className="relative overflow-hidden bg-gradient-to-br from-leaf-50 via-ivory-50 to-caramel-50">
+      <section className="relative overflow-hidden bg-gradient-to-br from-forest-800 via-ivory-50 to-caramel-500/15">
         <div className="container-site grid items-center gap-10 py-14 sm:py-20 lg:grid-cols-2 lg:gap-16 lg:py-28">
           <div className="animate-fadeUp">
             <p className="eyebrow mb-4">{hero.eyebrow || "MJ NATURE NATURALS"}</p>
@@ -41,7 +41,7 @@ export default async function HomePage() {
             </h1>
             <p className="mt-5 max-w-lg text-base leading-relaxed text-bark-600 sm:text-lg">
               {hero.subheading ||
-                "Discover thoughtfully crafted natural foods made with carefully selected ingredients — for everyday moments that deserve a little more care."}
+                "Crafted with pure ghee, real butter and original jaggery — no maida, no added sugar. Natural foods for everyday moments that deserve a little more care."}
             </p>
             <div className="mt-8 flex flex-wrap gap-3">
               <Link href={hero.ctaHref || "/shop"} className="btn-primary">
@@ -53,13 +53,13 @@ export default async function HomePage() {
             </div>
             <ul className="mt-7 flex flex-wrap gap-x-6 gap-y-2.5 text-xs font-medium text-bark-600">
               <li className="flex items-center gap-1.5">
-                <Leaf size={14} className="text-leaf-600" /> Small-batch kitchen
+                <Leaf size={14} className="text-leaf-400" /> Small-batch kitchen
               </li>
               <li className="flex items-center gap-1.5">
                 <Sparkles size={14} className="text-caramel-500" /> Packed fresh
               </li>
               <li className="flex items-center gap-1.5">
-                <Truck size={14} className="text-leaf-600" /> Ships across India
+                <Truck size={14} className="text-leaf-400" /> Ships across India
               </li>
             </ul>
           </div>
@@ -113,7 +113,7 @@ export default async function HomePage() {
             <p className="eyebrow mb-2">Our Favourites</p>
             <h2 className="section-title">Shop Our Favourites</h2>
           </div>
-          <Link href="/shop" className="hidden items-center gap-1 text-sm font-medium text-caramel-600 hover:text-caramel-700 sm:flex">
+          <Link href="/shop" className="hidden items-center gap-1 text-sm font-medium text-caramel-400 hover:text-caramel-300 sm:flex">
             View all <ArrowRight size={15} />
           </Link>
         </div>
@@ -142,7 +142,7 @@ export default async function HomePage() {
                 <Link
                   key={c.slug}
                   href={`/shop?category=${c.slug}`}
-                  className="group relative overflow-hidden rounded-xl border border-bark-800/10 bg-white shadow-soft transition hover:shadow-lift"
+                  className="group relative overflow-hidden rounded-xl border border-bark-800/10 bg-ivory-100 shadow-soft transition hover:shadow-lift"
                 >
                   <div className="relative aspect-[4/3] overflow-hidden bg-sand-50">
                     {c.image ? (
@@ -203,7 +203,7 @@ export default async function HomePage() {
       </section>
 
       {/* OUR PROCESS */}
-      <section className="bg-leaf-50 py-16 sm:py-20">
+      <section className="bg-forest-900 py-16 sm:py-20">
         <div className="container-site">
           <div className="mb-10 text-center">
             <p className="eyebrow mb-2">How We Work</p>
@@ -218,7 +218,7 @@ export default async function HomePage() {
                 step: "01",
                 Icon: Leaf,
                 title: "Ingredients Selected",
-                body: "We start with ingredients we would happily use at home — grains, nuts, jaggery and spices chosen for quality.",
+                body: "We start with ingredients we would happily use at home — pure ghee, real butter, original jaggery, millets and spices chosen for quality.",
               },
               {
                 step: "02",
@@ -260,29 +260,29 @@ export default async function HomePage() {
       </section>
 
       {/* PRODUCT HIGHLIGHT */}
-      <section className="bg-bark-800 py-16 sm:py-24">
+      <section className="bg-forest-800 py-16 sm:py-24">
         <div className="container-site grid items-center gap-10 lg:grid-cols-2 lg:gap-16">
           <div>
             <p className="mb-3 text-xs font-semibold uppercase tracking-[0.2em] text-caramel-400">
               Spotlight
             </p>
-            <h2 className="font-serif text-3xl leading-tight text-ivory-50 sm:text-4xl">
+            <h2 className="font-serif text-3xl leading-tight text-white sm:text-4xl">
               {highlight.title || "Made for everyday indulgence"}
             </h2>
-            <p className="mt-5 max-w-lg text-base leading-relaxed text-ivory-200/80">
+            <p className="mt-5 max-w-lg text-base leading-relaxed text-white/80">
               {highlight.body ||
                 "From soft jaggery laddus to rich millet cookies, our range is designed for the moments you want to slow down and savour."}
             </p>
             {highlightProduct && (
               <Link
                 href={`/product/${highlightProduct.slug}`}
-                className="btn mt-7 bg-ivory-50 px-6 py-3 text-bark-800 hover:bg-white"
+                className="btn mt-7 bg-ivory-50 px-6 py-3 text-bark-800 hover:bg-ivory-100"
               >
                 {highlight.ctaText || "Explore Product"} <ArrowRight size={15} />
               </Link>
             )}
           </div>
-          <div className="relative aspect-[4/3] overflow-hidden rounded-2xl bg-bark-700">
+          <div className="relative aspect-[4/3] overflow-hidden rounded-2xl bg-forest-700">
             {highlight.image ? (
               <Image
                 src={highlight.image}
@@ -394,7 +394,7 @@ function StoryFallbackArt() {
 
 function HighlightFallbackArt() {
   return (
-    <div className="flex h-full w-full items-center justify-center bg-bark-700">
+    <div className="flex h-full w-full items-center justify-center bg-forest-700">
       <Sparkles size={48} className="text-caramel-400" />
     </div>
   );

@@ -6,7 +6,7 @@ export const dynamic = "force-dynamic";
 export const metadata = {
   title: "Shop",
   description:
-    "Explore the full MJ Nature Naturals collection — laddus, brownies, cookies and millet treats crafted with care.",
+    "Explore the full MJ Nature Naturals collection — laddus, brownies, cookies and millet treats made with pure ghee, real butter and original jaggery — no maida, no added sugar.",
 };
 
 export default async function ShopPage() {

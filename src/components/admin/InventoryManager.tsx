@@ -78,7 +78,7 @@ export function InventoryManager({
       </div>
 
       <div className="flex flex-wrap gap-3">
-        <div className="flex min-w-[220px] flex-1 items-center gap-2 rounded-lg border border-bark-800/10 bg-white px-3 py-2">
+        <div className="flex min-w-[220px] flex-1 items-center gap-2 rounded-lg border border-bark-800/10 bg-ivory-100 px-3 py-2">
           <Search size={15} className="text-bark-400" />
           <input
             value={q}
@@ -150,7 +150,7 @@ export function InventoryManager({
                             aria-label={`Stock for ${ps.label}`}
                           />
                           {savingId === key && (
-                            <span className="text-[9px] text-caramel-600">…</span>
+                            <span className="text-[9px] text-caramel-400">…</span>
                           )}
                         </div>
                       </div>

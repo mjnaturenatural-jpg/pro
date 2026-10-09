@@ -117,7 +117,7 @@ export function CategoryManager({ categories }: { categories: Category[] }) {
                 <p className="text-xs text-bark-400">/{c.slug}</p>
               </div>
               <div className="flex gap-1">
-                <button onClick={() => openEdit(c)} className="rounded p-1.5 text-bark-500 hover:bg-sand-50" aria-label="Edit">
+                <button onClick={() => openEdit(c)} className="rounded p-1.5 text-bark-500 hover:bg-bark-800/10" aria-label="Edit">
                   <Pencil size={15} />
                 </button>
                 <button onClick={() => remove(c)} className="rounded p-1.5 text-bark-500 hover:bg-red-50 hover:text-red-600" aria-label="Delete">
@@ -145,8 +145,8 @@ export function CategoryManager({ categories }: { categories: Category[] }) {
 
       {editing && (
         <div className="fixed inset-0 z-[90] flex items-center justify-center p-4">
-          <div className="absolute inset-0 bg-bark-900/40" onClick={() => setEditing(null)} />
-          <div className="relative w-full max-w-lg animate-fadeUp rounded-2xl bg-white p-6 shadow-lift sm:p-8">
+          <div className="absolute inset-0 bg-forest-900/40" onClick={() => setEditing(null)} />
+          <div className="relative w-full max-w-lg animate-fadeUp rounded-2xl bg-ivory-100 p-6 shadow-lift sm:p-8">
             <div className="mb-5 flex items-center justify-between">
               <h2 className="font-serif text-lg text-bark-900">
                 {isNew ? "New Category" : "Edit Category"}

@@ -329,7 +329,7 @@ export function ProductEditor({
                 </button>
               </div>
               {p.mrp > p.price && p.price > 0 && (
-                <p className="col-span-full text-xs text-leaf-600">
+                <p className="col-span-full text-xs text-leaf-400">
                   Discount: {Math.round(((p.mrp - p.price) / p.mrp) * 100)}% · Customer pays {formatINR(p.price)}
                 </p>
               )}
@@ -351,20 +351,20 @@ export function ProductEditor({
               <button
                 type="button"
                 onClick={() => set("images", form.images.filter((_, idx) => idx !== i))}
-                className="absolute right-1 top-1 rounded-full bg-white/90 p-1 text-red-500 shadow"
+                className="absolute right-1 top-1 rounded-full bg-ivory-100/90 p-1 text-red-500 shadow"
                 aria-label="Remove image"
               >
                 <Trash2 size={12} />
               </button>
               {i === 0 && (
-                <span className="absolute bottom-1 left-1 rounded bg-bark-800/80 px-1.5 py-0.5 text-[9px] font-bold text-white">
+                <span className="absolute bottom-1 left-1 rounded bg-forest-800/80 px-1.5 py-0.5 text-[9px] font-bold text-white">
                   PRIMARY
                 </span>
               )}
             </div>
           ))}
           <label className={cn(
-            "flex h-24 w-24 cursor-pointer flex-col items-center justify-center rounded-lg border-2 border-dashed border-bark-800/15 text-bark-400 transition hover:border-caramel-500 hover:text-caramel-600",
+            "flex h-24 w-24 cursor-pointer flex-col items-center justify-center rounded-lg border-2 border-dashed border-bark-800/15 text-bark-400 transition hover:border-caramel-500 hover:text-caramel-400",
             uploading && "pointer-events-none opacity-50"
           )}>
             <Upload size={18} />

@@ -108,7 +108,7 @@ export function ShopPageClient({ categories }: { categories: Category[] }) {
               className={cn(
                 "rounded-full border px-3 py-1.5 text-xs font-medium transition",
                 pack === p
-                  ? "border-bark-800 bg-bark-800 text-ivory-50"
+                  ? "border-caramel-500 bg-caramel-500 text-forest-900"
                   : "border-bark-800/15 text-bark-600 hover:border-bark-800/40"
               )}
             >
@@ -128,7 +128,7 @@ export function ShopPageClient({ categories }: { categories: Category[] }) {
               className={cn(
                 "rounded-full border px-3 py-1.5 text-xs font-medium transition",
                 maxPrice === p
-                  ? "border-bark-800 bg-bark-800 text-ivory-50"
+                  ? "border-caramel-500 bg-caramel-500 text-forest-900"
                   : "border-bark-800/15 text-bark-600 hover:border-bark-800/40"
               )}
             >
@@ -148,7 +148,7 @@ export function ShopPageClient({ categories }: { categories: Category[] }) {
               className={cn(
                 "rounded-full border px-3 py-1.5 text-xs font-medium transition",
                 minDiscount === d
-                  ? "border-bark-800 bg-bark-800 text-ivory-50"
+                  ? "border-caramel-500 bg-caramel-500 text-forest-900"
                   : "border-bark-800/15 text-bark-600 hover:border-bark-800/40"
               )}
             >
@@ -170,7 +170,7 @@ export function ShopPageClient({ categories }: { categories: Category[] }) {
 
       <button
         onClick={() => router.push(pathname, { scroll: false })}
-        className="text-xs font-medium text-caramel-600 hover:text-caramel-700"
+        className="text-xs font-medium text-caramel-400 hover:text-caramel-300"
       >
         Clear all filters
       </button>
@@ -199,7 +199,7 @@ export function ShopPageClient({ categories }: { categories: Category[] }) {
           <select
             value={sort}
             onChange={(e) => setParam("sort", e.target.value)}
-            className="rounded-lg border border-bark-800/15 bg-white px-3 py-2 text-sm text-bark-700 focus:border-caramel-500 focus:outline-none"
+            className="rounded-lg border border-bark-800/15 bg-ivory-100 px-3 py-2 text-sm text-bark-700 focus:border-caramel-500 focus:outline-none"
             aria-label="Sort products"
           >
             {SORT_OPTIONS.map((o) => (
@@ -217,7 +217,7 @@ export function ShopPageClient({ categories }: { categories: Category[] }) {
             ))}
           </div>
         ) : products.length === 0 ? (
-          <div className="rounded-xl border border-bark-800/10 bg-white px-6 py-20 text-center">
+          <div className="rounded-xl border border-bark-800/10 bg-ivory-100 px-6 py-20 text-center">
             <p className="font-serif text-xl text-bark-800">No products found</p>
             <p className="mt-2 text-sm text-bark-500">Try adjusting your filters or search.</p>
             <button
@@ -261,7 +261,7 @@ export function ShopPageClient({ categories }: { categories: Category[] }) {
       {/* Mobile filter drawer */}
       {filtersOpen && (
         <div className="fixed inset-0 z-[80] lg:hidden">
-          <div className="absolute inset-0 bg-bark-900/40" onClick={() => setFiltersOpen(false)} />
+          <div className="absolute inset-0 bg-forest-900/40" onClick={() => setFiltersOpen(false)} />
           <div className="absolute bottom-0 left-0 right-0 max-h-[80vh] overflow-y-auto rounded-t-2xl bg-ivory-50 p-6 animate-fadeUp">
             <div className="mb-5 flex items-center justify-between">
               <h2 className="font-serif text-lg text-bark-900">Filters</h2>
@@ -294,7 +294,7 @@ function FilterChip({
       onClick={onClick}
       className={cn(
         "block w-full rounded-lg px-3 py-2 text-left text-sm transition",
-        active ? "bg-bark-800 text-ivory-50" : "text-bark-600 hover:bg-sand-50"
+        active ? "bg-caramel-500 text-forest-900" : "text-bark-600 hover:bg-forest-800/10"
       )}
     >
       {label}

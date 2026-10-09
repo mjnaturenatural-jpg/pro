@@ -67,7 +67,7 @@ export default async function OrderSuccessPage({ params }: { params: { id: strin
             <p className="text-xs uppercase tracking-wide text-bark-500">Payment</p>
             <p
               className={`mt-0.5 text-sm font-semibold ${
-                order.paymentStatus === "PAID" ? "text-leaf-600" : "text-caramel-600"
+                order.paymentStatus === "PAID" ? "text-leaf-400" : "text-caramel-400"
               }`}
             >
               {order.paymentStatus}
@@ -95,7 +95,7 @@ export default async function OrderSuccessPage({ params }: { params: { id: strin
               <dd>{formatINR(order.subtotal)}</dd>
             </div>
             {order.couponDiscount > 0 && (
-              <div className="flex justify-between text-leaf-600">
+              <div className="flex justify-between text-leaf-400">
                 <dt>Coupon{order.couponCode ? ` (${order.couponCode})` : ""}</dt>
                 <dd>−{formatINR(order.couponDiscount)}</dd>
               </div>

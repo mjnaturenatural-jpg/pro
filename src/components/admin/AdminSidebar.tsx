@@ -49,8 +49,8 @@ export function AdminSidebar() {
             className={cn(
               "flex items-center gap-3 rounded-lg px-3 py-2.5 text-sm font-medium transition",
               active
-                ? "bg-bark-800 text-ivory-50"
-                : "text-bark-600 hover:bg-sand-50 hover:text-bark-900"
+                ? "bg-forest-700 text-white"
+                : "text-bark-600 hover:bg-forest-800/10 hover:text-bark-900"
             )}
           >
             <item.icon size={17} />
@@ -63,14 +63,14 @@ export function AdminSidebar() {
 
   return (
     <>
-      <aside className="fixed inset-y-0 left-0 z-40 hidden w-64 flex-col border-r border-bark-800/10 bg-white lg:flex">
+      <aside className="fixed inset-y-0 left-0 z-40 hidden w-64 flex-col border-r border-bark-800/10 bg-ivory-100 lg:flex">
         <Link href="/" className="flex h-16 items-center gap-2.5 border-b border-bark-800/10 px-5">
           <span className="flex h-8 w-8 items-center justify-center rounded-full bg-leaf-600 text-xs font-bold text-white">
             MJ
           </span>
           <div className="leading-tight">
             <p className="font-serif text-sm font-semibold text-bark-900">MJ Nature Naturals</p>
-            <p className="text-[10px] uppercase tracking-widest text-caramel-600">Admin Panel</p>
+            <p className="text-[10px] uppercase tracking-widest text-caramel-400">Admin Panel</p>
           </div>
         </Link>
         {nav}
@@ -84,15 +84,15 @@ export function AdminSidebar() {
       {/* Mobile */}
       <button
         onClick={() => setOpen(true)}
-        className="fixed bottom-5 right-5 z-40 flex h-12 w-12 items-center justify-center rounded-full bg-bark-800 text-ivory-50 shadow-lift lg:hidden"
+        className="fixed bottom-5 right-5 z-40 flex h-12 w-12 items-center justify-center rounded-full bg-leaf-600 text-white shadow-lift lg:hidden"
         aria-label="Open admin menu"
       >
         <Menu size={20} />
       </button>
       {open && (
         <div className="fixed inset-0 z-50 lg:hidden">
-          <div className="absolute inset-0 bg-bark-900/40" onClick={() => setOpen(false)} />
-          <div className="absolute inset-y-0 left-0 flex w-72 flex-col bg-white shadow-lift animate-fadeIn">
+          <div className="absolute inset-0 bg-forest-900/40" onClick={() => setOpen(false)} />
+          <div className="absolute inset-y-0 left-0 flex w-72 flex-col bg-ivory-100 shadow-lift animate-fadeIn">
             <div className="flex h-16 items-center justify-between border-b border-bark-800/10 px-5">
               <p className="font-serif text-sm font-semibold text-bark-900">MJ Admin</p>
               <button onClick={() => setOpen(false)} aria-label="Close menu">

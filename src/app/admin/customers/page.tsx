@@ -51,7 +51,7 @@ export default async function AdminCustomersPage({ searchParams }: { searchParam
         <p className="text-sm text-bark-500">{total} customers</p>
       </div>
 
-      <form className="flex max-w-md items-center gap-2 rounded-lg border border-bark-800/10 bg-white px-3 py-2">
+      <form className="flex max-w-md items-center gap-2 rounded-lg border border-bark-800/10 bg-ivory-100 px-3 py-2">
         <input name="q" defaultValue={q} placeholder="Search name, email, phone…" className="w-full bg-transparent text-sm focus:outline-none" />
       </form>
 

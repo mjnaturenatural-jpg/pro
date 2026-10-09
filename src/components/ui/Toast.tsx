@@ -39,10 +39,10 @@ export function ToastProvider({ children }: { children: React.ReactNode }) {
           <div
             key={t.id}
             className={cn(
-              "pointer-events-auto flex items-center gap-3 rounded-xl border bg-white px-4 py-3 shadow-lift animate-fadeUp",
+              "pointer-events-auto flex items-center gap-3 rounded-xl border bg-ivory-100 px-4 py-3 shadow-lift animate-fadeUp",
               t.type === "success" && "border-leaf-200",
               t.type === "error" && "border-red-200",
-              t.type === "info" && "border-sand-200"
+              t.type === "info" && "border-caramel-500/40"
             )}
           >
             <span
@@ -50,7 +50,7 @@ export function ToastProvider({ children }: { children: React.ReactNode }) {
                 "flex h-7 w-7 shrink-0 items-center justify-center rounded-full",
                 t.type === "success" && "bg-leaf-100 text-leaf-700",
                 t.type === "error" && "bg-red-50 text-red-600",
-                t.type === "info" && "bg-sand-50 text-caramel-600"
+                t.type === "info" && "bg-sand-50 text-caramel-400"
               )}
             >
               <Check size={14} />
@@ -59,7 +59,7 @@ export function ToastProvider({ children }: { children: React.ReactNode }) {
             {t.action && (
               <Link
                 href={t.action.href}
-                className="text-xs font-semibold text-caramel-600 hover:text-caramel-700"
+                className="text-xs font-semibold text-caramel-400 hover:text-caramel-300"
                 onClick={() => setToasts((prev) => prev.filter((x) => x.id !== t.id))}
               >
                 {t.action.label}

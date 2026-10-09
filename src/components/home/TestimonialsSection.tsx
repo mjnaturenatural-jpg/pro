@@ -10,7 +10,7 @@ export function TestimonialsSection({
   if (!enabled) {
     return (
       <section className="container-site pb-16">
-        <div className="rounded-2xl border border-bark-800/10 bg-white px-6 py-12 text-center">
+        <div className="rounded-2xl border border-bark-800/10 bg-ivory-100 px-6 py-12 text-center">
           <p className="eyebrow mb-2">Testimonials</p>
           <h2 className="font-serif text-2xl text-bark-900">Customer stories coming soon.</h2>
         </div>
@@ -34,7 +34,7 @@ export function TestimonialsSection({
                   <Star
                     key={s}
                     size={14}
-                    className={s < t.rating! ? "fill-caramel-400 text-caramel-400" : "text-sand-300"}
+                    className={s < t.rating! ? "fill-caramel-400 text-caramel-400" : "text-white/30"}
                   />
                 ))}
               </div>

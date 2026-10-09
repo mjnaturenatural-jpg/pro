@@ -124,7 +124,7 @@ export function ProductDetailView({
               />
             )}
             {pct > 0 && (
-              <span className="absolute left-4 top-4 rounded-full bg-bark-800 px-3 py-1.5 text-xs font-bold text-ivory-50">
+              <span className="absolute left-4 top-4 rounded-full bg-forest-800 px-3 py-1.5 text-xs font-bold text-white">
                 {pct}% OFF
               </span>
             )}
@@ -177,7 +177,7 @@ export function ProductDetailView({
                     className={
                       i < Math.round(product.averageRating)
                         ? "fill-caramel-400 text-caramel-400"
-                        : "text-sand-300"
+                        : "text-white/30"
                     }
                   />
                 ))}
@@ -198,7 +198,7 @@ export function ProductDetailView({
             {pack.mrp > pack.price && (
               <span className="text-base text-bark-400 line-through">{formatINR(pack.mrp)}</span>
             )}
-            {pct > 0 && <span className="text-sm font-semibold text-leaf-600">Save {pct}%</span>}
+            {pct > 0 && <span className="text-sm font-semibold text-leaf-400">Save {pct}%</span>}
           </div>
 
           {/* Pack selector */}
@@ -212,7 +212,7 @@ export function ProductDetailView({
                   className={cn(
                     "rounded-lg border px-4 py-2.5 text-sm font-medium transition",
                     p.label === packLabel
-                      ? "border-bark-800 bg-bark-800 text-ivory-50"
+                      ? "border-caramel-500 bg-caramel-500 text-forest-900"
                       : "border-bark-800/15 text-bark-700 hover:border-bark-800/40",
                     p.stock <= 0 && "opacity-50"
                   )}
@@ -227,7 +227,7 @@ export function ProductDetailView({
           {/* Quantity */}
           <div className="mt-5">
             <p className="label">Quantity</p>
-            <div className="inline-flex items-center rounded-lg border border-bark-800/15 bg-white">
+            <div className="inline-flex items-center rounded-lg border border-bark-800/15 bg-ivory-100">
               <button
                 onClick={() => setQuantity((q) => Math.max(1, q - 1))}
                 className="px-4 py-2.5 text-bark-600 hover:text-bark-900"
@@ -245,7 +245,7 @@ export function ProductDetailView({
               </button>
             </div>
             {pack.stock > 0 && pack.stock <= 10 && (
-              <p className="mt-2 text-xs text-caramel-600">Only {pack.stock} left in stock</p>
+              <p className="mt-2 text-xs text-caramel-400">Only {pack.stock} left in stock</p>
             )}
           </div>
 

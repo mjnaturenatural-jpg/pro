@@ -30,7 +30,7 @@ export function Header({ announcement }: { announcement: { enabled: boolean; tex
   return (
     <>
       {announcement.enabled && announcement.text && (
-        <div className="bg-bark-800 text-ivory-100">
+        <div className="bg-forest-800 text-white">
           <div className="container-site flex h-9 items-center justify-center text-center text-xs tracking-wide">
             {announcement.text}
           </div>
@@ -54,7 +54,7 @@ export function Header({ announcement }: { announcement: { enabled: boolean; tex
               <span className="font-serif text-lg font-semibold text-bark-900 sm:text-xl">
                 MJ Nature
               </span>
-              <span className="text-[10px] font-medium uppercase tracking-[0.28em] text-caramel-600">
+              <span className="text-[10px] font-medium uppercase tracking-[0.28em] text-caramel-400">
                 Naturals
               </span>
             </span>
@@ -105,7 +105,7 @@ export function Header({ announcement }: { announcement: { enabled: boolean; tex
       {/* Mobile menu */}
       {menuOpen && (
         <div className="fixed inset-0 z-[60] lg:hidden">
-          <div className="absolute inset-0 bg-bark-900/40" onClick={() => setMenuOpen(false)} />
+          <div className="absolute inset-0 bg-forest-900/40" onClick={() => setMenuOpen(false)} />
           <div className="absolute left-0 top-0 h-full w-80 max-w-[85vw] bg-ivory-50 shadow-lift animate-fadeIn">
             <div className="flex items-center justify-between border-b border-bark-800/10 px-5 h-16">
               <span className="font-serif text-lg font-semibold text-bark-900">{APP_NAME}</span>
@@ -120,8 +120,8 @@ export function Header({ announcement }: { announcement: { enabled: boolean; tex
                   href={item.href}
                   onClick={() => setMenuOpen(false)}
                   className={cn(
-                    "rounded-lg px-4 py-3 text-base font-medium text-bark-800 hover:bg-sand-50",
-                    pathname === item.href && "bg-sand-50 text-bark-900"
+                    "rounded-lg px-4 py-3 text-base font-medium text-bark-800 hover:bg-forest-800/10",
+                    pathname === item.href && "bg-forest-800/15 text-bark-900"
                   )}
                 >
                   {item.label}
@@ -131,7 +131,7 @@ export function Header({ announcement }: { announcement: { enabled: boolean; tex
               <Link
                 href="/cart"
                 onClick={() => setMenuOpen(false)}
-                className="rounded-lg px-4 py-3 text-base font-medium text-bark-800 hover:bg-sand-50"
+                className="rounded-lg px-4 py-3 text-base font-medium text-bark-800 hover:bg-forest-800/10"
               >
                 Cart ({count})
               </Link>

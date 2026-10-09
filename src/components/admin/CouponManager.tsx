@@ -157,8 +157,8 @@ export function CouponManager({ coupons }: { coupons: Coupon[] }) {
                   </td>
                   <td className="px-4 py-3">
                     <div className="flex justify-end gap-1">
-                      <button onClick={() => toggle(c)} className="rounded p-1.5 text-bark-500 hover:bg-sand-50" title="Toggle active">
-                        {c.active ? <ToggleRight size={16} className="text-leaf-600" /> : <ToggleLeft size={16} />}
+                      <button onClick={() => toggle(c)} className="rounded p-1.5 text-bark-500 hover:bg-bark-800/10" title="Toggle active">
+                        {c.active ? <ToggleRight size={16} className="text-leaf-400" /> : <ToggleLeft size={16} />}
                       </button>
                       <button onClick={() => remove(c)} className="rounded p-1.5 text-bark-500 hover:bg-red-50 hover:text-red-600" title="Delete">
                         <Trash2 size={15} />
@@ -181,8 +181,8 @@ export function CouponManager({ coupons }: { coupons: Coupon[] }) {
 
       {open && (
         <div className="fixed inset-0 z-[90] flex items-center justify-center p-4">
-          <div className="absolute inset-0 bg-bark-900/40" onClick={() => setOpen(false)} />
-          <div className="relative max-h-[90vh] w-full max-w-lg overflow-y-auto animate-fadeUp rounded-2xl bg-white p-6 shadow-lift sm:p-8">
+          <div className="absolute inset-0 bg-forest-900/40" onClick={() => setOpen(false)} />
+          <div className="relative max-h-[90vh] w-full max-w-lg overflow-y-auto animate-fadeUp rounded-2xl bg-ivory-100 p-6 shadow-lift sm:p-8">
             <div className="mb-5 flex items-center justify-between">
               <h2 className="font-serif text-lg text-bark-900">New Coupon</h2>
               <button onClick={() => setOpen(false)} aria-label="Close">

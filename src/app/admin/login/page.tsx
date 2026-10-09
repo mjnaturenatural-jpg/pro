@@ -28,7 +28,7 @@ function AdminLoginForm() {
   };
 
   return (
-    <div className="w-full max-w-sm animate-fadeUp rounded-2xl border border-bark-800/10 bg-white p-8 shadow-lift">
+    <div className="w-full max-w-sm animate-fadeUp rounded-2xl border border-bark-800/10 bg-ivory-100 p-8 shadow-lift">
       <div className="mb-6 text-center">
         <span className="mx-auto mb-4 flex h-12 w-12 items-center justify-center rounded-full bg-leaf-600 font-serif text-base font-bold text-white">
           MJ

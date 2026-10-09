@@ -7,7 +7,7 @@ const HeroSchema = new Schema(
     subheading: {
       type: String,
       default:
-        "Discover thoughtfully crafted natural foods made with carefully selected ingredients — for everyday moments that deserve a little more care.",
+        "Crafted with pure ghee, real butter and original jaggery — no maida, no added sugar. Natural foods for everyday moments that deserve a little more care.",
     },
     ctaText: { type: String, default: "Shop Now" },
     ctaHref: { type: String, default: "/shop" },
@@ -94,10 +94,10 @@ const HomepageContentSchema = new Schema(
     trustPoints: {
       type: [TrustPointSchema],
       default: [
-        { title: "Natural Ingredients", description: "Thoughtfully selected ingredients in every recipe." },
-        { title: "Made With Care", description: "Small-batch preparation with attention to detail." },
-        { title: "Premium Quality", description: "A finish and texture that feels genuinely premium." },
-        { title: "Secure Payments", description: "Safe and encrypted checkout every time." },
+        { title: "100% Pure Ghee", description: "Every batch is cooked in pure ghee for rich, authentic flavour." },
+        { title: "No Maida", description: "No refined flour in any recipe — ever." },
+        { title: "No Added Sugar", description: "Sweetened the traditional way with original jaggery, never white sugar." },
+        { title: "Real Butter & Original Jaggery", description: "Real butter and slow-set original jaggery for a familiar homemade taste." },
       ],
     },
     featuredProductSlugs: { type: [String], default: [] },

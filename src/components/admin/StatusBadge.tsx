@@ -3,7 +3,7 @@ import { cn } from "@/lib/utils";
 const STYLES: Record<string, string> = {
   PENDING: "bg-sand-100 text-bark-600",
   CONFIRMED: "bg-leaf-100 text-leaf-700",
-  PROCESSING: "bg-caramel-400/15 text-caramel-700",
+  PROCESSING: "bg-caramel-400/15 text-caramel-300",
   SHIPPED: "bg-blue-50 text-blue-600",
   OUT_FOR_DELIVERY: "bg-blue-50 text-blue-700",
   DELIVERED: "bg-leaf-100 text-leaf-700",

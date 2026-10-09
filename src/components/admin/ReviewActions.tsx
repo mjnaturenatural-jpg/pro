@@ -28,7 +28,7 @@ export function ReviewActions({ id, approved }: { id: string; approved: boolean 
       {!approved && (
         <button
           onClick={() => act("PATCH", { approved: true })}
-          className="rounded p-1.5 text-leaf-600 hover:bg-leaf-50"
+          className="rounded p-1.5 text-leaf-400 hover:bg-forest-800/15"
           title="Approve"
         >
           <Check size={15} />
@@ -37,7 +37,7 @@ export function ReviewActions({ id, approved }: { id: string; approved: boolean 
       {approved && (
         <button
           onClick={() => act("PATCH", { approved: false })}
-          className="rounded p-1.5 text-caramel-600 hover:bg-sand-50"
+          className="rounded p-1.5 text-caramel-400 hover:bg-forest-800/15"
           title="Unpublish"
         >
           <X size={15} />

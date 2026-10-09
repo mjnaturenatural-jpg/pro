@@ -46,7 +46,7 @@ export default async function AdminProductsPage({
         </Link>
       </div>
 
-      <form className="flex max-w-md items-center gap-2 rounded-lg border border-bark-800/10 bg-white px-3 py-2">
+      <form className="flex max-w-md items-center gap-2 rounded-lg border border-bark-800/10 bg-ivory-100 px-3 py-2">
         <Search size={15} className="text-bark-400" />
         <input
           name="q"
@@ -86,7 +86,7 @@ export default async function AdminProductsPage({
                 return (
                   <tr key={p._id} className="hover:bg-ivory-50">
                     <td className="px-4 py-3">
-                      <Link href={`/admin/products/${p._id}`} className="font-medium text-bark-900 hover:text-caramel-600">
+                      <Link href={`/admin/products/${p._id}`} className="font-medium text-bark-900 hover:text-caramel-400">
                         {p.name}
                       </Link>
                       <p className="text-[11px] text-bark-400">{p.packSizes.length} pack sizes</p>
@@ -110,7 +110,7 @@ export default async function AdminProductsPage({
                           {p.published ? "Published" : "Draft"}
                         </span>
                         {p.featured && (
-                          <span className="rounded-full bg-caramel-400/15 px-2 py-0.5 text-[10px] font-semibold text-caramel-700">
+                          <span className="rounded-full bg-caramel-400/15 px-2 py-0.5 text-[10px] font-semibold text-caramel-300">
                             Featured
                           </span>
                         )}

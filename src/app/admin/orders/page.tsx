@@ -63,7 +63,7 @@ export default async function AdminOrdersPage({
       </div>
 
       <div className="flex flex-wrap gap-3">
-        <form className="flex min-w-[240px] items-center gap-2 rounded-lg border border-bark-800/10 bg-white px-3 py-2">
+        <form className="flex min-w-[240px] items-center gap-2 rounded-lg border border-bark-800/10 bg-ivory-100 px-3 py-2">
           <input
             name="q"
             defaultValue={q}
@@ -78,14 +78,14 @@ export default async function AdminOrdersPage({
           aria-hidden
         />
         <div className="flex flex-wrap gap-2">
-          <Link href={qs({ status: "", payment: "", page: "" })} className={`btn-sm rounded-full border px-3 py-1.5 text-xs font-medium ${!status && !payment ? "border-bark-800 bg-bark-800 text-ivory-50" : "border-bark-800/15 text-bark-600"}`}>
+          <Link href={qs({ status: "", payment: "", page: "" })} className={`btn-sm rounded-full border px-3 py-1.5 text-xs font-medium ${!status && !payment ? "border-caramel-500 bg-caramel-500 text-forest-900" : "border-bark-800/15 text-bark-600"}`}>
             All
           </Link>
           {ORDER_STATUSES.filter((s) => s !== "PENDING").map((s) => (
             <Link
               key={s}
               href={qs({ status: status === s ? "" : s, page: "" })}
-              className={`btn-sm rounded-full border px-3 py-1.5 text-xs font-medium ${status === s ? "border-bark-800 bg-bark-800 text-ivory-50" : "border-bark-800/15 text-bark-600"}`}
+              className={`btn-sm rounded-full border px-3 py-1.5 text-xs font-medium ${status === s ? "border-caramel-500 bg-caramel-500 text-forest-900" : "border-bark-800/15 text-bark-600"}`}
             >
               {s.replace(/_/g, " ")}
             </Link>
@@ -122,7 +122,7 @@ export default async function AdminOrdersPage({
                     <td className="px-4 py-3">
                       <Link
                         href={`/admin/orders/${o._id}`}
-                        className="font-mono text-xs font-semibold text-bark-800 hover:text-caramel-600"
+                        className="font-mono text-xs font-semibold text-bark-800 hover:text-caramel-400"
                       >
                         {orderNumber(o._id)}
                       </Link>
@@ -137,12 +137,12 @@ export default async function AdminOrdersPage({
                       <span
                         className={`text-xs font-semibold ${
                           o.paymentStatus === "PAID"
-                            ? "text-leaf-600"
+                            ? "text-leaf-400"
                             : o.paymentStatus === "FAILED"
                               ? "text-red-500"
                               : o.paymentStatus === "REFUNDED"
                                 ? "text-blue-600"
-                                : "text-caramel-600"
+                                : "text-caramel-400"
                         }`}
                       >
                         {o.paymentStatus}

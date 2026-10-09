@@ -10,7 +10,7 @@ export function AdminTopbar({ name }: { name: string }) {
   const [q, setQ] = useState("");
 
   return (
-    <header className="sticky top-0 z-30 flex h-16 items-center gap-4 border-b border-bark-800/10 bg-white/90 px-4 backdrop-blur sm:px-6 lg:px-8">
+    <header className="sticky top-0 z-30 flex h-16 items-center gap-4 border-b border-bark-800/10 bg-ivory-100/90 px-4 backdrop-blur sm:px-6 lg:px-8">
       <form
         onSubmit={(e) => {
           e.preventDefault();

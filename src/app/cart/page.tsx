@@ -119,13 +119,13 @@ export default function CartPage() {
                 <dd className="font-medium">{formatINR(subtotal)}</dd>
               </div>
               {itemDiscount > 0 && (
-                <div className="flex justify-between text-leaf-600">
+                <div className="flex justify-between text-leaf-400">
                   <dt>Item discount</dt>
                   <dd>−{formatINR(itemDiscount)}</dd>
                 </div>
               )}
               {coupon && couponDiscount > 0 && (
-                <div className="flex justify-between text-leaf-600">
+                <div className="flex justify-between text-leaf-400">
                   <dt>Coupon ({coupon.code})</dt>
                   <dd>−{formatINR(couponDiscount)}</dd>
                 </div>

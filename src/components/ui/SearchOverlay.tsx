@@ -61,9 +61,9 @@ export function SearchOverlay({ open, onClose }: { open: boolean; onClose: () =>
 
   return (
     <div className="fixed inset-0 z-[70]">
-      <div className="absolute inset-0 bg-bark-900/40 backdrop-blur-sm" onClick={onClose} />
+      <div className="absolute inset-0 bg-forest-900/40 backdrop-blur-sm" onClick={onClose} />
       <div className="relative mx-auto mt-20 w-full max-w-lg animate-fadeUp px-4">
-        <div className="overflow-hidden rounded-2xl border border-bark-800/10 bg-white shadow-lift">
+        <div className="overflow-hidden rounded-2xl border border-bark-800/10 bg-ivory-100 shadow-lift">
           <div className="flex items-center gap-3 border-b border-bark-800/10 px-5">
             <Search size={18} className="text-bark-500" />
             <input
@@ -99,7 +99,7 @@ export function SearchOverlay({ open, onClose }: { open: boolean; onClose: () =>
                     onClose();
                     router.push(`/product/${p.slug}`);
                   }}
-                  className="flex w-full items-center gap-3 px-5 py-3 text-left transition hover:bg-sand-50"
+                  className="flex w-full items-center gap-3 px-5 py-3 text-left transition hover:bg-bark-800/10"
                 >
                   <div className="relative h-12 w-12 shrink-0 overflow-hidden rounded-lg bg-sand-50">
                     {p.images[0] && (

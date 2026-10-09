@@ -158,7 +158,7 @@ export function ContentEditor({
               <label
                 key={p.slug}
                 className={`flex cursor-pointer items-center gap-2 rounded-lg border px-3 py-2 text-xs ${
-                  selected ? "border-bark-800 bg-bark-800 text-ivory-50" : "border-bark-800/10 text-bark-600"
+                  selected ? "border-caramel-500 bg-caramel-500 text-forest-900" : "border-bark-800/10 text-bark-600"
                 }`}
               >
                 <input

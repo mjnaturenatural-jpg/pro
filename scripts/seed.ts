@@ -462,7 +462,7 @@ function placeholderImage(name: string): string {
     .map((w) => w[0])
     .join("")
     .toUpperCase();
-  const svg = `<svg xmlns="http://www.w3.org/2000/svg" width="800" height="800"><rect width="100%" height="100%" fill="#F6ECE7"/><circle cx="400" cy="360" r="140" fill="#EFDFD8"/><text x="400" y="385" font-family="Georgia,serif" font-size="72" fill="#0E8079" text-anchor="middle" font-weight="600">${initials}</text><text x="400" y="560" font-family="Georgia,serif" font-size="28" fill="#41514E" text-anchor="middle">MJ Nature Naturals</text></svg>`;
+  const svg = `<svg xmlns="http://www.w3.org/2000/svg" width="800" height="800"><rect width="100%" height="100%" fill="#07382A"/><circle cx="400" cy="360" r="140" fill="#0A4A38"/><text x="400" y="385" font-family="Georgia,serif" font-size="72" fill="#2FB5AA" text-anchor="middle" font-weight="600">${initials}</text><text x="400" y="560" font-family="Georgia,serif" font-size="28" fill="#B3C3BD" text-anchor="middle">MJ Nature Naturals</text></svg>`;
   return `data:image/svg+xml;base64,${Buffer.from(svg).toString("base64")}`;
 }
 

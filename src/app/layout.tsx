@@ -14,7 +14,7 @@ const inter = Inter({ subsets: ["latin"], variable: "--font-sans", display: "swa
 const fraunces = Fraunces({ subsets: ["latin"], variable: "--font-serif", display: "swap" });
 
 export const viewport: Viewport = {
-  themeColor: "#FDF9F7",
+  themeColor: "#052E22",
   width: "device-width",
   initialScale: 1,
 };
@@ -40,7 +40,7 @@ export async function generateMetadata(): Promise<Metadata> {
       template: `%s | ${brandName}`,
     },
     description:
-      "Shop premium natural foods from MJ Nature Naturals — laddus, brownies, cookies and millet treats crafted with thoughtfully selected ingredients.",
+      "Shop premium natural foods from MJ Nature Naturals — laddus, brownies, cookies and millet treats crafted with pure ghee, real butter and original jaggery — no maida, no added sugar.",
     openGraph: {
       type: "website",
       siteName: brandName,
