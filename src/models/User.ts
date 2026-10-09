@@ -18,7 +18,6 @@ const UserSchema = new Schema(
       state: String,
       pincode: String,
     },
-    wishlist: [{ type: Schema.Types.ObjectId, ref: "Product" }],
     resetToken: { type: String, select: false },
     resetTokenExpiry: { type: Date, select: false },
   },

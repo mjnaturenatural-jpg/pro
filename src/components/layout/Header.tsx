@@ -3,7 +3,7 @@
 import Link from "next/link";
 import { usePathname, useRouter } from "next/navigation";
 import { useState } from "react";
-import { Heart, Menu, Search, ShoppingBag, X } from "lucide-react";
+import { Menu, Search, ShoppingBag, X } from "lucide-react";
 import { useCart } from "@/store/cart";
 import { SearchOverlay } from "@/components/ui/SearchOverlay";
 import { cn } from "@/lib/utils";
@@ -87,13 +87,6 @@ export function Header({ announcement }: { announcement: { enabled: boolean; tex
               <Search size={20} />
             </button>
             <Link
-              href="/wishlist"
-              className="hidden sm:flex p-2 text-bark-700 hover:text-bark-900"
-              aria-label="Wishlist"
-            >
-              <Heart size={20} />
-            </Link>
-            <Link
               href="/cart"
               className="relative p-2 text-bark-700 hover:text-bark-900"
               aria-label="Cart"
@@ -135,13 +128,6 @@ export function Header({ announcement }: { announcement: { enabled: boolean; tex
                 </Link>
               ))}
               <div className="my-3 border-t border-bark-800/10" />
-              <Link
-                href="/wishlist"
-                onClick={() => setMenuOpen(false)}
-                className="rounded-lg px-4 py-3 text-base font-medium text-bark-800 hover:bg-sand-50"
-              >
-                Wishlist
-              </Link>
               <Link
                 href="/cart"
                 onClick={() => setMenuOpen(false)}

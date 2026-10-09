@@ -4,7 +4,7 @@ import { connectDB } from "@/lib/db";
 import { Product, Category } from "@/models";
 import { ProductDetailView } from "@/components/product/ProductDetailView";
 import { APP_URL } from "@/lib/constants";
-export const dynamic = "force-dynamic";
+export const revalidate = 60;
 
 interface Props {
   params: { slug: string };

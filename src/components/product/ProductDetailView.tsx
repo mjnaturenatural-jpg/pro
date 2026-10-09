@@ -4,9 +4,9 @@ import Image from "next/image";
 import Link from "next/link";
 import { useRouter } from "next/navigation";
 import { useState } from "react";
-import { Heart, ShoppingBag, Zap, Star, ChevronRight } from "lucide-react";
+import { ShoppingBag, Zap, Star, ChevronRight } from "lucide-react";
 import { formatINR, discountPercent, cn } from "@/lib/utils";
-import { useCart, useWishlist } from "@/store/cart";
+import { useCart } from "@/store/cart";
 import { useToast } from "@/components/ui/Toast";
 import { BADGES } from "@/lib/constants";
 
@@ -40,9 +40,6 @@ export function ProductDetailView({
   const router = useRouter();
   const { toast } = useToast();
   const addItem = useCart((s) => s.addItem);
-  const toggleWish = useWishlist((s) => s.toggle);
-  const wishItems = useWishlist((s) => s.items);
-  const wished = wishItems.some((i) => i.productId === product._id);
 
   const defaultPack = product.packSizes.find((p) => p.stock > 0) ?? product.packSizes[0];
   const [packLabel, setPackLabel] = useState(defaultPack.label);
@@ -259,31 +256,6 @@ export function ProductDetailView({
             </button>
             <button onClick={handleBuyNow} disabled={outOfStock} className="btn-accent flex-1">
               <Zap size={16} /> Buy Now
-            </button>
-            <button
-              onClick={() => {
-                toggleWish({
-                  productId: product._id,
-                  slug: product.slug,
-                  name: product.name,
-                  image: product.images[0] || "",
-                  price: product.packSizes[0]?.price ?? 0,
-                  mrp: product.packSizes[0]?.mrp ?? 0,
-                });
-                toast({
-                  message: wished ? "Removed from wishlist" : "Saved to wishlist",
-                  type: "info",
-                });
-              }}
-              aria-label="Toggle wishlist"
-              className={cn(
-                "flex h-[50px] w-[50px] items-center justify-center rounded-full border transition",
-                wished
-                  ? "border-red-200 bg-red-50 text-red-500"
-                  : "border-bark-800/15 text-bark-600 hover:border-bark-800/40"
-              )}
-            >
-              <Heart size={18} fill={wished ? "currentColor" : "none"} />
             </button>
           </div>
 

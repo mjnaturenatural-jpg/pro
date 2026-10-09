@@ -153,7 +153,7 @@ export default function CheckoutPage() {
           email: address.email,
           contact: address.phone,
         },
-        theme: { color: "#35863A" },
+        theme: { color: "#0E8079" },
         handler: async (response: {
           razorpay_order_id: string;
           razorpay_payment_id: string;

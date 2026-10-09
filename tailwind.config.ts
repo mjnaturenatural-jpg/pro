@@ -5,28 +5,28 @@ const config: Config = {
   theme: {
     extend: {
       colors: {
-        ivory: { 50: "#F9FCF7", 100: "#F1F8ED", 200: "#E5F2DE", 300: "#D4E9CB" },
-        cream: { DEFAULT: "#F7FBF4", dark: "#EDF5E5" },
-        sand: { 50: "#F5F9F0", 100: "#EBF2E3", 200: "#DCE7D0", 300: "#C7D7B5" },
-        caramel: { 400: "#F2B33E", 500: "#E09A21", 600: "#996610", 700: "#7C520C" },
+        ivory: { 50: "#FDF9F7", 100: "#FAF1ED", 200: "#F6E5DF", 300: "#F0D5CC" },
+        cream: { DEFAULT: "#FDF8F6", dark: "#F8EFEA" },
+        sand: { 50: "#FBF5F2", 100: "#F6ECE7", 200: "#EFDFD8", 300: "#E3CCC1" },
+        caramel: { 50: "#FFF3EF", 100: "#FFE4DB", 400: "#FFA593", 500: "#FB8671", 600: "#C04A34", 700: "#A63D2A" },
         bark: {
-          300: "#97A69A",
-          400: "#6E7F71",
-          500: "#57685B",
-          600: "#435145",
-          700: "#323E35",
-          800: "#242F27",
-          900: "#18211B",
+          300: "#94A6A3",
+          400: "#6B7E7A",
+          500: "#536461",
+          600: "#41514E",
+          700: "#313E3C",
+          800: "#24302E",
+          900: "#17211F",
         },
-        leaf: { 50: "#EFF8EC", 100: "#DCF2D6", 200: "#B9E4B0", 500: "#43A047", 600: "#35863A", 700: "#2A6B2E" },
+        leaf: { 50: "#E7F6F5", 100: "#C4EBE8", 200: "#99DBD6", 500: "#17968F", 600: "#0E8079", 700: "#0B6660" },
       },
       fontFamily: {
         serif: ["var(--font-serif)", "Georgia", "serif"],
         sans: ["var(--font-sans)", "system-ui", "sans-serif"],
       },
       boxShadow: {
-        soft: "0 2px 16px -4px rgba(24, 33, 27, 0.08)",
-        lift: "0 8px 30px -8px rgba(24, 33, 27, 0.16)",
+        soft: "0 2px 16px -4px rgba(23, 33, 31, 0.08)",
+        lift: "0 8px 30px -8px rgba(23, 33, 31, 0.16)",
       },
       keyframes: {
         fadeUp: { "0%": { opacity: "0", transform: "translateY(12px)" }, "100%": { opacity: "1", transform: "translateY(0)" } },

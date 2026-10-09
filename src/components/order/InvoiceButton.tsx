@@ -91,19 +91,19 @@ function buildInvoiceHtml(order: InvoiceOrder, number: string): string {
 
   return `<!doctype html><html><head><meta charset="utf-8"><title>Invoice ${number}</title>
 <style>
-  body{font-family:Georgia,serif;color:#242F27;background:#fff;margin:40px}
-  .doc{max-width:800px;margin:0 auto;border:1px solid #DCE7D0;padding:40px}
-  h1{font-size:22px;margin:0;color:#18211B}
-  .brand{display:flex;justify-content:space-between;align-items:flex-start;border-bottom:2px solid #E09A21;padding-bottom:16px;margin-bottom:24px}
-  .muted{color:#57685B;font-size:13px}
+  body{font-family:Georgia,serif;color:#24302E;background:#fff;margin:40px}
+  .doc{max-width:800px;margin:0 auto;border:1px solid #EFDFD8;padding:40px}
+  h1{font-size:22px;margin:0;color:#17211F}
+  .brand{display:flex;justify-content:space-between;align-items:flex-start;border-bottom:2px solid #E86A54;padding-bottom:16px;margin-bottom:24px}
+  .muted{color:#536461;font-size:13px}
   table{width:100%;border-collapse:collapse;margin:20px 0;font-size:14px}
-  th{background:#F7FBF4;text-align:left;padding:10px;border-bottom:1px solid #DCE7D0;font-size:12px;text-transform:uppercase;letter-spacing:.08em}
-  td{padding:10px;border-bottom:1px solid #EDF5E5;vertical-align:top}
+  th{background:#FDF8F6;text-align:left;padding:10px;border-bottom:1px solid #EFDFD8;font-size:12px;text-transform:uppercase;letter-spacing:.08em}
+  td{padding:10px;border-bottom:1px solid #F8EFEA;vertical-align:top}
   .totals{margin-left:auto;width:280px;font-size:14px}
   .totals div{display:flex;justify-content:space-between;padding:6px 0}
-  .grand{border-top:2px solid #E09A21;font-weight:bold;font-size:16px;margin-top:6px;padding-top:10px}
-  .badge{display:inline-block;background:#DCF2D6;color:#2A6B2E;padding:4px 10px;border-radius:999px;font-size:12px;font-weight:bold}
-  .foot{margin-top:32px;font-size:12px;color:#57685B;text-align:center;border-top:1px solid #DCE7D0;padding-top:16px}
+  .grand{border-top:2px solid #E86A54;font-weight:bold;font-size:16px;margin-top:6px;padding-top:10px}
+  .badge{display:inline-block;background:#C4EBE8;color:#0B6660;padding:4px 10px;border-radius:999px;font-size:12px;font-weight:bold}
+  .foot{margin-top:32px;font-size:12px;color:#536461;text-align:center;border-top:1px solid #EFDFD8;padding-top:16px}
   @media print{body{margin:0}.doc{border:none}}
 </style></head><body><div class="doc">
   <div class="brand">

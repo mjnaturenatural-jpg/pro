@@ -4,9 +4,9 @@ import Image from "next/image";
 import Link from "next/link";
 import { useRouter } from "next/navigation";
 import { useState } from "react";
-import { Heart, ShoppingBag, Zap } from "lucide-react";
+import { ShoppingBag, Zap } from "lucide-react";
 import { formatINR, discountPercent, cn } from "@/lib/utils";
-import { useCart, useWishlist } from "@/store/cart";
+import { useCart } from "@/store/cart";
 import { useToast } from "@/components/ui/Toast";
 import { BADGES } from "@/lib/constants";
 
@@ -26,9 +26,6 @@ export function ProductCard({ product, priority = false }: { product: ProductCar
   const router = useRouter();
   const { toast } = useToast();
   const addItem = useCart((s) => s.addItem);
-  const toggleWish = useWishlist((s) => s.toggle);
-  const wishItems = useWishlist((s) => s.items);
-  const wished = wishItems.some((i) => i.productId === product._id);
 
   const inStock = product.packSizes.some((p) => p.stock > 0);
   const defaultPack =
@@ -75,20 +72,6 @@ export function ProductCard({ product, priority = false }: { product: ProductCar
     router.push("/checkout");
   };
 
-  const handleWish = (e: React.MouseEvent) => {
-    e.preventDefault();
-    e.stopPropagation();
-    toggleWish({
-      productId: product._id,
-      slug: product.slug,
-      name: product.name,
-      image: product.images[0] || "",
-      price: product.packSizes[0]?.price ?? 0,
-      mrp: product.packSizes[0]?.mrp ?? 0,
-    });
-    toast({ message: wished ? "Removed from wishlist" : "Saved to wishlist", type: "info" });
-  };
-
   return (
     <Link
       href={`/product/${product.slug}`}
@@ -122,16 +105,6 @@ export function ProductCard({ product, priority = false }: { product: ProductCar
             </span>
           )}
         </div>
-        <button
-          onClick={handleWish}
-          aria-label={wished ? "Remove from wishlist" : "Add to wishlist"}
-          className={cn(
-            "absolute right-3 top-3 flex h-8 w-8 items-center justify-center rounded-full bg-white/90 shadow-soft transition hover:bg-white",
-            wished ? "text-red-500" : "text-bark-500 hover:text-bark-800"
-          )}
-        >
-          <Heart size={15} fill={wished ? "currentColor" : "none"} />
-        </button>
       </div>
 
       <div className="flex flex-1 flex-col gap-2.5 p-4">

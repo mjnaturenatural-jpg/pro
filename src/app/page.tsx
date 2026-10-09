@@ -1,11 +1,11 @@
 import Image from "next/image";
 import Link from "next/link";
-import { ArrowRight, Leaf, Heart, Sparkles, Truck } from "lucide-react";
+import { ArrowRight, Leaf, Heart, Sparkles, Truck, Package, ChefHat } from "lucide-react";
 import { getFeaturedProducts, getHomepageContent, getPublishedCategories, getProductsBySlugs } from "@/lib/queries";
 import { ProductCard } from "@/components/product/ProductCard";
 import { NewsletterSection } from "@/components/home/NewsletterSection";
 import { TestimonialsSection } from "@/components/home/TestimonialsSection";
-export const dynamic = "force-dynamic";
+export const revalidate = 60;
 
 const ICONS = [Leaf, Heart, Sparkles, Truck];
 
@@ -32,7 +32,7 @@ export default async function HomePage() {
   return (
     <>
       {/* HERO */}
-      <section className="relative overflow-hidden bg-gradient-to-br from-ivory-100 via-cream to-sand-50">
+      <section className="relative overflow-hidden bg-gradient-to-br from-leaf-50 via-ivory-50 to-caramel-50">
         <div className="container-site grid items-center gap-10 py-14 sm:py-20 lg:grid-cols-2 lg:gap-16 lg:py-28">
           <div className="animate-fadeUp">
             <p className="eyebrow mb-4">{hero.eyebrow || "MJ NATURE NATURALS"}</p>
@@ -51,6 +51,17 @@ export default async function HomePage() {
                 {hero.secondaryCtaText || "Explore Our Products"}
               </Link>
             </div>
+            <ul className="mt-7 flex flex-wrap gap-x-6 gap-y-2.5 text-xs font-medium text-bark-600">
+              <li className="flex items-center gap-1.5">
+                <Leaf size={14} className="text-leaf-600" /> Small-batch kitchen
+              </li>
+              <li className="flex items-center gap-1.5">
+                <Sparkles size={14} className="text-caramel-500" /> Packed fresh
+              </li>
+              <li className="flex items-center gap-1.5">
+                <Truck size={14} className="text-leaf-600" /> Ships across India
+              </li>
+            </ul>
           </div>
           <div className="relative">
             <div className="relative aspect-square overflow-hidden rounded-3xl bg-sand-100 shadow-lift">
@@ -126,7 +137,7 @@ export default async function HomePage() {
               <p className="eyebrow mb-2">Browse</p>
               <h2 className="section-title">Shop by Category</h2>
             </div>
-            <div className="grid grid-cols-2 gap-3 sm:gap-5 lg:grid-cols-5">
+            <div className="grid grid-cols-2 gap-3 sm:gap-5 lg:grid-cols-4">
               {categories.map((c) => (
                 <Link
                   key={c.slug}
@@ -186,6 +197,63 @@ export default async function HomePage() {
             </p>
             <Link href={story.ctaHref || "/about"} className="btn-secondary mt-7 inline-flex">
               {story.ctaText || "Discover Our Story"} <ArrowRight size={15} />
+            </Link>
+          </div>
+        </div>
+      </section>
+
+      {/* OUR PROCESS */}
+      <section className="bg-leaf-50 py-16 sm:py-20">
+        <div className="container-site">
+          <div className="mb-10 text-center">
+            <p className="eyebrow mb-2">How We Work</p>
+            <h2 className="section-title">From Our Kitchen to Your Door</h2>
+            <p className="mx-auto mt-3 max-w-xl text-sm leading-relaxed text-bark-600">
+              Every order follows the same careful path — no shortcuts, no long warehouse waits.
+            </p>
+          </div>
+          <div className="grid gap-5 sm:grid-cols-2 lg:grid-cols-4">
+            {[
+              {
+                step: "01",
+                Icon: Leaf,
+                title: "Ingredients Selected",
+                body: "We start with ingredients we would happily use at home — grains, nuts, jaggery and spices chosen for quality.",
+              },
+              {
+                step: "02",
+                Icon: ChefHat,
+                title: "Made in Small Batches",
+                body: "Each batch is prepared and cooked in our kitchen with attention to texture, taste and consistency.",
+              },
+              {
+                step: "03",
+                Icon: Package,
+                title: "Packed Fresh",
+                body: "Products are packed close to dispatch in food-safe packaging so freshness travels well to you.",
+              },
+              {
+                step: "04",
+                Icon: Truck,
+                title: "Delivered With Care",
+                body: "Orders are shipped to your doorstep with tracking, and we are here if you need anything after delivery.",
+              },
+            ].map(({ step, Icon, title, body }) => (
+              <div key={step} className="card relative p-6">
+                <span className="absolute right-5 top-5 font-serif text-2xl font-semibold text-caramel-500/70">
+                  {step}
+                </span>
+                <span className="mb-4 flex h-11 w-11 items-center justify-center rounded-full bg-leaf-600 text-white">
+                  <Icon size={19} />
+                </span>
+                <h3 className="text-sm font-semibold text-bark-900">{title}</h3>
+                <p className="mt-2 text-xs leading-relaxed text-bark-500">{body}</p>
+              </div>
+            ))}
+          </div>
+          <div className="mt-8 flex justify-center">
+            <Link href="/about" className="btn-secondary">
+              Discover Our Story <ArrowRight size={15} />
             </Link>
           </div>
         </div>

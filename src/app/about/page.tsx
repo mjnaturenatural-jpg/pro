@@ -3,7 +3,7 @@ import Link from "next/link";
 import { Leaf, Heart, Sparkles, Truck, Quote } from "lucide-react";
 import { getHomepageContent, getSettings } from "@/lib/queries";
 import { Metadata } from "next";
-export const dynamic = "force-dynamic";
+export const revalidate = 60;
 
 export const metadata: Metadata = {
   title: "About",
