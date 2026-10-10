@@ -53,7 +53,7 @@ export default async function HomePage() {
   return (
     <>
       {/* HERO */}
-      <section className="relative overflow-hidden bg-gradient-to-br from-leaf-50 via-ivory-50 to-caramel-50">
+      <section className="relative overflow-hidden bg-sand-100">
         <div className="pointer-events-none absolute inset-0 bg-gradient-to-tr from-honey-300/25 via-transparent to-transparent" />
         <div className="container-site grid items-center gap-10 py-14 sm:py-20 lg:grid-cols-2 lg:gap-16 lg:py-28">
           <div className="animate-fadeUp">
@@ -227,10 +227,10 @@ export default async function HomePage() {
       </section>
 
       {/* OUR PROCESS */}
-      <section className="bg-leaf-100 py-16 sm:py-20">
+      <section className="bg-sand-300 py-16 sm:py-20">
         <div className="container-site">
           <div className="mb-10 text-center">
-            <p className="eyebrow mb-2">How We Work</p>
+            <p className="eyebrow mb-2 text-forest-900">How We Work</p>
             <h2 className="section-title">From Our Kitchen to Your Door</h2>
             <p className="mx-auto mt-3 max-w-xl text-sm leading-relaxed text-bark-600">
               Every order follows the same careful path — no shortcuts, no long warehouse waits.

@@ -102,7 +102,7 @@ function buildInvoiceHtml(order: InvoiceOrder, number: string): string {
   .totals{margin-left:auto;width:280px;font-size:14px}
   .totals div{display:flex;justify-content:space-between;padding:6px 0}
   .grand{border-top:2px solid #E86A54;font-weight:bold;font-size:16px;margin-top:6px;padding-top:10px}
-  .badge{display:inline-block;background:#C4EBE8;color:#0B6660;padding:4px 10px;border-radius:999px;font-size:12px;font-weight:bold}
+  .badge{display:inline-block;background:#E2F0D8;color:#176044;padding:4px 10px;border-radius:999px;font-size:12px;font-weight:bold}
   .foot{margin-top:32px;font-size:12px;color:#536461;text-align:center;border-top:1px solid #EFDFD8;padding-top:16px}
   @media print{body{margin:0}.doc{border:none}}
 </style></head><body><div class="doc">

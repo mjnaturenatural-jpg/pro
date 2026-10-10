@@ -59,7 +59,7 @@ export default async function ContactPage() {
   return (
     <>
       {/* Hero band */}
-      <section className="border-b border-bark-800/10 bg-gradient-to-r from-leaf-50 via-ivory-50 to-caramel-50">
+      <section className="border-b border-bark-800/10 bg-gradient-to-r from-sand-100 via-ivory-50 to-caramel-50">
         <div className="container-site py-14 text-center sm:py-18">
           <p className="eyebrow mb-3">Contact</p>
           <h1 className="mx-auto max-w-2xl font-serif text-3xl leading-tight text-bark-900 sm:text-4xl">
