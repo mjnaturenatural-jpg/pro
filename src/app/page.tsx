@@ -1,10 +1,11 @@
 import Image from "next/image";
 import Link from "next/link";
 import { ArrowRight, Leaf, Heart, Sparkles, Truck, Package, ChefHat } from "lucide-react";
-import { getFeaturedProducts, getHomepageContent, getPublishedCategories, getProductsBySlugs } from "@/lib/queries";
+import { getFeaturedProducts, getHomepageContent, getPublishedCategories, getProductsBySlugs, getSettings } from "@/lib/queries";
 import { ProductCard } from "@/components/product/ProductCard";
 import { NewsletterSection } from "@/components/home/NewsletterSection";
 import { TestimonialsSection } from "@/components/home/TestimonialsSection";
+import { BrandVideoSection } from "@/components/home/BrandVideoSection";
 export const revalidate = 60;
 
 const ICONS = [Leaf, Heart, Sparkles, Truck];
@@ -31,10 +32,11 @@ const CAT_ACCENTS = [
 ];
 
 export default async function HomePage() {
-  const [content, categories, featured] = await Promise.all([
+  const [content, categories, featured, settings] = await Promise.all([
     getHomepageContent(),
     getPublishedCategories(),
     getFeaturedProducts(8),
+    getSettings(),
   ]);
 
   const hero = (content?.hero ?? {}) as Record<string, string>;
@@ -53,11 +55,13 @@ export default async function HomePage() {
   return (
     <>
       {/* HERO */}
-      <section className="relative overflow-hidden bg-sand-100">
-        <div className="pointer-events-none absolute inset-0 bg-gradient-to-tr from-honey-300/25 via-transparent to-transparent" />
-        <div className="container-site grid items-center gap-10 py-14 sm:py-20 lg:grid-cols-2 lg:gap-16 lg:py-28">
+      <section className="relative overflow-hidden bg-ivory-50">
+        <div className="pointer-events-none absolute inset-0 bg-gradient-to-tr from-caramel-100/60 via-transparent to-transparent" />
+        <div className="container-site grid items-center gap-10 py-14 sm:py-20 lg:grid-cols-2 lg:gap-16 lg:py-24">
           <div className="animate-fadeUp">
-            <p className="eyebrow mb-4">{hero.eyebrow || "MJ NATURE NATURALS"}</p>
+            <p className="mb-4 inline-flex rounded-full bg-caramel-100 px-4 py-1.5 text-xs font-bold uppercase tracking-[0.14em] text-caramel-700">
+              {hero.eyebrow || "MJ NATURE NATURALS"}
+            </p>
             <h1 className="font-serif text-4xl leading-[1.1] text-bark-900 sm:text-5xl lg:text-6xl">
               {hero.headline || "Naturally made. Thoughtfully crafted."}
             </h1>
@@ -73,7 +77,10 @@ export default async function HomePage() {
                 {hero.secondaryCtaText || "Explore Our Products"}
               </Link>
             </div>
-            <ul className="mt-7 flex flex-wrap gap-x-6 gap-y-2.5 text-xs font-medium text-bark-600">
+            <p className="mt-6 text-sm font-bold text-leaf-700">
+              100% Eggless &nbsp;•&nbsp; No Maida &nbsp;•&nbsp; No Added Sugar
+            </p>
+            <ul className="mt-4 flex flex-wrap gap-x-6 gap-y-2.5 text-xs font-medium text-bark-600">
               <li className="flex items-center gap-1.5">
                 <Leaf size={14} className="text-leaf-600" /> Small-batch kitchen
               </li>
@@ -86,7 +93,7 @@ export default async function HomePage() {
             </ul>
           </div>
           <div className="relative">
-            <div className="relative aspect-square overflow-hidden rounded-3xl bg-sand-100 shadow-lift">
+            <div className="relative aspect-square overflow-hidden rounded-[32px] bg-sand-100 shadow-lift">
               {hero.image ? (
                 <Image
                   src={hero.image}
@@ -104,10 +111,39 @@ export default async function HomePage() {
         </div>
       </section>
 
+      {/* CLAIMS MARQUEE */}
+      <div className="overflow-hidden bg-bark-900 py-3.5">
+        <div className="animate-marquee flex w-max whitespace-nowrap">
+          {[0, 1].map((n) => (
+            <div key={n} className="flex shrink-0 items-center" aria-hidden={n === 1}>
+              {["Pure Ghee", "No Maida", "No Added Sugar", "100% Eggless", "Original Jaggery", "Small-Batch Kitchen"].map(
+                (c) => (
+                  <span
+                    key={c}
+                    className="px-6 text-xs font-bold uppercase tracking-[0.2em] text-ivory-50"
+                  >
+                    {c} <span className="pl-12 text-caramel-400">✦</span>
+                  </span>
+                )
+              )}
+            </div>
+          ))}
+        </div>
+      </div>
+
+      {/* BRAND VIDEO (renders only when a video URL is configured) */}
+      <BrandVideoSection
+        src={(settings.brandVideoUrl as string) || ""}
+        poster={(settings.brandVideoPoster as string) || (hero.image as string) || ""}
+        title="A Look Inside Our Kitchen"
+        body="See how our small-batch treats are made with pure ghee, real butter and original jaggery."
+      />
+
       {/* TRUST STRIP */}
       {trustPoints.length > 0 && (
-        <section className="border-y border-bark-800/10 bg-ivory-50">
-          <div className="container-site grid grid-cols-2 gap-6 py-10 lg:grid-cols-4">
+        <section className="bg-ivory-50">
+          <div className="container-site py-10">
+            <div className="grid grid-cols-2 gap-6 rounded-2xl border border-bark-800/10 bg-ivory-100 px-6 py-8 shadow-soft lg:grid-cols-4">
             {trustPoints.slice(0, 4).map((t, i) => {
               const Icon = ICONS[i % ICONS.length];
               return (
@@ -126,6 +162,7 @@ export default async function HomePage() {
                 </div>
               );
             })}
+            </div>
           </div>
         </section>
       )}
@@ -134,8 +171,8 @@ export default async function HomePage() {
       <section className="container-site py-16 sm:py-20">
         <div className="mb-8 flex items-end justify-between gap-4">
           <div>
-            <p className="eyebrow mb-2">Our Favourites</p>
-            <h2 className="section-title">Shop Our Favourites</h2>
+            <p className="eyebrow mb-2">Bestsellers</p>
+            <h2 className="section-title">Shop Our Bestsellers</h2>
           </div>
           <Link href="/shop" className="hidden items-center gap-1 text-sm font-medium text-caramel-600 hover:text-caramel-700 sm:flex">
             View all <ArrowRight size={15} />
@@ -219,6 +256,21 @@ export default async function HomePage() {
               {story.body ||
                 "MJ Nature Naturals is a premium natural food brand crafting wholesome treats from thoughtfully selected ingredients."}
             </p>
+            <div className="mt-8 grid grid-cols-2 gap-6 border-t border-bark-800/10 pt-6 sm:grid-cols-4">
+              {[
+                { n: "32+", l: "Natural Products" },
+                { n: "8", l: "Categories" },
+                { n: "100%", l: "Eggless" },
+                { n: "0%", l: "Maida" },
+              ].map((s) => (
+                <div key={s.l}>
+                  <p className="font-serif text-3xl font-semibold text-bark-900">{s.n}</p>
+                  <p className="mt-1 text-[11px] font-semibold uppercase tracking-[0.14em] text-bark-500">
+                    {s.l}
+                  </p>
+                </div>
+              ))}
+            </div>
             <Link href={story.ctaHref || "/about"} className="btn-secondary mt-7 inline-flex">
               {story.ctaText || "Discover Our Story"} <ArrowRight size={15} />
             </Link>
@@ -227,11 +279,11 @@ export default async function HomePage() {
       </section>
 
       {/* OUR PROCESS */}
-      <section className="bg-sand-300 py-16 sm:py-20">
+      <section className="bg-cream py-16 sm:py-20">
         <div className="container-site">
           <div className="mb-10 text-center">
-            <p className="eyebrow mb-2 text-forest-900">How We Work</p>
-            <h2 className="section-title">From Our Kitchen to Your Door</h2>
+            <p className="eyebrow mb-2 text-forest-900">Our Process</p>
+            <h2 className="section-title">How We Work</h2>
             <p className="mx-auto mt-3 max-w-xl text-sm leading-relaxed text-bark-600">
               Every order follows the same careful path — no shortcuts, no long warehouse waits.
             </p>
@@ -286,29 +338,29 @@ export default async function HomePage() {
       </section>
 
       {/* PRODUCT HIGHLIGHT */}
-      <section className="bg-forest-800 py-16 sm:py-24">
-        <div className="container-site grid items-center gap-10 lg:grid-cols-2 lg:gap-16">
+      <section className="bg-forest-800 py-12 sm:py-16">
+        <div className="container-site grid items-center gap-8 lg:grid-cols-2 lg:gap-12">
           <div>
-            <p className="mb-3 text-xs font-semibold uppercase tracking-[0.2em] text-caramel-400">
+            <p className="mb-2 text-xs font-semibold uppercase tracking-[0.2em] text-caramel-400">
               Spotlight
             </p>
-            <h2 className="font-serif text-3xl leading-tight text-white sm:text-4xl">
+            <h2 className="font-serif text-2xl leading-tight text-white sm:text-3xl">
               {highlight.title || "Made for everyday indulgence"}
             </h2>
-            <p className="mt-5 max-w-lg text-base leading-relaxed text-white/80">
+            <p className="mt-4 max-w-lg text-sm leading-relaxed text-white/80">
               {highlight.body ||
                 "From soft jaggery laddus to rich millet cookies, our range is designed for the moments you want to slow down and savour."}
             </p>
             {highlightProduct && (
               <Link
                 href={`/product/${highlightProduct.slug}`}
-                className="btn mt-7 bg-ivory-50 px-6 py-3 text-bark-800 hover:bg-ivory-100"
+                className="btn mt-6 bg-ivory-50 px-5 py-2.5 text-sm text-bark-800 hover:bg-ivory-100"
               >
                 {highlight.ctaText || "Explore Product"} <ArrowRight size={15} />
               </Link>
             )}
           </div>
-          <div className="relative aspect-[4/3] overflow-hidden rounded-2xl bg-leaf-100">
+          <div className="relative mx-auto aspect-[4/3] w-full max-w-md overflow-hidden rounded-2xl bg-leaf-100">
             {highlight.image ? (
               <Image
                 src={highlight.image}
@@ -328,6 +380,38 @@ export default async function HomePage() {
             ) : (
               <HighlightFallbackArt />
             )}
+          </div>
+        </div>
+      </section>
+
+      {/* PROMISE PANEL */}
+      <section className="container-site py-16 sm:py-20">
+        <div className="relative overflow-hidden rounded-[30px] bg-forest-800 px-6 py-12 sm:px-12 sm:py-16">
+          <div className="pointer-events-none absolute -left-24 -top-24 h-72 w-72 rounded-full bg-honey-300/20" />
+          <div className="pointer-events-none absolute -bottom-28 -right-20 h-80 w-80 rounded-full bg-caramel-500/20" />
+          <div className="relative mx-auto max-w-2xl text-center">
+            <p className="mb-3 inline-flex rounded-full border border-white/20 bg-white/10 px-4 py-1.5 text-[11px] font-bold uppercase tracking-[0.16em] text-honey-200">
+              Our Promise
+            </p>
+            <h2 className="font-serif text-3xl leading-tight text-white sm:text-4xl">
+              No shortcuts. Just real ingredients.
+            </h2>
+            <p className="mx-auto mt-4 max-w-xl text-sm leading-relaxed text-white/75">
+              If we would not serve it to our own family, we will not pack it for yours. Every
+              recipe is held to three rules — pure ghee and real butter, original jaggery, and
+              nothing artificial.
+            </p>
+            <div className="mt-6 flex flex-wrap justify-center gap-x-8 gap-y-2 text-xs font-semibold uppercase tracking-wider text-honey-200">
+              <span>Pure Ghee</span>
+              <span>Original Jaggery</span>
+              <span>Nothing Artificial</span>
+            </div>
+            <Link
+              href="/shop"
+              className="btn mt-8 bg-honey-300 px-7 py-3 text-sm font-semibold text-forest-900 hover:bg-honey-200"
+            >
+              Shop the Kitchen <ArrowRight size={15} />
+            </Link>
           </div>
         </div>
       </section>

@@ -19,6 +19,9 @@ const SiteSettingsSchema = new Schema(
     flatShipping: { type: Number, default: 79 },
     taxRate: { type: Number, default: 0 },
     gstNumber: { type: String, default: "" },
+    foodLicence: { type: String, default: "" },
+    brandVideoUrl: { type: String, default: "" },
+    brandVideoPoster: { type: String, default: "" },
   },
   { timestamps: true }
 );

@@ -344,6 +344,10 @@ export function ProductEditor({
 
       {/* Images */}
       <Section title="Images">
+        <p className="text-xs text-bark-500">
+          The first image is the <strong>Primary</strong> gallery photo and the second is the{" "}
+          <strong>Secondary</strong> photo. The storefront shows these two.
+        </p>
         <div className="flex flex-wrap gap-3">
           {form.images.map((img, i) => (
             <div key={i} className="relative h-24 w-24 overflow-hidden rounded-lg border border-bark-800/10 bg-sand-50">
@@ -360,6 +364,11 @@ export function ProductEditor({
               {i === 0 && (
                 <span className="absolute bottom-1 left-1 rounded bg-forest-800/80 px-1.5 py-0.5 text-[9px] font-bold text-white">
                   PRIMARY
+                </span>
+              )}
+              {i === 1 && (
+                <span className="absolute bottom-1 left-1 rounded bg-caramel-600/90 px-1.5 py-0.5 text-[9px] font-bold text-white">
+                  SECONDARY
                 </span>
               )}
             </div>

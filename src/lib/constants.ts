@@ -2,14 +2,14 @@ export const APP_NAME = process.env.NEXT_PUBLIC_APP_NAME || "MJ Nature Naturals"
 export const APP_URL = process.env.NEXT_PUBLIC_APP_URL || "http://localhost:3000";
 
 export const CATEGORIES = [
-  { name: "Laddus", slug: "laddus" },
-  { name: "Brownies", slug: "brownies" },
+  { name: "Chikki", slug: "chikki" },
   { name: "Cookies", slug: "cookies" },
+  { name: "Brownie", slug: "brownies" },
+  { name: "Raw Materials", slug: "raw-materials" },
+  { name: "Laddus", slug: "laddus" },
   { name: "Millet Cookies", slug: "millet-cookies" },
   { name: "Jaggery Products", slug: "jaggery-products" },
-  { name: "Chikki", slug: "chikki" },
   { name: "Mixtures", slug: "mixtures" },
-  { name: "Pantry Staples", slug: "pantry-staples" },
 ] as const;
 
 export const BADGES = [
@@ -50,11 +50,12 @@ export const SORT_OPTIONS = [
 export const FREE_SHIPPING_THRESHOLD = 999;
 export const FLAT_SHIPPING = 79;
 
-// Placeholder — replace with the real business WhatsApp number (international format, no +)
-export const WHATSAPP_NUMBER =
-  process.env.NEXT_PUBLIC_WHATSAPP_NUMBER || "919876543210";
+// Verified business WhatsApp number (international format, no +). Configure via
+// Site Settings → WhatsApp in the admin, or the NEXT_PUBLIC_WHATSAPP_NUMBER env var.
+// When empty the WhatsApp actions are hidden entirely — never invent a number.
+export const WHATSAPP_NUMBER = process.env.NEXT_PUBLIC_WHATSAPP_NUMBER || "";
 export const WHATSAPP_MESSAGE =
-  "Hi! I'd like to know more about your products.";
+  "Hello MJ Nature Natural, I would like to know more about your products.";
 
 export const INDIAN_STATES = [
   "Andhra Pradesh","Arunachal Pradesh","Assam","Bihar","Chhattisgarh","Goa","Gujarat",

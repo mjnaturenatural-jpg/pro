@@ -22,8 +22,8 @@ export function TestimonialsSection({
   return (
     <section className="container-site py-16 sm:py-20">
       <div className="mb-10 text-center">
-        <p className="eyebrow mb-2">Testimonials</p>
-        <h2 className="section-title">What Our Customers Say</h2>
+        <p className="eyebrow mb-2">Reviews</p>
+        <h2 className="section-title">Loved Across India</h2>
       </div>
       <div className="grid gap-5 sm:grid-cols-2 lg:grid-cols-3">
         {testimonials.slice(0, 6).map((t, i) => (
@@ -34,12 +34,12 @@ export function TestimonialsSection({
                   <Star
                     key={s}
                     size={14}
-                    className={s < t.rating! ? "fill-caramel-600 text-caramel-600" : "text-bark-300"}
+                    className={s < t.rating! ? "fill-honey-400 text-honey-400" : "text-bark-300"}
                   />
                 ))}
               </div>
             )}
-            <p className="flex-1 text-sm leading-relaxed text-bark-700">“{t.quote}”</p>
+            <p className="flex-1 font-serif text-[15px] italic leading-relaxed text-bark-800">“{t.quote}”</p>
             <div className="mt-4 border-t border-bark-800/10 pt-3">
               <p className="text-sm font-semibold text-bark-900">{t.name}</p>
               {t.location && <p className="text-xs text-bark-500">{t.location}</p>}

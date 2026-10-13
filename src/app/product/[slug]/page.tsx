@@ -3,6 +3,7 @@ import type { Metadata } from "next";
 import { connectDB } from "@/lib/db";
 import { Product, Category } from "@/models";
 import { ProductDetailView } from "@/components/product/ProductDetailView";
+import { ProductCard, type ProductCardData } from "@/components/product/ProductCard";
 import { APP_URL } from "@/lib/constants";
 export const revalidate = 60;
 
@@ -16,6 +17,23 @@ async function getProduct(slug: string) {
     .populate("category", "name slug")
     .lean();
   return product as unknown as ProductData | null;
+}
+
+async function getRelated(productId: string, categoryId: string): Promise<ProductCardData[]> {
+  await connectDB();
+  const base = { _id: { $ne: productId }, published: true };
+  let related =
+    categoryId !== ""
+      ? await Product.find({ ...base, category: categoryId }).limit(4).lean()
+      : [];
+  if (related.length < 4) {
+    const exclude = [productId, ...related.map((r: { _id: unknown }) => r._id)];
+    const more = await Product.find({ _id: { $nin: exclude }, published: true })
+      .limit(4 - related.length)
+      .lean();
+    related = [...related, ...more];
+  }
+  return JSON.parse(JSON.stringify(related));
 }
 
 interface ProductData {
@@ -59,12 +77,17 @@ export default async function ProductPage({ params }: Props) {
   if (!product) notFound();
 
   const categoryName = typeof product.category === "string" ? "" : product.category?.name || "";
+  const categoryId =
+    product.category && typeof product.category === "object"
+      ? String((product.category as unknown as { _id: string })._id || "")
+      : "";
+  const related = await getRelated(String(product._id), categoryId);
   const jsonLd = {
     "@context": "https://schema.org",
     "@type": "Product",
     name: product.name,
     description: product.shortDescription || product.description || "",
-    image: product.images,
+    image: product.images.slice(0, 2),
     brand: { "@type": "Brand", name: "MJ Nature Naturals" },
     offers: {
       "@type": "AggregateOffer",
@@ -95,6 +118,19 @@ export default async function ProductPage({ params }: Props) {
       <div className="container-site py-8 sm:py-12">
         <ProductDetailView product={JSON.parse(JSON.stringify(product))} categoryName={categoryName} />
       </div>
+      {related.length > 0 && (
+        <section className="container-site pb-16 sm:pb-20">
+          <div className="mb-8 text-center">
+            <p className="eyebrow mb-2">Pairs well with</p>
+            <h2 className="section-title">You May Also Like</h2>
+          </div>
+          <div className="grid grid-cols-2 gap-3 sm:gap-5 lg:grid-cols-4">
+            {related.map((p) => (
+              <ProductCard key={p._id} product={p} />
+            ))}
+          </div>
+        </section>
+      )}
     </>
   );
 }

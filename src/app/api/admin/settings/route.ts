@@ -23,6 +23,9 @@ const settingsSchema = z.object({
   flatShipping: z.number().min(0).optional(),
   taxRate: z.number().min(0).optional(),
   gstNumber: z.string().optional(),
+  foodLicence: z.string().optional(),
+  brandVideoUrl: z.string().optional(),
+  brandVideoPoster: z.string().optional(),
 });
 
 export async function GET() {
@@ -55,6 +58,9 @@ export async function GET() {
         flatShipping: st.flatShipping,
         taxRate: st.taxRate,
         gstNumber: st.gstNumber,
+        foodLicence: st.foodLicence,
+        brandVideoUrl: st.brandVideoUrl,
+        brandVideoPoster: st.brandVideoPoster,
       },
       integrations: {
         razorpay: Boolean(process.env.RAZORPAY_KEY_ID && process.env.RAZORPAY_KEY_SECRET),

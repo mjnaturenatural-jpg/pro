@@ -1,6 +1,7 @@
 import Link from "next/link";
-import { Instagram, Facebook, Youtube, Mail, Phone } from "lucide-react";
+import { Instagram, Facebook, Youtube, Mail, Phone, ShieldCheck, BadgeCheck } from "lucide-react";
 import { getSettings } from "@/lib/queries";
+import { BrandLogo } from "@/components/layout/Logo";
 
 const SHOP_LINKS = [
   { label: "Home", href: "/" },
@@ -25,23 +26,24 @@ export async function Footer() {
   }
 
   const brandName = (settings.brandName as string) || "MJ Nature Naturals";
+  const logo = (settings.logo as string) || "";
   const email = (settings.contactEmail as string) || "";
   const phone = (settings.phone as string) || "";
+  const whatsapp = (settings.whatsapp as string) || "";
   const instagram = (settings.instagram as string) || "";
   const facebook = (settings.facebook as string) || "";
   const youtube = (settings.youtube as string) || "";
   const address = (settings.address as string) || "";
+  const gstNumber = (settings.gstNumber as string) || "";
+  const foodLicence = (settings.foodLicence as string) || "";
 
   return (
-    <footer className="mt-20 border-t border-bark-800/10 bg-cream">
-      <div className="container-site grid gap-10 py-14 sm:grid-cols-2 lg:grid-cols-4">
-        <div className="space-y-4">
-          <div className="flex items-center gap-2.5">
-            <span className="flex h-9 w-9 items-center justify-center rounded-full bg-leaf-600 font-serif text-sm font-semibold text-white">
-              MJ
-            </span>
-            <span className="font-serif text-lg font-semibold text-bark-900">{brandName}</span>
-          </div>
+    <footer className="mt-14 border-t border-bark-800/10 bg-cream">
+      <div className="container-site grid gap-7 py-10 sm:grid-cols-2 lg:grid-cols-4">
+        <div className="space-y-3">
+          <Link href="/">
+            <BrandLogo logo={logo} brandName={brandName} />
+          </Link>
           <p className="max-w-xs text-sm leading-relaxed text-bark-600">
             Premium natural foods crafted with thoughtfully selected ingredients.
           </p>
@@ -65,10 +67,10 @@ export async function Footer() {
         </div>
 
         <div>
-          <h3 className="mb-4 text-xs font-semibold uppercase tracking-[0.18em] text-bark-700">
+          <h3 className="mb-3 text-xs font-semibold uppercase tracking-[0.18em] text-bark-700">
             Navigation
           </h3>
-          <ul className="space-y-2.5">
+          <ul className="space-y-2">
             {SHOP_LINKS.map((l) => (
               <li key={l.href}>
                 <Link href={l.href} className="text-sm text-bark-600 transition hover:text-bark-900">
@@ -80,10 +82,10 @@ export async function Footer() {
         </div>
 
         <div>
-          <h3 className="mb-4 text-xs font-semibold uppercase tracking-[0.18em] text-bark-700">
+          <h3 className="mb-3 text-xs font-semibold uppercase tracking-[0.18em] text-bark-700">
             Customer Care
           </h3>
-          <ul className="space-y-2.5">
+          <ul className="space-y-2">
             {CARE_LINKS.map((l) => (
               <li key={l.href}>
                 <Link href={l.href} className="text-sm text-bark-600 transition hover:text-bark-900">
@@ -92,13 +94,31 @@ export async function Footer() {
               </li>
             ))}
           </ul>
-        </div>
-
-        <div>
-          <h3 className="mb-4 text-xs font-semibold uppercase tracking-[0.18em] text-bark-700">
-            Get in Touch
+          <h3 className="mb-4 mt-4 text-xs font-semibold uppercase tracking-[0.18em] text-bark-700">
+            Reach Us
           </h3>
-          <ul className="space-y-3">
+          <ul className="space-y-2">
+            {phone && (
+              <li className="flex items-start gap-2.5 text-sm text-bark-600">
+                <Phone size={15} className="mt-0.5 shrink-0 text-caramel-500" />
+                <a href={`tel:${phone.replace(/[^\d+]/g, "")}`} className="hover:text-bark-900">
+                  {phone}
+                </a>
+              </li>
+            )}
+            {whatsapp && (
+              <li className="flex items-start gap-2.5 text-sm text-bark-600">
+                <Phone size={15} className="mt-0.5 shrink-0 text-caramel-500" />
+                <a
+                  href={`https://wa.me/${whatsapp.replace(/\D/g, "")}`}
+                  target="_blank"
+                  rel="noopener noreferrer"
+                  className="hover:text-bark-900"
+                >
+                  WhatsApp
+                </a>
+              </li>
+            )}
             {email && (
               <li className="flex items-start gap-2.5 text-sm text-bark-600">
                 <Mail size={15} className="mt-0.5 shrink-0 text-caramel-500" />
@@ -107,20 +127,48 @@ export async function Footer() {
                 </a>
               </li>
             )}
-            {phone && (
-              <li className="flex items-start gap-2.5 text-sm text-bark-600">
-                <Phone size={15} className="mt-0.5 shrink-0 text-caramel-500" />
-                <a href={`tel:${phone}`} className="hover:text-bark-900">
-                  {phone}
-                </a>
-              </li>
-            )}
             {address && <li className="text-sm leading-relaxed text-bark-600">{address}</li>}
           </ul>
         </div>
+
+        <div>
+          <h3 className="mb-3 text-xs font-semibold uppercase tracking-[0.18em] text-bark-700">
+            Business Information
+          </h3>
+          <ul className="space-y-2">
+            {foodLicence && (
+              <li className="flex items-start gap-2.5 text-sm text-bark-600">
+                <ShieldCheck size={15} className="mt-0.5 shrink-0 text-leaf-600" />
+                <span>
+                  <span className="block text-[11px] uppercase tracking-wide text-bark-500">
+                    Food Licence
+                  </span>
+                  {foodLicence}
+                </span>
+              </li>
+            )}
+            {gstNumber && (
+              <li className="flex items-start gap-2.5 text-sm text-bark-600">
+                <BadgeCheck size={15} className="mt-0.5 shrink-0 text-leaf-600" />
+                <span>
+                  <span className="block text-[11px] uppercase tracking-wide text-bark-500">
+                    GSTIN
+                  </span>
+                  {gstNumber}
+                </span>
+              </li>
+            )}
+            {!foodLicence && !gstNumber && (
+              <li className="text-sm leading-relaxed text-bark-500">
+                Business registration details are being updated.
+              </li>
+            )}
+          </ul>
+        </div>
       </div>
+
       <div className="border-t border-bark-800/10">
-        <div className="container-site flex flex-col items-center justify-between gap-2 py-5 text-xs text-bark-500 sm:flex-row">
+        <div className="container-site flex flex-col items-center justify-between gap-2 py-4 text-xs text-bark-500 sm:flex-row">
           <p>
             © {new Date().getFullYear()} {brandName}. All rights reserved.
           </p>

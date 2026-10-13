@@ -22,6 +22,9 @@ export async function getSettings() {
       flatShipping: 79,
       taxRate: 0,
       gstNumber: "",
+      foodLicence: "",
+      brandVideoUrl: "",
+      brandVideoPoster: "",
     }
   );
 }

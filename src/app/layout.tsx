@@ -1,5 +1,5 @@
 import type { Metadata, Viewport } from "next";
-import { Inter, Fraunces } from "next/font/google";
+import { Plus_Jakarta_Sans, Fraunces } from "next/font/google";
 import { Suspense } from "react";
 import "./globals.css";
 import { Header } from "@/components/layout/Header";
@@ -9,12 +9,13 @@ import { WhatsAppButton } from "@/components/ui/WhatsAppButton";
 import { APP_NAME, APP_URL } from "@/lib/constants";
 import { connectDB } from "@/lib/db";
 import { SiteSettings } from "@/models";
+import { getPublishedCategories } from "@/lib/queries";
 
-const inter = Inter({ subsets: ["latin"], variable: "--font-sans", display: "swap" });
+const inter = Plus_Jakarta_Sans({ subsets: ["latin"], variable: "--font-sans", display: "swap" });
 const fraunces = Fraunces({ subsets: ["latin"], variable: "--font-serif", display: "swap" });
 
 export const viewport: Viewport = {
-  themeColor: "#F8F7EC",
+  themeColor: "#FDFAF5",
   width: "device-width",
   initialScale: 1,
 };
@@ -54,13 +55,27 @@ export async function generateMetadata(): Promise<Metadata> {
 
 export default async function RootLayout({ children }: { children: React.ReactNode }) {
   let announcement = { enabled: false, text: "" };
+  let logo = "";
+  let brandName = APP_NAME;
+  let whatsapp = "";
+  let categories: { name: string; slug: string }[] = [];
   try {
     await connectDB();
     const s = await SiteSettings.findOne({ key: "site" }).lean();
     if (s) {
-      const st = s as unknown as { announcementEnabled: boolean; announcementText: string };
+      const st = s as unknown as {
+        announcementEnabled: boolean;
+        announcementText: string;
+        logo: string;
+        brandName: string;
+        whatsapp: string;
+      };
       announcement = { enabled: st.announcementEnabled, text: st.announcementText };
+      logo = st.logo || "";
+      brandName = st.brandName || APP_NAME;
+      whatsapp = st.whatsapp || "";
     }
+    categories = (await getPublishedCategories()).map((c) => ({ name: c.name, slug: c.slug }));
   } catch {
     // ignore
   }
@@ -69,10 +84,16 @@ export default async function RootLayout({ children }: { children: React.ReactNo
     <html lang="en" className={`${inter.variable} ${fraunces.variable}`}>
       <body className="min-h-screen flex flex-col">
         <ToastProvider>
-          <Header announcement={announcement} />
+          <Header
+            announcement={announcement}
+            logo={logo}
+            brandName={brandName}
+            whatsapp={whatsapp}
+            categories={categories}
+          />
           <main className="flex-1">{children}</main>
           <Footer />
-          <WhatsAppButton />
+          <WhatsAppButton whatsapp={whatsapp} />
         </ToastProvider>
       </body>
     </html>

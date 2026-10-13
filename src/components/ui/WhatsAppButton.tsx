@@ -4,12 +4,15 @@ import { usePathname } from "next/navigation";
 import { MessageCircle } from "lucide-react";
 import { WHATSAPP_NUMBER, WHATSAPP_MESSAGE } from "@/lib/constants";
 
-export function WhatsAppButton() {
+export function WhatsAppButton({ whatsapp = "" }: { whatsapp?: string }) {
   const pathname = usePathname() || "";
 
   if (pathname.startsWith("/admin")) return null;
 
-  const href = `https://wa.me/${WHATSAPP_NUMBER}?text=${encodeURIComponent(WHATSAPP_MESSAGE)}`;
+  const number = (whatsapp || WHATSAPP_NUMBER).replace(/\D/g, "");
+  if (!number) return null;
+
+  const href = `https://wa.me/${number}?text=${encodeURIComponent(WHATSAPP_MESSAGE)}`;
 
   return (
     <a

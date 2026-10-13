@@ -3,8 +3,8 @@
 import Image from "next/image";
 import Link from "next/link";
 import { useRouter } from "next/navigation";
-import { useState } from "react";
-import { ShoppingBag, Zap, Star, ChevronRight } from "lucide-react";
+import { useRef, useState } from "react";
+import { ShoppingBag, Zap, Star, ChevronRight, ChevronLeft, Leaf, ShieldCheck, Milk, Truck } from "lucide-react";
 import { formatINR, discountPercent, cn } from "@/lib/utils";
 import { useCart } from "@/store/cart";
 import { useToast } from "@/components/ui/Toast";
@@ -45,6 +45,24 @@ export function ProductDetailView({
   const [packLabel, setPackLabel] = useState(defaultPack.label);
   const [quantity, setQuantity] = useState(1);
   const [activeImage, setActiveImage] = useState(0);
+  // Each product shows exactly two designated gallery images (its own photos only).
+  const images = (product.images || []).filter(Boolean).slice(0, 2);
+  const galleryRef = useRef<HTMLDivElement>(null);
+
+  const goToImage = (i: number) => {
+    setActiveImage(i);
+    const el = galleryRef.current;
+    if (el) {
+      el.scrollTo({ left: i * el.clientWidth, behavior: "smooth" });
+    }
+  };
+
+  const onGalleryScroll = () => {
+    const el = galleryRef.current;
+    if (!el || el.clientWidth === 0) return;
+    const idx = Math.round(el.scrollLeft / el.clientWidth);
+    if (idx !== activeImage) setActiveImage(Math.min(Math.max(idx, 0), images.length - 1));
+  };
 
   const pack = product.packSizes.find((p) => p.label === packLabel) ?? defaultPack;
   const pct = discountPercent(pack.mrp, pack.price);
@@ -110,41 +128,97 @@ export function ProductDetailView({
       </nav>
 
       <div className="grid gap-8 lg:grid-cols-2 lg:gap-14">
-        {/* Gallery */}
+        {/* Gallery — product's own photos only (max two) with swipe + synced controls */}
         <div>
-          <div className="relative aspect-square overflow-hidden rounded-2xl border border-bark-800/10 bg-sand-50">
-            {product.images[activeImage] && (
-              <Image
-                src={product.images[activeImage]}
-                alt={product.name}
-                fill
-                priority
-                sizes="(max-width: 1024px) 100vw, 50vw"
-                className="object-cover"
-              />
-            )}
+          <div className="relative">
+            <div
+              ref={galleryRef}
+              onScroll={onGalleryScroll}
+              className="flex aspect-[4/5] snap-x snap-mandatory overflow-x-auto scroll-smooth rounded-2xl border border-bark-800/10 bg-sand-50 [scrollbar-width:none] [&::-webkit-scrollbar]:hidden"
+            >
+              {images.length > 0 ? (
+                images.map((img, i) => (
+                  <div key={i} className="relative h-full w-full shrink-0 snap-start">
+                    <Image
+                      src={img}
+                      alt={i === 0 ? product.name : `${product.name} — view ${i + 1}`}
+                      fill
+                      priority={i === 0}
+                      sizes="(max-width: 1024px) 100vw, 50vw"
+                      className="object-contain p-3"
+                    />
+                  </div>
+                ))
+              ) : (
+                <div className="flex h-full w-full items-center justify-center text-sm text-bark-400">
+                  No image available
+                </div>
+              )}
+            </div>
+
             {pct > 0 && (
-              <span className="absolute left-4 top-4 rounded-full bg-forest-800 px-3 py-1.5 text-xs font-bold text-white">
+              <span className="absolute left-3 top-3 rounded-full bg-forest-800 px-2.5 py-1 text-[10px] font-bold text-white">
                 {pct}% OFF
               </span>
             )}
-          </div>
-          {product.images.length > 1 && (
-            <div className="mt-3 flex gap-2 overflow-x-auto">
-              {product.images.map((img, i) => (
+
+            {images.length > 1 && (
+              <>
                 <button
-                  key={i}
-                  onClick={() => setActiveImage(i)}
-                  className={cn(
-                    "relative h-16 w-16 shrink-0 overflow-hidden rounded-lg border-2 transition",
-                    i === activeImage ? "border-caramel-500" : "border-transparent opacity-70 hover:opacity-100"
-                  )}
-                  aria-label={`View image ${i + 1}`}
+                  type="button"
+                  onClick={() => goToImage(Math.max(0, activeImage - 1))}
+                  disabled={activeImage === 0}
+                  aria-label="Previous image"
+                  className="absolute left-2 top-1/2 -translate-y-1/2 rounded-full border border-bark-800/10 bg-ivory-100/90 p-1.5 text-bark-700 shadow disabled:opacity-0"
                 >
-                  <Image src={img} alt="" fill sizes="64px" className="object-cover" />
+                  <ChevronLeft size={18} />
                 </button>
-              ))}
-            </div>
+                <button
+                  type="button"
+                  onClick={() => goToImage(Math.min(images.length - 1, activeImage + 1))}
+                  disabled={activeImage === images.length - 1}
+                  aria-label="Next image"
+                  className="absolute right-2 top-1/2 -translate-y-1/2 rounded-full border border-bark-800/10 bg-ivory-100/90 p-1.5 text-bark-700 shadow disabled:opacity-0"
+                >
+                  <ChevronRight size={18} />
+                </button>
+              </>
+            )}
+          </div>
+
+          {images.length > 1 && (
+            <>
+              <div className="mt-3 flex gap-2">
+                {images.map((img, i) => (
+                  <button
+                    key={i}
+                    onClick={() => goToImage(i)}
+                    className={cn(
+                      "relative h-16 w-16 shrink-0 overflow-hidden rounded-lg border-2 transition",
+                      i === activeImage
+                        ? "border-caramel-500"
+                        : "border-transparent opacity-70 hover:opacity-100"
+                    )}
+                    aria-label={`View image ${i + 1}`}
+                  >
+                    <Image src={img} alt="" fill sizes="64px" className="object-contain p-1" />
+                  </button>
+                ))}
+              </div>
+              <div className="mt-3 flex justify-center gap-2">
+                {images.map((_, i) => (
+                  <button
+                    key={i}
+                    onClick={() => goToImage(i)}
+                    aria-label={`Go to image ${i + 1}`}
+                    className={cn(
+                      "h-2 rounded-full transition-all",
+                      i === activeImage ? "w-6 bg-caramel-500" : "w-2 bg-bark-800/20"
+                    )}
+                  />
+                ))}
+              </div>
+            </>
           )}
         </div>
 
@@ -257,7 +331,7 @@ export function ProductDetailView({
             <button onClick={handleAdd} disabled={outOfStock} className="btn-primary flex-1">
               <ShoppingBag size={16} /> {outOfStock ? "Out of Stock" : "Add to Cart"}
             </button>
-            <button onClick={handleBuyNow} disabled={outOfStock} className="btn-accent flex-1">
+            <button onClick={handleBuyNow} disabled={outOfStock} className="btn-secondary flex-1">
               <Zap size={16} /> Buy Now
             </button>
           </div>
@@ -267,6 +341,23 @@ export function ProductDetailView({
               This pack size is currently out of stock. Try another size.
             </p>
           )}
+
+          {/* Trust strip */}
+          <div className="mt-6 grid grid-cols-2 gap-2 rounded-2xl border border-bark-800/10 bg-ivory-100 p-4 sm:grid-cols-4">
+            {[
+              { Icon: Leaf, label: "100% Eggless" },
+              { Icon: ShieldCheck, label: "No Maida" },
+              { Icon: Milk, label: "Pure Ghee" },
+              { Icon: Truck, label: "Ships Pan-India" },
+            ].map(({ Icon, label }) => (
+              <div key={label} className="flex items-center gap-2">
+                <span className="flex h-8 w-8 shrink-0 items-center justify-center rounded-full bg-leaf-100 text-leaf-700">
+                  <Icon size={15} />
+                </span>
+                <span className="text-xs font-semibold text-bark-700">{label}</span>
+              </div>
+            ))}
+          </div>
 
           {/* Info accordion */}
           <div className="mt-10 divide-y divide-bark-800/10 border-y border-bark-800/10">

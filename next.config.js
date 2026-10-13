@@ -5,7 +5,7 @@ const nextConfig = {
       { protocol: "https", hostname: "res.cloudinary.com" },
       { protocol: "https", hostname: "images.unsplash.com" },
     ],
-    formats: ["image/webp"],
+    formats: ["image/avif", "image/webp"],
   },
   experimental: {
     serverComponentsExternalPackages: ["mongoose", "cloudinary", "razorpay"],

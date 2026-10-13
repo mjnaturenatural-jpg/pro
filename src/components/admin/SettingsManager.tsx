@@ -31,6 +31,9 @@ export function SettingsManager({
     flatShipping: Number(initial.flatShipping ?? 79),
     taxRate: Number(initial.taxRate ?? 0),
     gstNumber: (initial.gstNumber as string) || "",
+    foodLicence: (initial.foodLicence as string) || "",
+    brandVideoUrl: (initial.brandVideoUrl as string) || "",
+    brandVideoPoster: (initial.brandVideoPoster as string) || "",
   });
   const [saving, setSaving] = useState(false);
 
@@ -101,6 +104,34 @@ export function SettingsManager({
             <input className="input" value={form.gstNumber} onChange={(e) => set("gstNumber", e.target.value)} />
           </Field>
         </div>
+        <Field label="Food Licence / FSSAI Number (leave blank if none)">
+          <input className="input" value={form.foodLicence} onChange={(e) => set("foodLicence", e.target.value)} />
+        </Field>
+      </div>
+
+      <div className="card p-5 sm:p-6">
+        <h2 className="mb-4 text-sm font-semibold uppercase tracking-wide text-bark-700">
+          Brand Video
+        </h2>
+        <p className="mb-4 text-xs text-bark-400">
+          Optional. Shown on the homepage when provided. Leave blank to hide the section.
+        </p>
+        <Field label="Video URL (MP4/WebM)">
+          <input
+            className="input"
+            value={form.brandVideoUrl}
+            onChange={(e) => set("brandVideoUrl", e.target.value)}
+            placeholder="https://…/brand-film.mp4"
+          />
+        </Field>
+        <Field label="Video Poster Image URL (optional)">
+          <input
+            className="input"
+            value={form.brandVideoPoster}
+            onChange={(e) => set("brandVideoPoster", e.target.value)}
+            placeholder="https://…/poster.jpg"
+          />
+        </Field>
       </div>
 
       <div className="card p-5 sm:p-6">

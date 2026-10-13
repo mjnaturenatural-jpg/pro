@@ -5,7 +5,7 @@ import Link from "next/link";
 import { useRouter } from "next/navigation";
 import { useState } from "react";
 import { ShoppingBag, Zap } from "lucide-react";
-import { formatINR, discountPercent, cn } from "@/lib/utils";
+import { formatINR, cn } from "@/lib/utils";
 import { useCart } from "@/store/cart";
 import { useToast } from "@/components/ui/Toast";
 import { BADGES, BADGE_STYLES } from "@/lib/constants";
@@ -33,7 +33,6 @@ export function ProductCard({ product, priority = false }: { product: ProductCar
   const [selectedPack, setSelectedPack] = useState(defaultPack.label);
   const activePack = product.packSizes.find((p) => p.label === selectedPack) ?? defaultPack;
 
-  const pct = discountPercent(activePack.mrp, activePack.price);
   const activeBadge = BADGES.find((b) => product.badges?.[b.key as keyof typeof product.badges]);
 
   const handleAdd = (e: React.MouseEvent) => {
@@ -75,9 +74,9 @@ export function ProductCard({ product, priority = false }: { product: ProductCar
   return (
     <Link
       href={`/product/${product.slug}`}
-      className="group relative flex flex-col overflow-hidden rounded-xl border border-bark-800/10 bg-ivory-100 shadow-soft transition duration-300 hover:shadow-lift"
+      className="group relative flex flex-col overflow-hidden rounded-[32px] border border-bark-800/10 bg-ivory-100 shadow-soft transition duration-300 hover:-translate-y-1 hover:shadow-lift"
     >
-      <div className="relative aspect-square overflow-hidden bg-sand-50">
+      <div className="relative aspect-[4/5] overflow-hidden bg-gradient-to-br from-sand-50 to-leaf-50">
         {product.images[0] && (
           <Image
             src={product.images[0]}
@@ -85,19 +84,14 @@ export function ProductCard({ product, priority = false }: { product: ProductCar
             fill
             priority={priority}
             sizes="(max-width: 640px) 50vw, (max-width: 1024px) 33vw, 25vw"
-            className="object-cover transition duration-500 group-hover:scale-105"
+            className="object-contain p-2 transition duration-500 group-hover:scale-105"
           />
         )}
-        <div className="absolute left-3 top-3 flex flex-col gap-1.5">
-          {pct > 0 && (
-            <span className="rounded-full bg-forest-800 px-2.5 py-1 text-[10px] font-bold tracking-wide text-white">
-              {pct}% OFF
-            </span>
-          )}
+        <div className="absolute left-2.5 top-2.5 flex flex-col items-start gap-1">
           {activeBadge && (
             <span
               className={cn(
-                "rounded-full px-2.5 py-1 text-[10px] font-semibold",
+                "rounded-full px-2 py-0.5 text-[9px] font-semibold",
                 BADGE_STYLES[activeBadge.key] ?? "bg-leaf-100 text-leaf-700"
               )}
             >
@@ -105,14 +99,14 @@ export function ProductCard({ product, priority = false }: { product: ProductCar
             </span>
           )}
           {!inStock && (
-            <span className="rounded-full bg-red-50 px-2.5 py-1 text-[10px] font-semibold text-red-600">
+            <span className="rounded-full bg-red-50 px-2 py-0.5 text-[9px] font-semibold text-red-600">
               Out of Stock
             </span>
           )}
         </div>
       </div>
 
-      <div className="flex flex-1 flex-col gap-2.5 p-4">
+      <div className="flex flex-1 flex-col gap-2.5 p-5">
         <div>
           <h3 className="line-clamp-2 text-sm font-medium leading-snug text-bark-900 group-hover:text-bark-700">
             {product.name}
@@ -146,27 +140,34 @@ export function ProductCard({ product, priority = false }: { product: ProductCar
           </div>
         )}
 
-        <div className="mt-auto flex items-baseline gap-2 pt-1">
-          <span className="text-base font-semibold text-bark-900">
+        <div className="mt-auto flex flex-wrap items-baseline gap-x-2 gap-y-1 pt-1">
+          <span className="text-base font-semibold text-caramel-600">
             {formatINR(activePack.price)}
           </span>
-          {activePack.mrp > activePack.price && (
-            <span className="text-xs text-bark-400 line-through">{formatINR(activePack.mrp)}</span>
+          {activePack.mrp > 0 && (
+            <span
+              className={cn(
+                "text-xs text-bark-400",
+                activePack.mrp > activePack.price && "line-through"
+              )}
+            >
+              MRP {formatINR(activePack.mrp)}
+            </span>
           )}
         </div>
 
-        <div className="flex gap-2">
+        <div className="flex w-full flex-col gap-2">
           <button
             onClick={handleAdd}
             disabled={activePack.stock <= 0}
-            className="btn-primary btn-sm flex-1"
+            className="btn-primary btn-sm w-full"
           >
-            <ShoppingBag size={13} /> Add
+            <ShoppingBag size={13} /> Add to Cart
           </button>
           <button
             onClick={handleBuyNow}
             disabled={activePack.stock <= 0}
-            className="btn-accent btn-sm flex-1"
+            className="btn-secondary btn-sm w-full"
           >
             <Zap size={13} /> Buy Now
           </button>

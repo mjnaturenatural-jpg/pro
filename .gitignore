@@ -11,4 +11,6 @@ next-env.d.ts
 npm-debug.log*
 yarn-error.log*
 .next-server.log
+.next-server.out.log
+.next-server.err.log
 mongodb-data/
