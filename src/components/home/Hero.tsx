@@ -2,7 +2,6 @@ import Image from "next/image";
 import Link from "next/link";
 import { ArrowRight, BadgeCheck, Leaf, Sparkles } from "lucide-react";
 import { Rating } from "@/components/ui/Rating";
-import { Reveal } from "@/components/ui/Reveal";
 
 interface HeroProps {
   hero: Record<string, string>;
@@ -38,8 +37,8 @@ export function Hero({ hero, rating, reviewCount, reviewerInitials }: HeroProps)
       <div className="absolute inset-0 bg-gradient-to-r from-brown-900/95 via-brown-900/65 to-brown-900/15" aria-hidden="true" />
       <div className="absolute inset-0 bg-gradient-to-t from-brown-900/80 via-transparent to-brown-900/25" aria-hidden="true" />
 
-      <div className="container-site relative flex min-h-[88svh] items-center py-16 sm:py-20 lg:min-h-[94vh]">
-        <Reveal className="max-w-2xl">
+      <div className="container-site relative flex min-h-[540px] items-center py-16 supports-[height:100svh]:min-h-[88svh] sm:py-20 lg:min-h-[94vh]">
+        <div className="max-w-2xl animate-fadeUp">
           <p className="mb-5 inline-flex items-center gap-2 rounded-full bg-white/10 px-4 py-1.5 text-xs font-bold uppercase tracking-[0.14em] text-turmeric-300 ring-1 ring-white/20 backdrop-blur">
             <span className="h-1.5 w-1.5 rounded-full bg-gradient-to-r from-caramel-400 to-turmeric-300" />
             {hero.eyebrow || "Pure Ghee • Original Jaggery • 100% Eggless"}
@@ -92,7 +91,7 @@ export function Hero({ hero, rating, reviewCount, reviewerInitials }: HeroProps)
               </p>
             </div>
           </div>
-        </Reveal>
+        </div>
       </div>
 
       {/* Floating badges */}

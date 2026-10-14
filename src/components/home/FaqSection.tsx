@@ -59,7 +59,7 @@ export function FaqSection() {
         align="center"
       />
       <div className="mx-auto max-w-3xl scroll-mt-28" id="faq">
-        <Accordion items={items.map((item) => ({ title: item.q, body: item.a }))} defaultIndex={0} />
+        <Accordion items={items.map((item) => ({ title: item.q, body: item.a }))} />
         <p className="mt-6 text-center text-sm text-bark-600">
           Still curious?{" "}
           <Link href="/contact" className="font-semibold text-caramel-700 hover:text-caramel-600">

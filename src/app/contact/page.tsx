@@ -217,7 +217,7 @@ export default async function ContactPage() {
             Frequently asked questions
           </h2>
           <div className="mt-8">
-            <Accordion items={FAQS.map((f) => ({ title: f.q, body: f.a }))} defaultIndex={0} />
+            <Accordion items={FAQS.map((f) => ({ title: f.q, body: f.a }))} />
           </div>
         </section>
       </div>

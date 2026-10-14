@@ -6,7 +6,6 @@ import { ArrowRight } from "lucide-react";
 import { ProductCard, type ProductCardData } from "@/components/product/ProductCard";
 import { SectionHeader } from "@/components/ui/SectionHeader";
 import { Tabs } from "@/components/ui/Tabs";
-import { Reveal } from "@/components/ui/Reveal";
 
 const TABS = [
   { value: "all", label: "All" },
@@ -38,12 +37,14 @@ export function Bestsellers({ products }: { products: ProductCardData[] }) {
         align="center"
       />
       <Tabs options={TABS} value={tab} onChange={setTab} ariaLabel="Filter bestsellers by category" />
-      <div key={tab} className="mt-8 grid grid-cols-2 gap-3 sm:gap-5 lg:grid-cols-4">
-        {filtered.map((p, i) => (
-          <Reveal key={p._id} delay={Math.min(i * 0.05, 0.3)}>
-            <ProductCard product={p} priority={i < 2} />
-          </Reveal>
-        ))}
+      <div className="mt-8 overflow-hidden">
+        <div key={tab} className="animate-shelf flex w-max gap-3 pr-3 sm:gap-5 sm:pr-5">
+          {[...filtered, ...filtered].map((p, i) => (
+            <div key={`${p._id}-${i}`} className="w-[68vw] max-w-[300px] shrink-0 sm:w-[280px]" aria-hidden={i >= filtered.length}>
+              <ProductCard product={p} priority={i < 2} />
+            </div>
+          ))}
+        </div>
       </div>
       {filtered.length === 0 && (
         <p className="mt-8 text-center text-sm text-bark-500">

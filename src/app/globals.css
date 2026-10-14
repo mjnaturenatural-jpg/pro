@@ -98,6 +98,16 @@
   animation-play-state: paused;
 }
 
+/* Auto-scrolling product shelf (right-to-left). Pauses on hover, touch or keyboard focus. */
+.animate-shelf {
+  animation: marquee 55s linear infinite;
+}
+.animate-shelf:hover,
+.animate-shelf:active,
+.animate-shelf:focus-within {
+  animation-play-state: paused;
+}
+
 @keyframes floaty {
   0%,
   100% {
@@ -153,7 +163,8 @@
 }
 
 @media (prefers-reduced-motion: reduce) {
-  .animate-marquee {
+  .animate-marquee,
+  .animate-shelf {
     animation: none;
   }
   *,
