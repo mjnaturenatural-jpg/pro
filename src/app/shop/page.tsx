@@ -58,7 +58,7 @@ export default async function ShopPage({
                 {active.name}
               </h1>
               {active.description && (
-                <p className="mt-2 max-w-md text-sm leading-relaxed text-white/85">
+                <p className="mt-2 line-clamp-2 max-w-md text-sm leading-relaxed text-white/85">
                   {active.description}
                 </p>
               )}

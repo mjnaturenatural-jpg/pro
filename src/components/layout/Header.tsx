@@ -123,7 +123,7 @@ export function Header({
                         <span className="absolute -bottom-0.5 left-0 h-0.5 w-full rounded bg-caramel-500" />
                       )}
                     </Link>
-                    <div className="invisible absolute left-1/2 top-full z-50 w-[560px] -translate-x-1/2 pt-3 opacity-0 transition group-hover:visible group-hover:opacity-100 group-focus-within:visible group-focus-within:opacity-100">
+                    <div className="invisible absolute left-1/2 top-full z-50 w-[560px] max-w-[calc(100vw-2rem)] -translate-x-1/2 pt-3 opacity-0 transition group-hover:visible group-hover:opacity-100 group-focus-within:visible group-focus-within:opacity-100">
                       <div className="overflow-hidden rounded-2xl border border-bark-800/10 bg-ivory-100 p-3 shadow-lift">
                         <div className="grid grid-cols-2 gap-1">
                           {categories.map((c) => (

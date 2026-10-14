@@ -103,7 +103,7 @@ export function SearchOverlay({ open, onClose }: { open: boolean; onClose: () =>
                 >
                   <div className="relative h-12 w-12 shrink-0 overflow-hidden rounded-lg bg-sand-50">
                     {p.images[0] && (
-                      <Image src={p.images[0]} alt={p.name} fill className="object-cover" sizes="48px" />
+                      <Image src={p.images[0]} alt={p.name} fill className="object-contain p-0.5" sizes="48px" />
                     )}
                   </div>
                   <div className="flex-1 min-w-0">

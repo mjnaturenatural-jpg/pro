@@ -378,7 +378,7 @@ export default function CheckoutPage() {
                 <li key={`${item.productId}-${item.packSize}`} className="flex gap-3">
                   <div className="relative h-12 w-12 shrink-0 overflow-hidden rounded-lg bg-sand-50">
                     {item.image && (
-                      <Image src={item.image} alt="" fill sizes="48px" className="object-cover" />
+                      <Image src={item.image} alt="" fill sizes="48px" className="object-contain p-0.5" />
                     )}
                   </div>
                   <div className="flex-1 min-w-0">

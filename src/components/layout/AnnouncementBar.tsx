@@ -48,7 +48,7 @@ export function AnnouncementBar({ adminText = "" }: { adminText?: string }) {
       onMouseEnter={() => setPaused(true)}
       onMouseLeave={() => setPaused(false)}
     >
-      <div className="container-site relative flex h-9 items-center justify-center text-center">
+      <div className="container-site relative flex min-h-9 items-center justify-center py-1.5 text-center">
         <p aria-live="polite" className="px-8 text-[11px] font-bold uppercase tracking-[0.12em] sm:text-xs">
           <AnimatePresence mode="wait">
             <motion.span

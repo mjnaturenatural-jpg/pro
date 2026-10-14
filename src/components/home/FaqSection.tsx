@@ -58,7 +58,7 @@ export function FaqSection() {
         title="Frequently Asked Questions"
         align="center"
       />
-      <div className="mx-auto max-w-3xl" id="faq">
+      <div className="mx-auto max-w-3xl scroll-mt-28" id="faq">
         <Accordion items={items.map((item) => ({ title: item.q, body: item.a }))} />
         <p className="mt-6 text-center text-sm text-bark-600">
           Still curious?{" "}
