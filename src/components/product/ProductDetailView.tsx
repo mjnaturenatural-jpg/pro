@@ -12,7 +12,6 @@ import { QuantityStepper } from "@/components/ui/QuantityStepper";
 import { Accordion } from "@/components/ui/Accordion";
 import { Modal } from "@/components/ui/Modal";
 import { Breadcrumbs } from "@/components/ui/Breadcrumbs";
-import { PincodeChecker } from "@/components/product/PincodeChecker";
 import { analytics } from "@/lib/analytics";
 import { getWhatsAppLink, productEnquiryMessage } from "@/lib/whatsapp";
 import { BADGES, BADGE_STYLES } from "@/lib/constants";
@@ -365,8 +364,6 @@ export function ProductDetailView({
             </a>
           )}
 
-          <PincodeChecker />
-
           {/* Trust strip */}
           <div className="mt-6 grid grid-cols-2 gap-2 rounded-2xl border border-bark-800/10 bg-ivory-100 p-4 sm:grid-cols-4">
             {[
@@ -433,8 +430,8 @@ export function ProductDetailView({
         )}
       </Modal>
 
-      {/* Sticky mobile add-to-cart bar */}
-      <div className="fixed inset-x-0 bottom-0 z-40 border-t border-bark-800/10 bg-ivory-50/95 px-4 pb-[calc(0.75rem+env(safe-area-inset-bottom))] pt-3 backdrop-blur-md sm:hidden">
+      {/* Sticky mobile add-to-cart bar (sits above the bottom nav) */}
+      <div className="fixed inset-x-0 bottom-[calc(4rem+env(safe-area-inset-bottom))] z-40 border-t border-bark-800/10 bg-ivory-50/95 px-4 pb-3 pt-3 backdrop-blur-md sm:hidden">
         <div className="flex items-center gap-3">
           <div className="min-w-0 flex-1">
             <p className="truncate text-xs font-semibold text-bark-900">{product.name}</p>

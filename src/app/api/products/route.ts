@@ -88,12 +88,19 @@ export async function GET(req: Request) {
       Product.countDocuments(filter),
     ]);
 
-    return NextResponse.json({
-      products: JSON.parse(JSON.stringify(products)),
-      total,
-      page,
-      pages: Math.ceil(total / limit),
-    });
+    return NextResponse.json(
+      {
+        products: JSON.parse(JSON.stringify(products)),
+        total,
+        page,
+        pages: Math.ceil(total / limit),
+      },
+      {
+        headers: {
+          "Cache-Control": "public, s-maxage=30, stale-while-revalidate=60",
+        },
+      }
+    );
   } catch (err) {
     console.error("products list error", err);
     return NextResponse.json({ error: "Failed to load products" }, { status: 500 });

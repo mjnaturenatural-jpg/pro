@@ -13,7 +13,7 @@ export function WhatsAppButton({ whatsapp = "" }: { whatsapp?: string }) {
   if (!href) return null;
 
   return (
-    <span className="group fixed bottom-20 right-5 z-50 sm:bottom-5">
+    <span className="group fixed bottom-24 right-5 z-50 sm:bottom-5">
       <span
         aria-hidden="true"
         className="wa-ping absolute inset-0 rounded-full bg-[#25D366]"

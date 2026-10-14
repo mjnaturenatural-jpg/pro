@@ -37,14 +37,12 @@ export function Bestsellers({ products }: { products: ProductCardData[] }) {
         align="center"
       />
       <Tabs options={TABS} value={tab} onChange={setTab} ariaLabel="Filter bestsellers by category" />
-      <div className="mt-8 overflow-hidden">
-        <div key={tab} className="animate-shelf flex w-max gap-3 pr-3 sm:gap-5 sm:pr-5">
-          {[...filtered, ...filtered].map((p, i) => (
-            <div key={`${p._id}-${i}`} className="w-[68vw] max-w-[300px] shrink-0 sm:w-[280px]" aria-hidden={i >= filtered.length}>
-              <ProductCard product={p} priority={i < 2} />
-            </div>
-          ))}
-        </div>
+      <div className="mt-8 grid auto-cols-[70%] grid-flow-col gap-3 overflow-x-auto pb-2 sm:auto-cols-auto sm:grid-flow-row sm:grid-cols-2 sm:gap-5 sm:overflow-visible lg:grid-cols-4">
+        {filtered.map((p) => (
+          <div key={p._id} className="snap-start">
+            <ProductCard product={p} />
+          </div>
+        ))}
       </div>
       {filtered.length === 0 && (
         <p className="mt-8 text-center text-sm text-bark-500">

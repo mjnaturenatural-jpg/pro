@@ -24,7 +24,7 @@ export const siteConfig = {
 
   // TODO(client): founder name + portrait photo path for the About page.
   founderName: "",
-  founderPhoto: "",
+  founderPhoto: "/founder.png",
 
   // TODO(client): Google Maps embed URL for the Contact page (iframe src).
   mapEmbedUrl: "",

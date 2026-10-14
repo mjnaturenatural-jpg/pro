@@ -4,6 +4,7 @@ import { Suspense } from "react";
 import "./globals.css";
 import { Header } from "@/components/layout/Header";
 import { Footer } from "@/components/layout/Footer";
+import { BottomNav } from "@/components/layout/BottomNav";
 import { ToastProvider } from "@/components/ui/Toast";
 import { WhatsAppButton } from "@/components/ui/WhatsAppButton";
 import { APP_NAME, APP_URL } from "@/lib/constants";
@@ -123,8 +124,9 @@ export default async function RootLayout({ children }: { children: React.ReactNo
             whatsapp={whatsapp}
             categories={categories}
           />
-          <main id="main-content" className="flex-1">{children}</main>
+          <main id="main-content" className="flex-1 pb-16 lg:pb-0">{children}</main>
           <Footer />
+          <BottomNav />
           <WhatsAppButton whatsapp={whatsapp} />
         </ToastProvider>
       </body>

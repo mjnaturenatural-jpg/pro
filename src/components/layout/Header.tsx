@@ -5,7 +5,7 @@ import Link from "next/link";
 import { usePathname } from "next/navigation";
 import { useEffect, useState } from "react";
 import { AnimatePresence, motion } from "framer-motion";
-import { ChevronDown, Menu, Search, ShoppingBag, X } from "lucide-react";
+import { ChevronDown, Search, ShoppingBag } from "lucide-react";
 import { useCart } from "@/store/cart";
 import { SearchOverlay } from "@/components/ui/SearchOverlay";
 import { CartDrawer } from "@/components/cart/CartDrawer";
@@ -44,10 +44,8 @@ export function Header({
   categories?: HeaderCategory[];
 }) {
   const pathname = usePathname();
-  const [menuOpen, setMenuOpen] = useState(false);
   const [searchOpen, setSearchOpen] = useState(false);
   const [cartOpen, setCartOpen] = useState(false);
-  const [shopExpanded, setShopExpanded] = useState(false);
   const [scrolled, setScrolled] = useState(false);
   const items = useCart((s) => s.items);
   const count = items.reduce((n, i) => n + i.quantity, 0);
@@ -83,15 +81,6 @@ export function Header({
         )}
       >
         <div className={cn("container-site flex items-center justify-between gap-4 transition-all duration-300", scrolled ? "h-14" : "h-16 sm:h-[72px]")}>
-          <button
-            className="-ml-1 min-h-[44px] min-w-[44px] p-2 text-bark-800 lg:hidden"
-            onClick={() => setMenuOpen(true)}
-            aria-label="Open menu"
-            aria-expanded={menuOpen}
-          >
-            <Menu size={22} />
-          </button>
-
           <Link href="/" aria-label={`${brandName} home`}>
             <BrandLogo logo={logo} brandName={brandName} />
           </Link>
@@ -219,127 +208,6 @@ export function Header({
           </div>
         </div>
       </header>
-
-      {/* Mobile menu */}
-      <AnimatePresence>
-        {menuOpen && (
-          <div className="fixed inset-0 z-[60] lg:hidden">
-            <motion.div
-              initial={{ opacity: 0 }}
-              animate={{ opacity: 1 }}
-              exit={{ opacity: 0 }}
-              className="absolute inset-0 bg-brown-900/50"
-              onClick={() => setMenuOpen(false)}
-              aria-hidden="true"
-            />
-            <motion.div
-              initial={{ x: "-100%" }}
-              animate={{ x: 0 }}
-              exit={{ x: "-100%" }}
-              transition={{ duration: 0.3, ease: "easeOut" }}
-              className="absolute left-0 top-0 flex h-full w-80 max-w-[85vw] flex-col overflow-y-auto bg-ivory-50 shadow-lift"
-              role="dialog"
-              aria-modal="true"
-              aria-label="Menu"
-            >
-              <div className="flex h-16 items-center justify-between border-b border-bark-800/10 px-5">
-                <span className="font-serif text-lg font-semibold text-bark-900">{brandName}</span>
-                <button onClick={() => setMenuOpen(false)} aria-label="Close menu" className="flex h-10 w-10 items-center justify-center rounded-full bg-bark-800/5">
-                  <X size={20} />
-                </button>
-              </div>
-              <nav className="flex flex-col gap-1 p-5" aria-label="Mobile navigation">
-                <Link
-                  href="/"
-                  onClick={() => setMenuOpen(false)}
-                  className="rounded-xl px-4 py-3.5 text-base font-semibold text-bark-800 hover:bg-caramel-500/10"
-                >
-                  Home
-                </Link>
-                <button
-                  type="button"
-                  onClick={() => setShopExpanded((v) => !v)}
-                  aria-expanded={shopExpanded}
-                  className="flex items-center justify-between rounded-xl px-4 py-3.5 text-base font-semibold text-bark-800 hover:bg-caramel-500/10"
-                >
-                  Shop
-                  <ChevronDown size={18} className={cn("transition", shopExpanded && "rotate-180")} />
-                </button>
-                <AnimatePresence initial={false}>
-                  {shopExpanded && (
-                    <motion.div
-                      initial={{ height: 0, opacity: 0 }}
-                      animate={{ height: "auto", opacity: 1 }}
-                      exit={{ height: 0, opacity: 0 }}
-                      transition={{ duration: 0.25 }}
-                      className="overflow-hidden"
-                    >
-                      <div className="flex flex-col gap-0.5 pb-1 pl-3">
-                        <Link
-                          href="/shop"
-                          onClick={() => setMenuOpen(false)}
-                          className="rounded-lg px-4 py-3 text-sm font-bold uppercase tracking-wide text-caramel-700 hover:bg-caramel-500/10"
-                        >
-                          Shop All
-                        </Link>
-                        {categories.map((c) => (
-                          <Link
-                            key={c.slug}
-                            href={`/shop?category=${c.slug}`}
-                            onClick={() => setMenuOpen(false)}
-                            className="rounded-lg px-4 py-3 text-[15px] font-medium text-bark-700 hover:bg-caramel-500/10"
-                          >
-                            {c.name}
-                          </Link>
-                        ))}
-                      </div>
-                    </motion.div>
-                  )}
-                </AnimatePresence>
-                {[
-                  { label: "About", href: "/about" },
-                  { label: "Contact", href: "/contact" },
-                ].map((item) => (
-                  <Link
-                    key={item.href}
-                    href={item.href}
-                    onClick={() => setMenuOpen(false)}
-                    className="rounded-xl px-4 py-3.5 text-base font-semibold text-bark-800 hover:bg-caramel-500/10"
-                  >
-                    {item.label}
-                  </Link>
-                ))}
-                <div className="my-3 border-t border-bark-800/10" />
-                <button
-                  onClick={() => {
-                    setMenuOpen(false);
-                    setCartOpen(true);
-                  }}
-                  className="flex items-center justify-between rounded-xl px-4 py-3.5 text-base font-semibold text-bark-800 hover:bg-caramel-500/10"
-                >
-                  Cart
-                  {count > 0 && (
-                    <span className="flex h-6 min-w-[24px] items-center justify-center rounded-full bg-chilli-600 px-1.5 text-xs font-bold text-white">
-                      {count}
-                    </span>
-                  )}
-                </button>
-                {waHref && (
-                  <a
-                    href={waHref}
-                    target="_blank"
-                    rel="noopener noreferrer"
-                    onClick={() => setMenuOpen(false)}
-                    className="flex items-center gap-2 rounded-xl px-4 py-3.5 text-base font-semibold text-[#1EBE5A] hover:bg-caramel-500/10"
-                  >
-                    <WhatsAppGlyph size={18} /> Chat on WhatsApp
-                  </a>
-                )}
-              </nav>
-            </motion.div>
-          </div>
-        )}
-      </AnimatePresence>
 
       <CartDrawer open={cartOpen} onClose={() => setCartOpen(false)} />
       <SearchOverlay open={searchOpen} onClose={() => setSearchOpen(false)} />
