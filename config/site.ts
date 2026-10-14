@@ -11,10 +11,8 @@ export const siteConfig = {
   brandName: "MJ Nature Natural",
   tagline: "Homemade Goodness, Delivered to Your Door.",
 
-  // TODO(client): customer-care phone in international format, e.g. "+91 98765 43210".
-  phone: "",
-  // TODO(client): digits only for the tel: link, e.g. "919876543210".
-  phoneHref: "",
+  phone: "+91 94934 35877",
+  phoneHref: "919493435877",
   // TODO(client): official support email.
   email: "",
   // TODO(client): full street address with city, state and pincode.
@@ -29,8 +27,7 @@ export const siteConfig = {
   // TODO(client): Google Maps embed URL for the Contact page (iframe src).
   mapEmbedUrl: "",
 
-  // TODO(client): FSSAI licence number — shown in footer + checkout once supplied.
-  fssai: "",
+  fssai: "23626320000132",
   // TODO(client): GSTIN — shown in footer once supplied.
   gstin: "",
 
