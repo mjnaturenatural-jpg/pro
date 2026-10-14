@@ -78,10 +78,6 @@ export default async function HomePage() {
 
   const summary = reviewSummary();
   const reviewerInitials = REVIEWS.map((r) => r.name.charAt(0).toUpperCase());
-  const floaters = pool
-    .filter((p) => p.images[0])
-    .slice(0, 2)
-    .map((p) => ({ src: p.images[0] as string, alt: p.name }));
 
   const tiles = categories.map((c) => ({
     name: c.name,
@@ -117,7 +113,6 @@ export default async function HomePage() {
         rating={summary.average}
         reviewCount={summary.total}
         reviewerInitials={reviewerInitials}
-        floaters={floaters}
       />
 
       <TrustMarquee />
