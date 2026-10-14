@@ -3,7 +3,7 @@ import mongoose, { Schema, model, models, type InferSchemaType, type Model } fro
 const SiteSettingsSchema = new Schema(
   {
     key: { type: String, default: "site", unique: true },
-    brandName: { type: String, default: "MJ Nature Naturals" },
+    brandName: { type: String, default: "MJ Nature Natural" },
     logo: { type: String, default: "" },
     favicon: { type: String, default: "" },
     contactEmail: { type: String, default: "" },

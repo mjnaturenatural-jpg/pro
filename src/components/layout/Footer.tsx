@@ -25,7 +25,7 @@ export async function Footer() {
     settings = {};
   }
 
-  const brandName = (settings.brandName as string) || "MJ Nature Naturals";
+  const brandName = (settings.brandName as string) || "MJ Nature Natural";
   const logo = (settings.logo as string) || "";
   const email = (settings.contactEmail as string) || "";
   const phone = (settings.phone as string) || "";
@@ -38,7 +38,8 @@ export async function Footer() {
   const foodLicence = (settings.foodLicence as string) || "";
 
   return (
-    <footer className="mt-14 border-t border-bark-800/10 bg-cream">
+    <footer className="mt-14 bg-gradient-to-b from-ivory-50 to-honey-100/40">
+      <div className="h-1 bg-gradient-to-r from-caramel-500 via-honey-300 to-leaf-500" />
       <div className="container-site grid gap-7 py-10 sm:grid-cols-2 lg:grid-cols-4">
         <div className="space-y-3">
           <Link href="/">
@@ -47,20 +48,20 @@ export async function Footer() {
           <p className="max-w-xs text-sm leading-relaxed text-bark-600">
             Premium natural foods crafted with thoughtfully selected ingredients.
           </p>
-          <div className="flex gap-3">
+          <div className="flex gap-2.5">
             {instagram && (
-              <a href={instagram} target="_blank" rel="noopener noreferrer" aria-label="Instagram" className="text-bark-600 hover:text-caramel-600">
-                <Instagram size={18} />
+              <a href={instagram} target="_blank" rel="noopener noreferrer" aria-label="Instagram" className="flex h-9 w-9 items-center justify-center rounded-full bg-ivory-100 text-bark-600 shadow-sm ring-1 ring-bark-800/10 transition hover:-translate-y-0.5 hover:text-caramel-600 hover:ring-caramel-500/30">
+                <Instagram size={17} />
               </a>
             )}
             {facebook && (
-              <a href={facebook} target="_blank" rel="noopener noreferrer" aria-label="Facebook" className="text-bark-600 hover:text-caramel-600">
-                <Facebook size={18} />
+              <a href={facebook} target="_blank" rel="noopener noreferrer" aria-label="Facebook" className="flex h-9 w-9 items-center justify-center rounded-full bg-ivory-100 text-bark-600 shadow-sm ring-1 ring-bark-800/10 transition hover:-translate-y-0.5 hover:text-caramel-600 hover:ring-caramel-500/30">
+                <Facebook size={17} />
               </a>
             )}
             {youtube && (
-              <a href={youtube} target="_blank" rel="noopener noreferrer" aria-label="YouTube" className="text-bark-600 hover:text-caramel-600">
-                <Youtube size={18} />
+              <a href={youtube} target="_blank" rel="noopener noreferrer" aria-label="YouTube" className="flex h-9 w-9 items-center justify-center rounded-full bg-ivory-100 text-bark-600 shadow-sm ring-1 ring-bark-800/10 transition hover:-translate-y-0.5 hover:text-caramel-600 hover:ring-caramel-500/30">
+                <Youtube size={17} />
               </a>
             )}
           </div>

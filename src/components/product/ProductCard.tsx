@@ -74,7 +74,7 @@ export function ProductCard({ product, priority = false }: { product: ProductCar
   return (
     <Link
       href={`/product/${product.slug}`}
-      className="group relative flex flex-col overflow-hidden rounded-[32px] border border-bark-800/10 bg-ivory-100 shadow-soft transition duration-300 hover:-translate-y-1 hover:shadow-lift"
+      className="group relative flex flex-col overflow-hidden rounded-[32px] border border-bark-800/10 bg-ivory-100 shadow-soft transition duration-300 hover:-translate-y-1 hover:shadow-lift hover:ring-2 hover:ring-honey-300/70"
     >
       <div className="relative aspect-[4/5] overflow-hidden bg-gradient-to-br from-sand-50 to-leaf-50">
         {product.images[0] && (

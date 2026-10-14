@@ -6,7 +6,7 @@ export const metadata: Metadata = { title: "Refund Policy" };
 
 export default async function RefundPolicyPage() {
   const settings = await getSettings();
-  const brand = (settings.brandName as string) || "MJ Nature Naturals";
+  const brand = (settings.brandName as string) || "MJ Nature Natural";
   const email = (settings.contactEmail as string) || "";
   return (
     <div className="container-site max-w-3xl py-14 sm:py-20">

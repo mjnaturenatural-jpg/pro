@@ -6,7 +6,7 @@ export const revalidate = 60;
 
 export const metadata: Metadata = {
   title: "Contact",
-  description: "Get in touch with MJ Nature Naturals — we're here to help with orders, products and queries.",
+  description: "Get in touch with MJ Nature Natural — we're here to help with orders, products and queries.",
 };
 
 const FAQS = [

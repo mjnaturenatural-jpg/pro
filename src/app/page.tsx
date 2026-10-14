@@ -1,6 +1,6 @@
 import Image from "next/image";
 import Link from "next/link";
-import { ArrowRight, Leaf, Heart, Sparkles, Truck, Package, ChefHat } from "lucide-react";
+import { ArrowRight, Leaf, Heart, Sparkles, Truck, Package, ChefHat, BadgeCheck, Star } from "lucide-react";
 import { getFeaturedProducts, getHomepageContent, getPublishedCategories, getProductsBySlugs, getSettings } from "@/lib/queries";
 import { ProductCard } from "@/components/product/ProductCard";
 import { NewsletterSection } from "@/components/home/NewsletterSection";
@@ -48,6 +48,10 @@ export default async function HomePage() {
   const spotlightProducts =
     featuredSlugs.length > 0 ? await getProductsBySlugs(featuredSlugs) : featured.slice(0, 4);
   const highlightSlug = highlight.productSlug || "";
+  const headline = hero.headline || "Naturally made. Thoughtfully crafted.";
+  const hMatch = headline.match(/^([^,.:;]+)([,.:;]\s*)([\s\S]*)$/);
+  const hMain = hMatch ? hMatch[1] + hMatch[2] : headline;
+  const hRest = hMatch ? hMatch[3] : "";
   const highlightProduct =
     (highlightSlug ? featured.find((p) => p.slug === highlightSlug) : undefined) ??
     (highlightSlug ? (await getProductsBySlugs([highlightSlug]))[0] : undefined);
@@ -56,14 +60,20 @@ export default async function HomePage() {
     <>
       {/* HERO */}
       <section className="relative overflow-hidden bg-ivory-50">
-        <div className="pointer-events-none absolute inset-0 bg-gradient-to-tr from-caramel-100/60 via-transparent to-transparent" />
-        <div className="container-site grid items-center gap-10 py-14 sm:py-20 lg:grid-cols-2 lg:gap-16 lg:py-24">
+        <div className="pointer-events-none absolute inset-0">
+          <div className="absolute -left-32 -top-32 h-96 w-96 rounded-full bg-caramel-100/70 blur-3xl" />
+          <div className="absolute right-0 top-16 h-[28rem] w-[28rem] rounded-full bg-honey-100/60 blur-3xl" />
+          <div className="absolute bottom-0 left-1/3 h-72 w-72 rounded-full bg-leaf-100/50 blur-3xl" />
+        </div>
+        <div className="container-site relative grid items-center gap-12 py-14 sm:py-20 lg:grid-cols-2 lg:gap-16 lg:py-24">
           <div className="animate-fadeUp">
-            <p className="mb-4 inline-flex rounded-full bg-caramel-100 px-4 py-1.5 text-xs font-bold uppercase tracking-[0.14em] text-caramel-700">
-              {hero.eyebrow || "MJ NATURE NATURALS"}
+            <p className="mb-4 inline-flex items-center gap-2 rounded-full bg-ivory-100 px-4 py-1.5 text-xs font-bold uppercase tracking-[0.14em] text-caramel-700 shadow-sm ring-1 ring-caramel-500/20">
+              <span className="h-1.5 w-1.5 rounded-full bg-gradient-to-r from-caramel-500 to-honey-400" />
+              {hero.eyebrow || "MJ NATURE NATURAL"}
             </p>
-            <h1 className="font-serif text-4xl leading-[1.1] text-bark-900 sm:text-5xl lg:text-6xl">
-              {hero.headline || "Naturally made. Thoughtfully crafted."}
+            <h1 className="font-serif text-4xl leading-[1.08] text-bark-900 sm:text-5xl lg:text-6xl">
+              {hMain}
+              {hRest && <em className="italic text-caramel-600">{hRest}</em>}
             </h1>
             <p className="mt-5 max-w-lg text-base leading-relaxed text-bark-600 sm:text-lg">
               {hero.subheading ||
@@ -93,11 +103,12 @@ export default async function HomePage() {
             </ul>
           </div>
           <div className="relative">
-            <div className="relative aspect-square overflow-hidden rounded-[32px] bg-sand-100 shadow-lift">
+            <div className="absolute -inset-3 rounded-[40px] bg-gradient-to-br from-honey-200/70 via-caramel-100/50 to-leaf-100/70" />
+            <div className="relative aspect-square overflow-hidden rounded-[32px] bg-sand-100 shadow-lift ring-1 ring-white/60">
               {hero.image ? (
                 <Image
                   src={hero.image}
-                  alt={hero.headline || "MJ Nature Naturals"}
+                  alt={hero.headline || "MJ Nature Natural"}
                   fill
                   priority
                   sizes="(max-width: 1024px) 100vw, 50vw"
@@ -106,6 +117,22 @@ export default async function HomePage() {
               ) : (
                 <HeroFallbackArt />
               )}
+            </div>
+            <div className="absolute -left-3 top-8 z-10 flex items-center gap-1.5 rounded-full bg-ivory-100/95 px-4 py-2 text-xs font-bold text-leaf-700 shadow-lift ring-1 ring-leaf-500/20 backdrop-blur sm:-left-6">
+              <BadgeCheck size={15} /> 100% Eggless
+            </div>
+            <div className="absolute -bottom-5 right-4 z-10 w-48 rounded-2xl bg-ivory-100/95 p-4 shadow-lift ring-1 ring-honey-300/40 backdrop-blur sm:-right-4">
+              <div className="flex gap-0.5">
+                {Array.from({ length: 5 }).map((_, s) => (
+                  <Star key={s} size={12} className="fill-honey-400 text-honey-400" />
+                ))}
+              </div>
+              <p className="mt-1.5 font-serif text-sm italic leading-snug text-bark-800">
+                Fresh from our kitchen
+              </p>
+              <p className="mt-0.5 text-[11px] font-semibold uppercase tracking-wider text-bark-500">
+                Pure ghee • Real jaggery
+              </p>
             </div>
           </div>
         </div>
@@ -203,7 +230,7 @@ export default async function HomePage() {
                 <Link
                   key={c.slug}
                   href={`/shop?category=${c.slug}`}
-                  className={`group relative overflow-hidden rounded-xl border border-bark-800/10 border-b-4 ${CAT_ACCENTS[i % CAT_ACCENTS.length]} bg-ivory-100 shadow-soft transition hover:shadow-lift`}
+                  className={`group relative overflow-hidden rounded-2xl border border-bark-800/10 border-b-4 ${CAT_ACCENTS[i % CAT_ACCENTS.length]} bg-ivory-100 shadow-soft transition duration-300 hover:-translate-y-1 hover:shadow-lift hover:ring-2 hover:ring-honey-300/60`}
                 >
                   <div className="relative aspect-[4/3] overflow-hidden bg-sand-50">
                     {c.image ? (
@@ -254,7 +281,7 @@ export default async function HomePage() {
             <h2 className="section-title">{story.title || "Rooted in nature, made with care"}</h2>
             <p className="mt-5 text-base leading-relaxed text-bark-600">
               {story.body ||
-                "MJ Nature Naturals is a premium natural food brand crafting wholesome treats from thoughtfully selected ingredients."}
+                "MJ Nature Natural is a premium natural food brand crafting wholesome treats from thoughtfully selected ingredients."}
             </p>
             <div className="mt-8 grid grid-cols-2 gap-6 border-t border-bark-800/10 pt-6 sm:grid-cols-4">
               {[
@@ -421,7 +448,7 @@ export default async function HomePage() {
         <section className="container-site py-16 sm:py-24">
           <div className="mb-10 text-center">
             <p className="eyebrow mb-2">Why Us</p>
-            <h2 className="section-title">Why MJ Nature Naturals</h2>
+            <h2 className="section-title">Why MJ Nature Natural</h2>
           </div>
           <div className="grid gap-6 sm:grid-cols-2 lg:grid-cols-4">
             {whyPoints.slice(0, 4).map((w, i) => {
@@ -482,7 +509,7 @@ function HeroFallbackArt() {
       <span className="flex h-20 w-20 items-center justify-center rounded-full bg-leaf-600 font-serif text-2xl font-semibold text-white">
         MJ
       </span>
-      <p className="mt-6 font-serif text-2xl text-bark-800">Nature Naturals</p>
+      <p className="mt-6 font-serif text-2xl text-bark-800">Nature Natural</p>
       <p className="mt-2 text-sm text-bark-500">Premium natural foods</p>
     </div>
   );

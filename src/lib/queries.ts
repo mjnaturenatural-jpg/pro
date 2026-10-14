@@ -6,7 +6,7 @@ export async function getSettings() {
   const s = await SiteSettings.findOne({ key: "site" }).lean();
   return (
     (s as unknown as Record<string, unknown>) ?? {
-      brandName: "MJ Nature Naturals",
+      brandName: "MJ Nature Natural",
       logo: "",
       favicon: "",
       contactEmail: "",

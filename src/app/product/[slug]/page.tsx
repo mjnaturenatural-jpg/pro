@@ -88,7 +88,7 @@ export default async function ProductPage({ params }: Props) {
     name: product.name,
     description: product.shortDescription || product.description || "",
     image: product.images.slice(0, 2),
-    brand: { "@type": "Brand", name: "MJ Nature Naturals" },
+    brand: { "@type": "Brand", name: "MJ Nature Natural" },
     offers: {
       "@type": "AggregateOffer",
       priceCurrency: "INR",

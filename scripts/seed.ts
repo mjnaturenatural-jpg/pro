@@ -462,7 +462,7 @@ function placeholderImage(name: string): string {
     .map((w) => w[0])
     .join("")
     .toUpperCase();
-  const svg = `<svg xmlns="http://www.w3.org/2000/svg" width="800" height="800"><rect width="100%" height="100%" fill="#E2F0D8"/><circle cx="400" cy="360" r="140" fill="#B5CCA6"/><text x="400" y="385" font-family="Georgia,serif" font-size="72" fill="#176044" text-anchor="middle" font-weight="600">${initials}</text><text x="400" y="560" font-family="Georgia,serif" font-size="28" fill="#49351F" text-anchor="middle">MJ Nature Naturals</text></svg>`;
+  const svg = `<svg xmlns="http://www.w3.org/2000/svg" width="800" height="800"><rect width="100%" height="100%" fill="#E2F0D8"/><circle cx="400" cy="360" r="140" fill="#B5CCA6"/><text x="400" y="385" font-family="Georgia,serif" font-size="72" fill="#176044" text-anchor="middle" font-weight="600">${initials}</text><text x="400" y="560" font-family="Georgia,serif" font-size="28" fill="#49351F" text-anchor="middle">MJ Nature Natural</text></svg>`;
   return `data:image/svg+xml;base64,${Buffer.from(svg).toString("base64")}`;
 }
 
@@ -471,7 +471,7 @@ async function seed() {
   console.log("Connected to MongoDB");
 
   // Admin
-  const adminEmail = (process.env.ADMIN_EMAIL || "admin@mjnaturals.in").toLowerCase();
+  const adminEmail = (process.env.ADMIN_EMAIL || "admin@mjNATURAL.in").toLowerCase();
   const adminPassword = process.env.ADMIN_PASSWORD || "ChangeMe@123";
   const hashed = await bcrypt.hash(adminPassword, 12);
   await User.findOneAndUpdate(
@@ -536,7 +536,7 @@ async function seed() {
   await SiteSettings.findOneAndUpdate(
     { key: "site" },
     {
-      brandName: "MJ Nature Naturals",
+      brandName: "MJ Nature Natural",
       announcementEnabled: true,
       announcementText: "",
       freeShippingThreshold: 999,

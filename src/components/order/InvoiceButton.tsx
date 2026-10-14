@@ -107,7 +107,7 @@ function buildInvoiceHtml(order: InvoiceOrder, number: string): string {
   @media print{body{margin:0}.doc{border:none}}
 </style></head><body><div class="doc">
   <div class="brand">
-    <div><h1>MJ Nature Naturals</h1><div class="muted">Tax Invoice</div></div>
+    <div><h1>MJ Nature Natural</h1><div class="muted">Tax Invoice</div></div>
     <div style="text-align:right"><div class="muted">Invoice No</div><strong>${number}</strong><br>
     <div class="muted">Date</div>${new Date(order.createdAt).toLocaleDateString("en-IN", { day: "2-digit", month: "short", year: "numeric" })}</div>
   </div>
@@ -124,7 +124,7 @@ function buildInvoiceHtml(order: InvoiceOrder, number: string): string {
     ${order.tax > 0 ? `<div><span>Tax</span><span>${inr(order.tax)}</span></div>` : ""}
     <div class="grand"><span>Total</span><span>${inr(order.total)}</span></div>
   </div>
-  <div class="foot">Thank you for your order · MJ Nature Naturals<br>Payment status: ${order.paymentStatus}</div>
+  <div class="foot">Thank you for your order · MJ Nature Natural<br>Payment status: ${order.paymentStatus}</div>
 </div></body></html>`;
 }
 

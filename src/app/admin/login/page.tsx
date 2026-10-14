@@ -34,7 +34,7 @@ function AdminLoginForm() {
           MJ
         </span>
         <h1 className="font-serif text-xl text-bark-900">Admin Sign In</h1>
-        <p className="mt-1 text-xs text-bark-500">MJ Nature Naturals · Admin Panel</p>
+        <p className="mt-1 text-xs text-bark-500">MJ Nature Natural · Admin Panel</p>
       </div>
       {error && (
         <p className="mb-4 rounded-lg bg-red-50 px-4 py-3 text-xs text-red-600">{error}</p>

@@ -28,10 +28,10 @@
     @apply inline-flex items-center justify-center gap-2 rounded-full text-sm font-medium transition-all duration-200 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-caramel-500 focus-visible:ring-offset-2 focus-visible:ring-offset-ivory-50 disabled:pointer-events-none disabled:opacity-50;
   }
   .btn-primary {
-    @apply btn bg-caramel-600 text-white hover:bg-caramel-700 px-6 py-3;
+    @apply btn bg-gradient-to-r from-caramel-600 to-caramel-500 text-white shadow-lg shadow-caramel-600/30 hover:-translate-y-0.5 hover:shadow-xl hover:shadow-caramel-600/40 px-6 py-3;
   }
   .btn-secondary {
-    @apply btn border border-caramel-600/40 bg-white text-caramel-700 hover:bg-caramel-50 px-6 py-3;
+    @apply btn border border-caramel-600/40 bg-white text-caramel-700 shadow-sm hover:-translate-y-0.5 hover:border-caramel-600/70 hover:bg-caramel-50 hover:shadow-md px-6 py-3;
   }
   .btn-accent {
     @apply btn bg-forest-800 text-white hover:bg-forest-900 px-6 py-3;

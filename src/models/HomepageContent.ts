@@ -2,7 +2,7 @@ import mongoose, { Schema, model, models, type InferSchemaType, type Model } fro
 
 const HeroSchema = new Schema(
   {
-    eyebrow: { type: String, default: "MJ NATURE NATURALS" },
+    eyebrow: { type: String, default: "MJ NATURE NATURAL" },
     headline: { type: String, default: "Naturally made. Thoughtfully crafted." },
     subheading: {
       type: String,
@@ -24,7 +24,7 @@ const StorySchema = new Schema(
     body: {
       type: String,
       default:
-        "MJ Nature Naturals is a premium natural food brand crafting wholesome treats from thoughtfully selected ingredients. Every batch is prepared with care, so what reaches your table feels honest, flavourful and familiar.",
+        "MJ Nature Natural is a premium natural food brand crafting wholesome treats from thoughtfully selected ingredients. Every batch is prepared with care, so what reaches your table feels honest, flavourful and familiar.",
     },
     image: { type: String, default: "" },
     ctaText: { type: String, default: "Discover Our Story" },

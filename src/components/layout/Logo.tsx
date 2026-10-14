@@ -1,7 +1,7 @@
 import Image from "next/image";
 
 /**
- * Brand mark for MJ Nature Naturals.
+ * Brand mark for MJ Nature Natural.
  *
  * Falls back to the built-in MJ monogram that ships with the project when no
  * custom logo has been uploaded. Upload the original logo via
@@ -14,7 +14,7 @@ export function LogoMark({ size = 36, className }: { size?: number; className?: 
       height={size}
       viewBox="0 0 64 64"
       role="img"
-      aria-label="MJ Nature Naturals"
+      aria-label="MJ Nature Natural"
       className={className}
     >
       <rect width="64" height="64" rx="16" fill="#1B6B42" />
@@ -35,7 +35,7 @@ export function LogoMark({ size = 36, className }: { size?: number; className?: 
 
 export function BrandLogo({
   logo = "/images/logo.png",
-  brandName = "MJ Nature Naturals",
+  brandName = "MJ Nature Natural",
   size = 36,
 }: {
   logo?: string;
@@ -61,7 +61,7 @@ export function BrandLogo({
           {brandName.split(" ").slice(0, 2).join(" ")}
         </span>
         <span className="text-[10px] font-medium uppercase tracking-[0.28em] text-caramel-600">
-          {brandName.split(" ").slice(2).join(" ") || "Naturals"}
+          {brandName.split(" ").slice(2).join(" ") || "Natural"}
         </span>
       </span>
     </span>

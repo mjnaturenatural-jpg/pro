@@ -231,7 +231,7 @@ export function ContentEditor({
         </Row>
       </Section>
 
-      <Section title="Why MJ Nature Naturals">
+      <Section title="Why MJ Nature Natural">
         {form.whyPoints.map((w, i) => (
           <Row key={i}>
             <Field label={`Title ${i + 1}`}>

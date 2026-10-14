@@ -14,7 +14,7 @@ export function isCloudinaryConfigured(): boolean {
   );
 }
 
-export async function uploadImage(fileBase64: string, folder = "mj-nature-naturals") {
+export async function uploadImage(fileBase64: string, folder = "mj-nature-natural") {
   if (!isCloudinaryConfigured()) {
     throw new Error("Cloudinary is not configured");
   }

@@ -8,7 +8,7 @@ export const revalidate = 60;
 export const metadata: Metadata = {
   title: "About",
   description:
-    "Learn about MJ Nature Naturals — a premium natural food brand crafting 100% eggless laddus, brownies, cookies and millet treats with pure ghee, real butter and original jaggery — no maida, no added sugar.",
+    "Learn about MJ Nature Natural — a premium natural food brand crafting 100% eggless laddus, brownies, cookies and millet treats with pure ghee, real butter and original jaggery — no maida, no added sugar.",
 };
 
 const BRAND_PILLARS = [
@@ -24,7 +24,7 @@ export default async function AboutPage() {
   const story = (content?.story ?? {}) as Record<string, string>;
   const whyPoints = (content?.whyPoints ?? []) as { title: string; description: string }[];
   const trustPoints = (content?.trustPoints ?? []) as { title: string; description: string }[];
-  const brandName = (settings.brandName as string) || "MJ Nature Naturals";
+  const brandName = (settings.brandName as string) || "MJ Nature Natural";
 
   return (
     <div>

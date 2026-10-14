@@ -6,7 +6,7 @@ export const metadata: Metadata = { title: "Shipping Policy" };
 
 export default async function ShippingPolicyPage() {
   const settings = await getSettings();
-  const brand = (settings.brandName as string) || "MJ Nature Naturals";
+  const brand = (settings.brandName as string) || "MJ Nature Natural";
   const freeThreshold = (settings.freeShippingThreshold as number) || 999;
   const flat = (settings.flatShipping as number) || 79;
   const email = (settings.contactEmail as string) || "";

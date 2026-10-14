@@ -145,7 +145,7 @@ export default function CheckoutPage() {
         key: data.keyId,
         amount: data.amount,
         currency: data.currency,
-        name: "MJ Nature Naturals",
+        name: "MJ Nature Natural",
         description: `Order ${data.orderNumber}`,
         order_id: data.razorpayOrderId,
         prefill: {

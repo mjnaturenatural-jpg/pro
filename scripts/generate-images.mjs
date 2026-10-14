@@ -1,5 +1,5 @@
 /**
- * Generates real photographic images for MJ Nature Naturals using the
+ * Generates real photographic images for MJ Nature Natural using the
  * Pollinations.ai image API (keyless, flux model), saving them under
  * public/images/ and recording progress in scripts/image-manifest.json.
  *

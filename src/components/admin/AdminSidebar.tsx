@@ -69,7 +69,7 @@ export function AdminSidebar() {
             MJ
           </span>
           <div className="leading-tight">
-            <p className="font-serif text-sm font-semibold text-bark-900">MJ Nature Naturals</p>
+            <p className="font-serif text-sm font-semibold text-bark-900">MJ Nature Natural</p>
             <p className="text-[10px] uppercase tracking-widest text-caramel-600">Admin Panel</p>
           </div>
         </Link>
