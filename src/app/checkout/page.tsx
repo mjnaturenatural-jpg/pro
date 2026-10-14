@@ -4,11 +4,15 @@ import Image from "next/image";
 import Link from "next/link";
 import { useRouter } from "next/navigation";
 import { useEffect, useState } from "react";
+import { Leaf, Lock, Truck } from "lucide-react";
 import { useCart } from "@/store/cart";
 import { useToast } from "@/components/ui/Toast";
-import { formatINR, isValidIndianPhone, isValidPincode } from "@/lib/utils";
+import { isValidIndianPhone, isValidPincode } from "@/lib/utils";
+import { formatPrice } from "@/lib/format";
 import { FREE_SHIPPING_THRESHOLD, INDIAN_STATES } from "@/lib/constants";
+import { siteConfig } from "@config/site";
 import { CouponBox } from "@/components/cart/CouponBox";
+import { FssaiLine } from "@/components/checkout/FssaiLine";
 
 declare global {
   interface Window {
@@ -208,6 +212,26 @@ export default function CheckoutPage() {
       <div className="mb-8">
         <p className="eyebrow mb-2">Checkout</p>
         <h1 className="section-title">Delivery Details</h1>
+        <ol className="mt-5 flex max-w-md items-center gap-1.5 text-xs font-bold" aria-label="Checkout progress">
+          {["Cart", "Details", "Payment"].map((step, i) => (
+            <li key={step} className="flex flex-1 items-center gap-1.5 last:flex-none">
+              <span
+                aria-current={i === 1 ? "step" : undefined}
+                className={
+                  i < 1
+                    ? "flex h-6 w-6 items-center justify-center rounded-full bg-leaf-600 text-[11px] text-white"
+                    : i === 1
+                      ? "flex h-6 w-6 items-center justify-center rounded-full bg-caramel-600 text-[11px] text-white ring-4 ring-caramel-600/20"
+                      : "flex h-6 w-6 items-center justify-center rounded-full bg-bark-800/10 text-[11px] text-bark-500"
+                }
+              >
+                {i + 1}
+              </span>
+              <span className={i === 1 ? "text-bark-900" : "text-bark-500"}>{step}</span>
+              {i < 2 && <span className="mx-1 h-px flex-1 bg-bark-800/15" aria-hidden="true" />}
+            </li>
+          ))}
+        </ol>
       </div>
 
       <div className="grid gap-8 lg:grid-cols-[1fr_380px]">
@@ -321,10 +345,27 @@ export default function CheckoutPage() {
               disabled={loading}
               className="btn-primary mt-2 w-full py-4 text-base"
             >
-              {loading ? "Opening payment…" : `Pay ${formatINR(total)} Securely`}
+              {loading ? "Opening payment…" : `Pay ${formatPrice(total)} Securely`}
             </button>
             <p className="text-center text-xs text-bark-500">
               Payments are processed securely via Razorpay. Your card details are never stored on our servers.
+            </p>
+            <FssaiLine />
+            <div className="mt-3 flex items-center justify-center gap-4 text-[11px] font-bold uppercase tracking-wider text-bark-500">
+              <span className="inline-flex items-center gap-1">
+                <Lock size={11} className="text-leaf-600" /> 256-bit Secure
+              </span>
+              <span className="inline-flex items-center gap-1">
+                <Leaf size={11} className="text-leaf-600" /> 100% Eggless
+              </span>
+              <span className="inline-flex items-center gap-1">
+                <Truck size={11} className="text-leaf-600" /> Pan-India
+              </span>
+            </div>
+            <p className="mt-2 text-center text-xs text-bark-500">
+              {siteConfig.codAvailable
+                ? "Pay securely online or choose Cash on Delivery."
+                : "We accept UPI, cards and netbanking at checkout."}
             </p>
           </form>
         </div>
@@ -346,28 +387,28 @@ export default function CheckoutPage() {
                       {item.packSize} × {item.quantity}
                     </p>
                   </div>
-                  <p className="text-xs font-medium">{formatINR(item.price * item.quantity)}</p>
+                  <p className="text-xs font-medium">{formatPrice(item.price * item.quantity)}</p>
                 </li>
               ))}
             </ul>
             <dl className="space-y-2.5 border-t border-bark-800/10 pt-4 text-sm">
               <div className="flex justify-between">
                 <dt className="text-bark-600">Subtotal</dt>
-                <dd>{formatINR(subtotal)}</dd>
+                <dd>{formatPrice(subtotal)}</dd>
               </div>
               {coupon && couponDiscount > 0 && (
                 <div className="flex justify-between text-leaf-600">
                   <dt>Coupon ({coupon.code})</dt>
-                  <dd>−{formatINR(couponDiscount)}</dd>
+                  <dd>−{formatPrice(couponDiscount)}</dd>
                 </div>
               )}
               <div className="flex justify-between">
                 <dt className="text-bark-600">Shipping</dt>
-                <dd>{shipping === 0 ? "Free" : formatINR(shipping)}</dd>
+                <dd>{shipping === 0 ? "Free" : formatPrice(shipping)}</dd>
               </div>
               <div className="flex justify-between border-t border-bark-800/10 pt-2.5 text-base font-semibold text-bark-900">
                 <dt>Total</dt>
-                <dd>{formatINR(total)}</dd>
+                <dd>{formatPrice(total)}</dd>
               </div>
             </dl>
             <CouponBox

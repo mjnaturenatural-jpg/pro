@@ -3,7 +3,8 @@ import { notFound } from "next/navigation";
 import { CheckCircle2, Package, MapPin } from "lucide-react";
 import { connectDB } from "@/lib/db";
 import { Order } from "@/models";
-import { formatINR, formatDate } from "@/lib/utils";
+import { formatDate } from "@/lib/utils";
+import { formatPrice } from "@/lib/format";
 import { OrderSuccessActions } from "@/components/order/OrderSuccessActions";
 export const dynamic = "force-dynamic";
 
@@ -85,28 +86,28 @@ export default async function OrderSuccessPage({ params }: { params: { id: strin
                 <span className="text-bark-700">
                   {item.name} <span className="text-bark-400">· {item.packSize} × {item.quantity}</span>
                 </span>
-                <span className="font-medium">{formatINR(item.subtotal)}</span>
+                <span className="font-medium">{formatPrice(item.subtotal)}</span>
               </li>
             ))}
           </ul>
           <dl className="mt-4 space-y-2 border-t border-bark-800/10 pt-4 text-sm">
             <div className="flex justify-between">
               <dt className="text-bark-600">Subtotal</dt>
-              <dd>{formatINR(order.subtotal)}</dd>
+              <dd>{formatPrice(order.subtotal)}</dd>
             </div>
             {order.couponDiscount > 0 && (
               <div className="flex justify-between text-leaf-600">
                 <dt>Coupon{order.couponCode ? ` (${order.couponCode})` : ""}</dt>
-                <dd>−{formatINR(order.couponDiscount)}</dd>
+                <dd>−{formatPrice(order.couponDiscount)}</dd>
               </div>
             )}
             <div className="flex justify-between">
               <dt className="text-bark-600">Shipping</dt>
-              <dd>{order.shipping === 0 ? "Free" : formatINR(order.shipping)}</dd>
+              <dd>{order.shipping === 0 ? "Free" : formatPrice(order.shipping)}</dd>
             </div>
             <div className="flex justify-between border-t border-bark-800/10 pt-2 text-base font-semibold text-bark-900">
               <dt>Total</dt>
-              <dd>{formatINR(order.total)}</dd>
+              <dd>{formatPrice(order.total)}</dd>
             </div>
           </dl>
         </div>

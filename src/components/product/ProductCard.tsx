@@ -4,10 +4,14 @@ import Image from "next/image";
 import Link from "next/link";
 import { useRouter } from "next/navigation";
 import { useState } from "react";
-import { ShoppingBag, Zap } from "lucide-react";
-import { formatINR, cn } from "@/lib/utils";
+import { Heart, ShoppingBag, Zap } from "lucide-react";
+import { discountPercent, cn } from "@/lib/utils";
+import { formatPrice } from "@/lib/format";
 import { useCart } from "@/store/cart";
+import { useWishlist } from "@/store/wishlist";
 import { useToast } from "@/components/ui/Toast";
+import { Rating } from "@/components/ui/Rating";
+import { analytics } from "@/lib/analytics";
 import { BADGES, BADGE_STYLES } from "@/lib/constants";
 
 export interface ProductCardData {
@@ -20,19 +24,33 @@ export interface ProductCardData {
   badges?: { pureGhee?: boolean; eggless?: boolean; noMaida?: boolean; noAddedSugar?: boolean };
   averageRating?: number;
   reviewCount?: number;
+  category?: { name: string; slug: string } | string;
+  featured?: boolean;
 }
 
 export function ProductCard({ product, priority = false }: { product: ProductCardData; priority?: boolean }) {
   const router = useRouter();
   const { toast } = useToast();
   const addItem = useCart((s) => s.addItem);
+  const toggleWishlist = useWishlist((s) => s.toggle);
+  const wished = useWishlist((s) => s.has(product._id));
 
   const inStock = product.packSizes.some((p) => p.stock > 0);
   const defaultPack =
     product.packSizes.find((p) => p.stock > 0) ?? product.packSizes[0];
   const [selectedPack, setSelectedPack] = useState(defaultPack.label);
   const activePack = product.packSizes.find((p) => p.label === selectedPack) ?? defaultPack;
+  const fromPack = product.packSizes.reduce((a, b) => (b.price < a.price ? b : a), product.packSizes[0]);
+  const fromPct = discountPercent(fromPack.mrp, fromPack.price);
 
+  const categoryName =
+    typeof product.category === "object" ? product.category?.name || "" : "";
+  const tags = [
+    product.featured ? "Bestseller" : "",
+    product.badges?.eggless ? "Eggless" : "",
+    product.badges?.pureGhee ? "Pure Ghee" : "",
+    /millet/i.test(categoryName) || /millet/i.test(product.name) ? "Millet" : "",
+  ].filter(Boolean).slice(0, 2);
   const activeBadge = BADGES.find((b) => product.badges?.[b.key as keyof typeof product.badges]);
 
   const handleAdd = (e: React.MouseEvent) => {
@@ -48,6 +66,7 @@ export function ProductCard({ product, priority = false }: { product: ProductCar
       price: activePack.price,
       mrp: activePack.mrp,
     });
+    analytics.addToCart(product._id, product.name, activePack.price, 1);
     toast({
       message: "Added to cart",
       type: "success",
@@ -68,7 +87,14 @@ export function ProductCard({ product, priority = false }: { product: ProductCar
       price: activePack.price,
       mrp: activePack.mrp,
     });
+    analytics.addToCart(product._id, product.name, activePack.price, 1);
     router.push("/checkout");
+  };
+
+  const toggleHeart = (e: React.MouseEvent) => {
+    e.preventDefault();
+    e.stopPropagation();
+    toggleWishlist(product._id);
   };
 
   return (
@@ -84,10 +110,28 @@ export function ProductCard({ product, priority = false }: { product: ProductCar
             fill
             priority={priority}
             sizes="(max-width: 640px) 50vw, (max-width: 1024px) 33vw, 25vw"
-            className="object-contain p-2 transition duration-500 group-hover:scale-105"
+            className={cn(
+              "object-contain p-2 transition duration-500 group-hover:scale-105",
+              product.images[1] && "group-hover:opacity-0"
+            )}
+          />
+        )}
+        {product.images[1] && (
+          <Image
+            src={product.images[1]}
+            alt=""
+            aria-hidden="true"
+            fill
+            sizes="(max-width: 640px) 50vw, (max-width: 1024px) 33vw, 25vw"
+            className="object-contain p-2 opacity-0 transition duration-500 group-hover:scale-105 group-hover:opacity-100"
           />
         )}
         <div className="absolute left-2.5 top-2.5 flex flex-col items-start gap-1">
+          {fromPct > 0 && (
+            <span className="rounded-full bg-chilli-600 px-2 py-0.5 text-[9px] font-bold tracking-wide text-white">
+              {fromPct}% OFF
+            </span>
+          )}
           {activeBadge && (
             <span
               className={cn(
@@ -104,9 +148,30 @@ export function ProductCard({ product, priority = false }: { product: ProductCar
             </span>
           )}
         </div>
+        <button
+          type="button"
+          onClick={toggleHeart}
+          aria-label={wished ? `Remove ${product.name} from wishlist` : `Save ${product.name} to wishlist`}
+          aria-pressed={wished}
+          className={cn(
+            "absolute right-2.5 top-2.5 flex h-8 w-8 items-center justify-center rounded-full shadow-sm ring-1 ring-bark-800/10 transition",
+            wished ? "bg-chilli-600 text-white" : "bg-ivory-100/95 text-bark-500 hover:text-chilli-600"
+          )}
+        >
+          <Heart size={15} fill={wished ? "currentColor" : "none"} />
+        </button>
       </div>
 
       <div className="flex flex-1 flex-col gap-2.5 p-5">
+        {tags.length > 0 && (
+          <div className="flex flex-wrap gap-1.5">
+            {tags.map((t) => (
+              <span key={t} className="rounded-full bg-sand-100 px-2 py-0.5 text-[10px] font-bold uppercase tracking-wider text-caramel-700">
+                {t}
+              </span>
+            ))}
+          </div>
+        )}
         <div>
           <h3 className="line-clamp-2 text-sm font-medium leading-snug text-bark-900 group-hover:text-bark-700">
             {product.name}
@@ -114,10 +179,15 @@ export function ProductCard({ product, priority = false }: { product: ProductCar
           {product.shortDescription && (
             <p className="mt-1 line-clamp-1 text-xs text-bark-500">{product.shortDescription}</p>
           )}
+          {(product.reviewCount ?? 0) > 0 && (
+            <div className="mt-1.5">
+              <Rating value={product.averageRating || 0} count={product.reviewCount} size={12} />
+            </div>
+          )}
         </div>
 
         {product.packSizes.length > 1 && (
-          <div className="flex flex-wrap gap-1.5">
+          <div className="flex flex-wrap gap-1.5" role="group" aria-label="Choose pack size">
             {product.packSizes.map((p) => (
               <button
                 key={p.label}
@@ -126,10 +196,11 @@ export function ProductCard({ product, priority = false }: { product: ProductCar
                   e.stopPropagation();
                   setSelectedPack(p.label);
                 }}
+                aria-pressed={p.label === selectedPack}
                 className={cn(
-                  "rounded-md border px-2 py-1 text-[11px] font-medium transition",
+                  "min-h-[32px] rounded-full border px-2.5 py-1 text-[11px] font-semibold transition",
                   p.label === selectedPack
-                    ? "border-caramel-500 bg-caramel-500 text-forest-900"
+                    ? "border-caramel-600 bg-caramel-600 text-white"
                     : "border-bark-800/15 text-bark-600 hover:border-bark-800/40",
                   p.stock <= 0 && "opacity-50"
                 )}
@@ -141,17 +212,18 @@ export function ProductCard({ product, priority = false }: { product: ProductCar
         )}
 
         <div className="mt-auto flex flex-wrap items-baseline gap-x-2 gap-y-1 pt-1">
-          <span className="text-base font-semibold text-caramel-600">
-            {formatINR(activePack.price)}
+          <span className="text-base font-bold text-caramel-700">
+            from {formatPrice(fromPack.price)}
           </span>
-          {activePack.mrp > 0 && (
+          <span className="text-xs text-bark-500">/ {fromPack.label}</span>
+          {fromPack.mrp > 0 && (
             <span
               className={cn(
                 "text-xs text-bark-400",
-                activePack.mrp > activePack.price && "line-through"
+                fromPack.mrp > fromPack.price && "line-through"
               )}
             >
-              MRP {formatINR(activePack.mrp)}
+              MRP {formatPrice(fromPack.mrp)}
             </span>
           )}
         </div>

@@ -3,11 +3,18 @@
 import Image from "next/image";
 import Link from "next/link";
 import { useRouter } from "next/navigation";
-import { useRef, useState } from "react";
-import { ShoppingBag, Zap, Star, ChevronRight, ChevronLeft, Leaf, ShieldCheck, Milk, Truck } from "lucide-react";
-import { formatINR, discountPercent, cn } from "@/lib/utils";
+import { useEffect, useRef, useState } from "react";
+import { ShoppingBag, Zap, Star, ChevronRight, ChevronLeft, Leaf, ShieldCheck, Milk, Truck, MessageCircle, Maximize2 } from "lucide-react";
+import { discountPercent, cn } from "@/lib/utils";
+import { formatPrice } from "@/lib/format";
 import { useCart } from "@/store/cart";
-import { useToast } from "@/components/ui/Toast";
+import { QuantityStepper } from "@/components/ui/QuantityStepper";
+import { Accordion } from "@/components/ui/Accordion";
+import { Modal } from "@/components/ui/Modal";
+import { Breadcrumbs } from "@/components/ui/Breadcrumbs";
+import { PincodeChecker } from "@/components/product/PincodeChecker";
+import { analytics } from "@/lib/analytics";
+import { getWhatsAppLink, productEnquiryMessage } from "@/lib/whatsapp";
 import { BADGES, BADGE_STYLES } from "@/lib/constants";
 
 export interface ProductDetailViewData {
@@ -33,18 +40,20 @@ export interface ProductDetailViewData {
 export function ProductDetailView({
   product,
   categoryName,
+  whatsapp = "",
 }: {
   product: ProductDetailViewData;
   categoryName?: string;
+  whatsapp?: string;
 }) {
   const router = useRouter();
-  const { toast } = useToast();
   const addItem = useCart((s) => s.addItem);
 
   const defaultPack = product.packSizes.find((p) => p.stock > 0) ?? product.packSizes[0];
   const [packLabel, setPackLabel] = useState(defaultPack.label);
   const [quantity, setQuantity] = useState(1);
   const [activeImage, setActiveImage] = useState(0);
+  const [lightbox, setLightbox] = useState<number | null>(null);
   // Each product shows exactly two designated gallery images (its own photos only).
   const images = (product.images || []).filter(Boolean).slice(0, 2);
   const galleryRef = useRef<HTMLDivElement>(null);
@@ -67,6 +76,15 @@ export function ProductDetailView({
   const pack = product.packSizes.find((p) => p.label === packLabel) ?? defaultPack;
   const pct = discountPercent(pack.mrp, pack.price);
   const outOfStock = pack.stock <= 0;
+  const waHref = getWhatsAppLink(
+    productEnquiryMessage(product.name, pack.label),
+    whatsapp || undefined
+  );
+
+  useEffect(() => {
+    analytics.viewItem(product._id, product.name, pack.price);
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, []);
   const activeBadges = BADGES.filter(
     (b) => product.badges?.[b.key as keyof typeof product.badges]
   );
@@ -85,11 +103,8 @@ export function ProductDetailView({
       },
       quantity
     );
-    toast({
-      message: "Added to cart",
-      type: "success",
-      action: { label: "View Cart", href: "/cart" },
-    });
+    analytics.addToCart(product._id, product.name, pack.price, quantity);
+    if (typeof window !== "undefined") window.dispatchEvent(new Event("mj:open-cart"));
   };
 
   const handleBuyNow = () => {
@@ -106,26 +121,24 @@ export function ProductDetailView({
       },
       quantity
     );
+    analytics.addToCart(product._id, product.name, pack.price, quantity);
     router.push("/checkout");
   };
 
   return (
-    <div>
-      <nav className="mb-6 flex items-center gap-1.5 text-xs text-bark-500">
-        <Link href="/" className="hover:text-bark-800">Home</Link>
-        <ChevronRight size={12} />
-        <Link href="/shop" className="hover:text-bark-800">Shop</Link>
-        {product.category && (
-          <>
-            <ChevronRight size={12} />
-            <Link href={`/shop?category=${product.category.slug}`} className="hover:text-bark-800">
-              {product.category.name}
-            </Link>
-          </>
-        )}
-        <ChevronRight size={12} />
-        <span className="truncate text-bark-700">{product.name}</span>
-      </nav>
+    <div className="pb-24 sm:pb-0">
+      <Breadcrumbs
+        items={[
+          { label: "Home", href: "/" },
+          { label: "Shop", href: "/shop" },
+          ...(product.category
+            ? [{ label: product.category.name, href: `/shop?category=${product.category.slug}` }]
+            : categoryName
+              ? [{ label: categoryName }]
+              : []),
+          { label: product.name },
+        ]}
+      />
 
       <div className="grid gap-8 lg:grid-cols-2 lg:gap-14">
         {/* Gallery — product's own photos only (max two) with swipe + synced controls */}
@@ -157,9 +170,19 @@ export function ProductDetailView({
             </div>
 
             {pct > 0 && (
-              <span className="absolute left-3 top-3 rounded-full bg-forest-800 px-2.5 py-1 text-[10px] font-bold text-white">
+              <span className="absolute left-3 top-3 rounded-full bg-chilli-600 px-2.5 py-1 text-[10px] font-bold text-white">
                 {pct}% OFF
               </span>
+            )}
+            {images.length > 0 && (
+              <button
+                type="button"
+                onClick={() => setLightbox(activeImage)}
+                aria-label="Zoom product image"
+                className="absolute bottom-3 right-3 rounded-full border border-bark-800/10 bg-ivory-100/90 p-2 text-bark-700 shadow transition hover:text-caramel-700"
+              >
+                <Maximize2 size={16} />
+              </button>
             )}
 
             {images.length > 1 && (
@@ -271,9 +294,9 @@ export function ProductDetailView({
           )}
 
           <div className="mt-5 flex items-baseline gap-3">
-            <span className="text-3xl font-semibold text-bark-900">{formatINR(pack.price)}</span>
+            <span className="text-3xl font-semibold text-bark-900">{formatPrice(pack.price)}</span>
             {pack.mrp > pack.price && (
-              <span className="text-base text-bark-400 line-through">{formatINR(pack.mrp)}</span>
+              <span className="text-base text-bark-400 line-through">{formatPrice(pack.mrp)}</span>
             )}
             {pct > 0 && <span className="text-sm font-semibold text-leaf-600">Save {pct}%</span>}
           </div>
@@ -304,23 +327,11 @@ export function ProductDetailView({
           {/* Quantity */}
           <div className="mt-5">
             <p className="label">Quantity</p>
-            <div className="inline-flex items-center rounded-lg border border-bark-800/15 bg-ivory-100">
-              <button
-                onClick={() => setQuantity((q) => Math.max(1, q - 1))}
-                className="px-4 py-2.5 text-bark-600 hover:text-bark-900"
-                aria-label="Decrease quantity"
-              >
-                −
-              </button>
-              <span className="min-w-[40px] text-center text-sm font-medium">{quantity}</span>
-              <button
-                onClick={() => setQuantity((q) => Math.min(Math.max(pack.stock, 1), q + 1))}
-                className="px-4 py-2.5 text-bark-600 hover:text-bark-900"
-                aria-label="Increase quantity"
-              >
-                +
-              </button>
-            </div>
+            <QuantityStepper
+              value={quantity}
+              onChange={setQuantity}
+              max={Math.max(pack.stock, 1)}
+            />
             {pack.stock > 0 && pack.stock <= 10 && (
               <p className="mt-2 text-xs text-caramel-600">Only {pack.stock} left in stock</p>
             )}
@@ -342,6 +353,20 @@ export function ProductDetailView({
             </p>
           )}
 
+          {waHref && (
+            <a
+              href={waHref}
+              target="_blank"
+              rel="noopener noreferrer"
+              onClick={() => analytics.whatsappClick("product")}
+              className="btn mt-2.5 w-full border border-[#25D366]/50 bg-white py-3 text-sm font-semibold text-[#128C4B] transition hover:bg-[#25D366]/5"
+            >
+              <MessageCircle size={16} /> Enquire on WhatsApp
+            </a>
+          )}
+
+          <PincodeChecker />
+
           {/* Trust strip */}
           <div className="mt-6 grid grid-cols-2 gap-2 rounded-2xl border border-bark-800/10 bg-ivory-100 p-4 sm:grid-cols-4">
             {[
@@ -360,29 +385,71 @@ export function ProductDetailView({
           </div>
 
           {/* Info accordion */}
-          <div className="mt-10 divide-y divide-bark-800/10 border-y border-bark-800/10">
-            {[
-              { title: "Product Description", body: product.description },
-              { title: "Ingredients", body: product.ingredients },
-              { title: "Allergen Information", body: product.allergenInfo },
-              { title: "Storage Instructions", body: product.storageInstructions },
-              { title: "How to Use", body: product.howToUse },
-              { title: "Shipping Information", body: product.shippingInfo },
-              { title: "Return / Refund Information", body: product.returnInfo },
-            ]
-              .filter((s) => s.body && s.body.trim())
-              .map((s) => (
-                <details key={s.title} className="group py-4">
-                  <summary className="flex cursor-pointer items-center justify-between text-sm font-medium text-bark-800 marker:content-none">
-                    {s.title}
-                    <span className="text-bark-400 transition group-open:rotate-45">+</span>
-                  </summary>
-                  <p className="mt-3 whitespace-pre-line text-sm leading-relaxed text-bark-600">
-                    {s.body}
-                  </p>
-                </details>
-              ))}
+          <div className="mt-10">
+            <Accordion
+              items={[
+                { title: "Product Description", body: product.description },
+                { title: "Ingredients", body: product.ingredients },
+                { title: "Allergen Information", body: product.allergenInfo },
+                { title: "Storage Instructions", body: product.storageInstructions },
+                { title: "How to Use", body: product.howToUse },
+                { title: "Shipping Information", body: product.shippingInfo },
+                { title: "Return / Refund Information", body: product.returnInfo },
+              ]
+                .filter((s) => s.body && s.body.trim())
+                .map((s) => ({
+                  title: s.title,
+                  body: <p className="whitespace-pre-line">{s.body}</p>,
+                }))}
+            />
           </div>
+          {!(product.reviewCount > 0) && waHref && (
+            <p className="mt-6 rounded-2xl bg-sand-100 px-4 py-3 text-center text-xs leading-relaxed text-bark-600">
+              Tried this treat?{" "}
+              <a
+                href={waHref}
+                target="_blank"
+                rel="noopener noreferrer"
+                className="font-bold text-caramel-700 hover:underline"
+              >
+                Send us your review on WhatsApp →
+              </a>
+            </p>
+          )}
+        </div>
+      </div>
+
+      <Modal open={lightbox !== null} onClose={() => setLightbox(null)} title={product.name}>
+        {lightbox !== null && images[lightbox] && (
+          <div className="relative aspect-square w-full overflow-hidden rounded-2xl bg-sand-50">
+            <Image
+              src={images[lightbox]}
+              alt={product.name}
+              fill
+              sizes="(max-width: 640px) 100vw, 512px"
+              className="object-contain"
+            />
+          </div>
+        )}
+      </Modal>
+
+      {/* Sticky mobile add-to-cart bar */}
+      <div className="fixed inset-x-0 bottom-0 z-40 border-t border-bark-800/10 bg-ivory-50/95 px-4 pb-[calc(0.75rem+env(safe-area-inset-bottom))] pt-3 backdrop-blur-md sm:hidden">
+        <div className="flex items-center gap-3">
+          <div className="min-w-0 flex-1">
+            <p className="truncate text-xs font-semibold text-bark-900">{product.name}</p>
+            <p className="text-xs text-bark-500">
+              {pack.label} ·{" "}
+              <span className="text-sm font-bold text-caramel-700">{formatPrice(pack.price)}</span>
+            </p>
+          </div>
+          <button
+            onClick={handleAdd}
+            disabled={outOfStock}
+            className="btn-primary btn-sm shrink-0 disabled:opacity-50"
+          >
+            <ShoppingBag size={14} /> {outOfStock ? "Out of Stock" : "Add"}
+          </button>
         </div>
       </div>
     </div>

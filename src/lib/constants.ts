@@ -1,5 +1,8 @@
 export const APP_NAME = process.env.NEXT_PUBLIC_APP_NAME || "MJ Nature Natural";
-export const APP_URL = process.env.NEXT_PUBLIC_APP_URL || "http://localhost:3000";
+export const APP_URL =
+  process.env.NEXT_PUBLIC_SITE_URL ||
+  process.env.NEXT_PUBLIC_APP_URL ||
+  "https://www.mjnaturenatural.com";
 
 export const CATEGORIES = [
   { name: "Chikki", slug: "chikki" },
@@ -16,7 +19,7 @@ export const BADGES = [
   { key: "pureGhee", label: "100% Pure Ghee" },
   { key: "eggless", label: "100% Eggless" },
   { key: "noMaida", label: "No Maida" },
-  { key: "noAddedSugar", label: "No Added Sugar" },
+  { key: "noAddedSugar", label: "No Refined Sugar" },
 ] as const;
 
 export const BADGE_STYLES: Record<string, string> = {
@@ -54,8 +57,7 @@ export const FLAT_SHIPPING = 79;
 // Site Settings → WhatsApp in the admin, or the NEXT_PUBLIC_WHATSAPP_NUMBER env var.
 // When empty the WhatsApp actions are hidden entirely — never invent a number.
 export const WHATSAPP_NUMBER = process.env.NEXT_PUBLIC_WHATSAPP_NUMBER || "";
-export const WHATSAPP_MESSAGE =
-  "Hello MJ Nature Natural, I would like to know more about your products.";
+export { DEFAULT_WHATSAPP_MESSAGE as WHATSAPP_MESSAGE } from "./whatsapp";
 
 export const INDIAN_STATES = [
   "Andhra Pradesh","Arunachal Pradesh","Assam","Bihar","Chhattisgarh","Goa","Gujarat",

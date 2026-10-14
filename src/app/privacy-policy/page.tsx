@@ -1,5 +1,6 @@
 import type { Metadata } from "next";
 import { getSettings } from "@/lib/queries";
+import { PolicyLayout } from "@/components/legal/PolicyLayout";
 export const revalidate = 300;
 
 export const metadata: Metadata = { title: "Privacy Policy" };
@@ -9,12 +10,8 @@ export default async function PrivacyPolicyPage() {
   const brand = (settings.brandName as string) || "MJ Nature Natural";
   const email = (settings.contactEmail as string) || "";
   return (
-    <div className="container-site max-w-3xl py-14 sm:py-20">
-      <p className="eyebrow mb-3">Legal</p>
-      <h1 className="section-title">Privacy Policy</h1>
-      <p className="mt-2 text-xs text-bark-500">Last updated: {new Date().toLocaleDateString("en-IN", { month: "long", year: "numeric" })}</p>
-      <div className="prose-scope mt-8 space-y-6 text-sm leading-relaxed text-bark-600">
-        <p>
+    <PolicyLayout title="Privacy Policy">
+      <p>
           {brand} respects your privacy. This policy explains what information we collect when you
           visit our website, place an order or subscribe to our communications, and how we use it.
         </p>
@@ -59,7 +56,6 @@ export default async function PrivacyPolicyPage() {
           We may update this policy from time to time. Changes will be posted on this page with an
           updated revision date.
         </p>
-      </div>
-    </div>
+    </PolicyLayout>
   );
 }

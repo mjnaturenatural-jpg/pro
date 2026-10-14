@@ -79,6 +79,22 @@ export async function getFeaturedProducts(limit = 8): Promise<ProductCardData[]>
   return products.map(serializeProduct);
 }
 
+export async function getCategoryCounts(): Promise<Record<string, number>> {
+  await connectDB();
+  const rows = (await Product.aggregate([
+    { $match: { published: true } },
+    { $group: { _id: "$category", count: { $sum: 1 } } },
+  ])) as { _id: unknown; count: number }[];
+  const cats = (await Category.find({}).lean()) as unknown as { _id: unknown; slug: string }[];
+  const idToSlug = new Map(cats.map((c) => [String(c._id), c.slug]));
+  const out: Record<string, number> = {};
+  rows.forEach((r) => {
+    const slug = idToSlug.get(String(r._id));
+    if (slug) out[slug] = r.count;
+  });
+  return out;
+}
+
 export async function getProductsBySlugs(slugs: string[]): Promise<ProductCardData[]> {
   if (!slugs.length) return [];
   await connectDB();

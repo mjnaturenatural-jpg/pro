@@ -37,11 +37,15 @@ export function BrandLogo({
   logo = "/images/logo.png",
   brandName = "MJ Nature Natural",
   size = 36,
+  tone = "light",
 }: {
   logo?: string;
   brandName?: string;
   size?: number;
+  tone?: "light" | "dark";
 }) {
+  const nameClass =
+    tone === "dark" ? "text-ivory-50" : "text-bark-900";
   return (
     <span className="flex items-center gap-2.5 shrink-0">
       {logo ? (
@@ -50,14 +54,14 @@ export function BrandLogo({
           alt={brandName}
           width={size * 2}
           height={size}
-          className="h-10 w-auto object-contain"
+          className="h-10 w-auto rounded-lg bg-ivory-50 object-contain px-1"
           priority
         />
       ) : (
         <LogoMark size={size} />
       )}
       <span className="flex flex-col leading-none">
-        <span className="font-serif text-lg font-semibold text-bark-900 sm:text-xl">
+        <span className={`font-serif text-lg font-semibold sm:text-xl ${nameClass}`}>
           {brandName.split(" ").slice(0, 2).join(" ")}
         </span>
         <span className="text-[10px] font-medium uppercase tracking-[0.28em] text-caramel-600">

@@ -1,5 +1,7 @@
 import { Mail, Phone, MapPin, MessageCircle, Clock, HelpCircle, PackageSearch, Truck, CreditCard, Leaf } from "lucide-react";
 import { getSettings } from "@/lib/queries";
+import { DEFAULT_WHATSAPP_MESSAGE, getWhatsAppLink } from "@/lib/whatsapp";
+import { siteConfig } from "@config/site";
 import { ContactForm } from "@/components/contact/ContactForm";
 import { Metadata } from "next";
 export const revalidate = 60;
@@ -39,18 +41,24 @@ const FAQS = [
 
 export default async function ContactPage() {
   const settings = await getSettings();
-  const email = (settings.contactEmail as string) || "";
-  const phone = (settings.phone as string) || "";
+  const email = (settings.contactEmail as string) || siteConfig.email;
+  const phone = (settings.phone as string) || siteConfig.phone;
+  const phoneHref = phone
+    ? ((settings.phone as string) ? phone.replace(/[^\d+]/g, "") : siteConfig.phoneHref)
+    : "";
   const whatsapp = (settings.whatsapp as string) || "";
-  const address = (settings.address as string) || "";
+  const address = (settings.address as string) || siteConfig.address;
+  const hours = siteConfig.hours;
+  const waCtaHref = getWhatsAppLink(DEFAULT_WHATSAPP_MESSAGE, whatsapp || undefined);
 
   const methods = [
     email && { label: "Email", value: email, href: `mailto:${email}`, Icon: Mail },
-    phone && { label: "Phone", value: phone, href: `tel:${phone}`, Icon: Phone },
+    phoneHref && { label: "Phone", value: phone, href: `tel:${phoneHref}`, Icon: Phone },
+    hours && { label: "Hours", value: hours, href: "", Icon: Clock },
     whatsapp && {
       label: "WhatsApp",
       value: whatsapp,
-      href: `https://wa.me/${whatsapp.replace(/\D/g, "")}`,
+      href: getWhatsAppLink(DEFAULT_WHATSAPP_MESSAGE, whatsapp),
       Icon: MessageCircle,
     },
     address && { label: "Address", value: address, href: "", Icon: MapPin },
@@ -134,9 +142,9 @@ export default async function ContactPage() {
               </ul>
             </div>
 
-            {whatsapp && (
+            {waCtaHref && (
               <a
-                href={`https://wa.me/${whatsapp.replace(/\D/g, "")}`}
+                href={waCtaHref}
                 target="_blank"
                 rel="noopener noreferrer"
                 className="btn-accent w-full"
@@ -150,6 +158,24 @@ export default async function ContactPage() {
                 <span className="font-semibold text-bark-900">Looking for order help?</span>{" "}
                 Mention your order number in the message and we will get right on it.
               </p>
+            </div>
+
+            <div className="overflow-hidden rounded-xl border border-bark-800/10">
+              {siteConfig.mapEmbedUrl ? (
+                <iframe
+                  title="Store location map"
+                  src={siteConfig.mapEmbedUrl}
+                  className="h-52 w-full"
+                  loading="lazy"
+                />
+              ) : (
+                <div className="flex h-40 flex-col items-center justify-center gap-2 border-2 border-dashed border-bark-800/15 bg-sand-100 px-6 text-center">
+                  <MapPin size={22} className="text-caramel-600" />
+                  <p className="text-xs font-semibold text-bark-600">
+                    Find us across India — detailed map coming soon.
+                  </p>
+                </div>
+              )}
             </div>
           </aside>
         </div>

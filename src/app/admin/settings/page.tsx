@@ -1,5 +1,6 @@
 import { guardAdmin } from "@/lib/admin-guard";
 import { SettingsManager } from "@/components/admin/SettingsManager";
+import { APP_URL } from "@/lib/constants";
 
 export const metadata = { title: "Settings" };
 export const dynamic = "force-dynamic";
@@ -18,7 +19,7 @@ export default async function AdminSettingsPage() {
 
   let settings: Record<string, unknown> = {};
   try {
-    const res = await fetch(`${process.env.NEXT_PUBLIC_APP_URL || "http://localhost:3000"}/api/admin/settings`, {
+    const res = await fetch(`${APP_URL}/api/admin/settings`, {
       cache: "no-store",
     });
     const data = await res.json();

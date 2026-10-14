@@ -1,5 +1,6 @@
 import type { Metadata } from "next";
 import { getSettings } from "@/lib/queries";
+import { PolicyLayout } from "@/components/legal/PolicyLayout";
 export const revalidate = 300;
 
 export const metadata: Metadata = { title: "Refund Policy" };
@@ -9,12 +10,8 @@ export default async function RefundPolicyPage() {
   const brand = (settings.brandName as string) || "MJ Nature Natural";
   const email = (settings.contactEmail as string) || "";
   return (
-    <div className="container-site max-w-3xl py-14 sm:py-20">
-      <p className="eyebrow mb-3">Legal</p>
-      <h1 className="section-title">Refund Policy</h1>
-      <p className="mt-2 text-xs text-bark-500">Last updated: {new Date().toLocaleDateString("en-IN", { month: "long", year: "numeric" })}</p>
-      <div className="mt-8 space-y-6 text-sm leading-relaxed text-bark-600">
-        <p>
+    <PolicyLayout title="Refund Policy">
+      <p>
           Your satisfaction matters to us. Because we deal in food products, our refund policy has
           some specific conditions. Please read carefully.
         </p>
@@ -48,7 +45,6 @@ export default async function RefundPolicyPage() {
         </p>
         <h2 className="pt-2 font-serif text-lg text-bark-900">Contact</h2>
         <p>For refund or cancellation requests, reach us at {email || "our contact page"}.</p>
-      </div>
-    </div>
+    </PolicyLayout>
   );
 }

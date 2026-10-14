@@ -2,6 +2,7 @@
 
 import { useState } from "react";
 import { useToast } from "@/components/ui/Toast";
+import { analytics } from "@/lib/analytics";
 
 export function NewsletterSection({
   newsletter,
@@ -29,6 +30,7 @@ export function NewsletterSection({
       const data = await res.json();
       if (res.ok) {
         toast({ message: "You're subscribed. Welcome!", type: "success" });
+        analytics.newsletterSignup();
         setEmail("");
       } else {
         toast({ message: data.error || "Could not subscribe", type: "error" });

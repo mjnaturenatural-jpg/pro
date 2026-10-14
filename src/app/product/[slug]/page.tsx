@@ -4,6 +4,9 @@ import { connectDB } from "@/lib/db";
 import { Product, Category } from "@/models";
 import { ProductDetailView } from "@/components/product/ProductDetailView";
 import { ProductCard, type ProductCardData } from "@/components/product/ProductCard";
+import { FrequentlyBought } from "@/components/product/FrequentlyBought";
+import { breadcrumbJsonLd } from "@/components/ui/Breadcrumbs";
+import { getSettings } from "@/lib/queries";
 import { APP_URL } from "@/lib/constants";
 export const revalidate = 60;
 
@@ -66,7 +69,10 @@ export async function generateMetadata({ params }: Props): Promise<Metadata> {
     openGraph: {
       title: product.name,
       description: product.shortDescription || "",
-      images: product.images[0] ? [{ url: product.images[0] }] : [],
+      url: `${APP_URL}/product/${product.slug}`,
+      images: product.images[0]
+        ? [{ url: product.images[0] }]
+        : [{ url: `${APP_URL}/og.jpg`, width: 1200, height: 630 }],
       type: "website",
     },
   };
@@ -82,6 +88,8 @@ export default async function ProductPage({ params }: Props) {
       ? String((product.category as unknown as { _id: string })._id || "")
       : "";
   const related = await getRelated(String(product._id), categoryId);
+  const settings = await getSettings();
+  const whatsapp = (settings.whatsapp as string) || "";
   const jsonLd = {
     "@context": "https://schema.org",
     "@type": "Product",
@@ -109,14 +117,29 @@ export default async function ProductPage({ params }: Props) {
       : {}),
   };
 
+  const breadcrumbLd = breadcrumbJsonLd(
+    [
+      { label: "Home", href: "/" },
+      { label: "Shop", href: "/shop" },
+      ...(categoryName ? [{ label: categoryName }] : []),
+      { label: product.name },
+    ],
+    APP_URL
+  );
+
   return (
     <>
       <script
         type="application/ld+json"
         dangerouslySetInnerHTML={{ __html: JSON.stringify(jsonLd) }}
       />
+      <script
+        type="application/ld+json"
+        dangerouslySetInnerHTML={{ __html: JSON.stringify(breadcrumbLd) }}
+      />
       <div className="container-site py-8 sm:py-12">
-        <ProductDetailView product={JSON.parse(JSON.stringify(product))} categoryName={categoryName} />
+        <ProductDetailView product={JSON.parse(JSON.stringify(product))} categoryName={categoryName} whatsapp={whatsapp} />
+        <FrequentlyBought products={related.slice(0, 2)} />
       </div>
       {related.length > 0 && (
         <section className="container-site pb-16 sm:pb-20">

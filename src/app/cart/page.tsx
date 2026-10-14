@@ -3,9 +3,9 @@
 import Image from "next/image";
 import Link from "next/link";
 import { useState } from "react";
-import { Trash2, ShoppingBag } from "lucide-react";
+import { Trash2, ShoppingBag, Lock, Leaf } from "lucide-react";
 import { useCart } from "@/store/cart";
-import { formatINR } from "@/lib/utils";
+import { formatPrice } from "@/lib/format";
 import { FREE_SHIPPING_THRESHOLD } from "@/lib/constants";
 import { CouponBox } from "@/components/cart/CouponBox";
 
@@ -41,7 +41,32 @@ export default function CartPage() {
 
   return (
     <div className="container-site py-10 sm:py-14">
-      <h1 className="section-title mb-8">Your Cart</h1>
+      <h1 className="section-title mb-6">Your Cart</h1>
+      <div className="mb-8 rounded-2xl border border-bark-800/10 bg-ivory-100 p-4 sm:p-5">
+        {freeShippingGap > 0 ? (
+          <p className="text-sm font-semibold text-bark-700">
+            Add {formatPrice(freeShippingGap)} more for{" "}
+            <span className="text-leaf-700">free shipping</span>
+          </p>
+        ) : (
+          <p className="text-sm font-semibold text-leaf-700">
+            You have unlocked free shipping
+          </p>
+        )}
+        <div
+          className="mt-2.5 h-2.5 overflow-hidden rounded-full bg-bark-800/10"
+          role="progressbar"
+          aria-valuenow={Math.min(100, Math.round((net / FREE_SHIPPING_THRESHOLD) * 100))}
+          aria-valuemin={0}
+          aria-valuemax={100}
+          aria-label="Free shipping progress"
+        >
+          <div
+            className="h-full rounded-full bg-gradient-to-r from-leaf-600 to-leaf-500 transition-all duration-500"
+            style={{ width: `${Math.min(100, Math.round((net / FREE_SHIPPING_THRESHOLD) * 100))}%` }}
+          />
+        </div>
+      </div>
       <div className="grid gap-8 lg:grid-cols-[1fr_360px]">
         <div className="space-y-4">
           {items.map((item) => (
@@ -96,11 +121,11 @@ export default function CartPage() {
                   </div>
                   <div className="text-right">
                     <p className="text-sm font-semibold text-bark-900">
-                      {formatINR(item.price * item.quantity)}
+                      {formatPrice(item.price * item.quantity)}
                     </p>
                     {item.mrp > item.price && (
                       <p className="text-xs text-bark-400 line-through">
-                        {formatINR(item.mrp * item.quantity)}
+                        {formatPrice(item.mrp * item.quantity)}
                       </p>
                     )}
                   </div>
@@ -116,35 +141,35 @@ export default function CartPage() {
             <dl className="space-y-3 text-sm">
               <div className="flex justify-between">
                 <dt className="text-bark-600">Subtotal</dt>
-                <dd className="font-medium">{formatINR(subtotal)}</dd>
+                <dd className="font-medium">{formatPrice(subtotal)}</dd>
               </div>
               {itemDiscount > 0 && (
                 <div className="flex justify-between text-leaf-600">
                   <dt>Item discount</dt>
-                  <dd>−{formatINR(itemDiscount)}</dd>
+                  <dd>−{formatPrice(itemDiscount)}</dd>
                 </div>
               )}
               {coupon && couponDiscount > 0 && (
                 <div className="flex justify-between text-leaf-600">
                   <dt>Coupon ({coupon.code})</dt>
-                  <dd>−{formatINR(couponDiscount)}</dd>
+                  <dd>−{formatPrice(couponDiscount)}</dd>
                 </div>
               )}
               <div className="flex justify-between">
                 <dt className="text-bark-600">Shipping</dt>
                 <dd className="font-medium">
-                  {shipping === 0 ? "Free" : formatINR(shipping)}
+                  {shipping === 0 ? "Free" : formatPrice(shipping)}
                 </dd>
               </div>
               <div className="flex justify-between border-t border-bark-800/10 pt-3 text-base">
                 <dt className="font-semibold text-bark-900">Total</dt>
-                <dd className="font-semibold text-bark-900">{formatINR(total)}</dd>
+                <dd className="font-semibold text-bark-900">{formatPrice(total)}</dd>
               </div>
             </dl>
 
             {freeShippingGap > 0 && (
               <p className="mt-3 rounded-lg bg-leaf-50 px-3 py-2 text-xs text-leaf-700">
-                Add {formatINR(freeShippingGap)} more to get free shipping.
+                Add {formatPrice(freeShippingGap)} more to get free shipping.
               </p>
             )}
 
@@ -158,6 +183,14 @@ export default function CartPage() {
             <Link href="/checkout" className="btn-primary mt-5 w-full">
               Proceed to Checkout
             </Link>
+            <div className="mt-4 flex items-center justify-center gap-4 text-[11px] font-bold uppercase tracking-wider text-bark-500">
+              <span className="inline-flex items-center gap-1">
+                <Lock size={11} className="text-leaf-600" /> Secure checkout
+              </span>
+              <span className="inline-flex items-center gap-1">
+                <Leaf size={11} className="text-leaf-600" /> 100% Eggless
+              </span>
+            </div>
             <Link
               href="/shop"
               className="mt-3 block text-center text-sm text-bark-500 hover:text-bark-800"

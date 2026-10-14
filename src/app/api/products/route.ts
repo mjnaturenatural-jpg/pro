@@ -17,6 +17,7 @@ export async function GET(req: Request) {
     const maxPrice = Number(searchParams.get("maxPrice") || 0);
     const minDiscount = Number(searchParams.get("minDiscount") || 0);
     const featured = searchParams.get("featured") === "true";
+    const tag = searchParams.get("tag") || "";
 
     await connectDB();
     const filter: Record<string, unknown> = { published: true };
@@ -43,6 +44,31 @@ export async function GET(req: Request) {
       };
     }
     if (featured) filter.featured = true;
+    if (tag === "millet") {
+      const { Category } = await import("@/models");
+      const milletCats = await Category.find({
+        $or: [{ slug: "millet-cookies" }, { name: /millet/i }],
+      }).lean();
+      const ids = milletCats.map((c) => (c as { _id: unknown })._id);
+      filter.$or = [
+        { category: { $in: ids } },
+        { name: /millet/i },
+        { keywords: /millet/i },
+      ];
+    } else if (tag === "pure-ghee") {
+      filter["badges.pureGhee"] = true;
+    } else if (tag === "eggless") {
+      filter["badges.eggless"] = true;
+    } else if (tag === "gifting") {
+      // Festive-ready sweets: laddus, chikkis and cookies.
+      const { Category } = await import("@/models");
+      const giftCats = await Category.find({
+        slug: { $in: ["laddus", "chikki", "cookies", "millet-cookies"] },
+      }).lean();
+      filter.category = {
+        $in: giftCats.map((c) => (c as { _id: unknown })._id),
+      };
+    }
 
     const sortMap: Record<string, Record<string, 1 | -1>> = {
       featured: { featured: -1, totalSold: -1, createdAt: -1 },

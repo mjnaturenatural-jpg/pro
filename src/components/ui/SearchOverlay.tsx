@@ -4,7 +4,7 @@ import { useEffect, useState, useCallback } from "react";
 import { useRouter } from "next/navigation";
 import { Search, X } from "lucide-react";
 import Image from "next/image";
-import { formatINR } from "@/lib/utils";
+import { formatPrice } from "@/lib/format";
 
 interface SearchProduct {
   _id: string;
@@ -108,7 +108,7 @@ export function SearchOverlay({ open, onClose }: { open: boolean; onClose: () =>
                   </div>
                   <div className="flex-1 min-w-0">
                     <p className="truncate text-sm font-medium text-bark-800">{p.name}</p>
-                    <p className="text-xs text-bark-500">{formatINR(p.price)}</p>
+                    <p className="text-xs text-bark-500">{formatPrice(p.price)}</p>
                   </div>
                 </button>
               ))}

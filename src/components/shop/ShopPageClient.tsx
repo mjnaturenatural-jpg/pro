@@ -26,6 +26,7 @@ export function ShopPageClient({ categories }: { categories: Category[] }) {
   const [pages, setPages] = useState(1);
   const [total, setTotal] = useState(0);
   const [filtersOpen, setFiltersOpen] = useState(false);
+  const [priceDraft, setPriceDraft] = useState("2000");
 
   const category = searchParams.get("category") || "";
   const sort = searchParams.get("sort") || "featured";
@@ -34,6 +35,7 @@ export function ShopPageClient({ categories }: { categories: Category[] }) {
   const inStock = searchParams.get("inStock") === "true";
   const maxPrice = searchParams.get("maxPrice") || "";
   const minDiscount = searchParams.get("minDiscount") || "";
+  const tag = searchParams.get("tag") || "";
 
   const setParam = useCallback(
     (key: string, value: string) => {
@@ -57,6 +59,7 @@ export function ShopPageClient({ categories }: { categories: Category[] }) {
     if (inStock) params.set("inStock", "true");
     if (maxPrice) params.set("maxPrice", maxPrice);
     if (minDiscount) params.set("minDiscount", minDiscount);
+    if (tag) params.set("tag", tag);
     params.set("page", String(page));
     params.set("limit", "24");
 
@@ -75,11 +78,24 @@ export function ShopPageClient({ categories }: { categories: Category[] }) {
     return () => {
       cancelled = true;
     };
-  }, [category, sort, q, pack, inStock, maxPrice, minDiscount, page]);
+  }, [category, sort, q, pack, inStock, maxPrice, minDiscount, tag, page]);
 
   useEffect(() => {
     setPage(1);
-  }, [category, sort, q, pack, inStock, maxPrice, minDiscount]);
+  }, [category, sort, q, pack, inStock, maxPrice, minDiscount, tag]);
+
+  useEffect(() => {
+    setPriceDraft(maxPrice || "2000");
+  }, [maxPrice]);
+
+  useEffect(() => {
+    const t = setTimeout(() => {
+      const v = priceDraft === "2000" ? "" : priceDraft;
+      if (v !== maxPrice) setParam("maxPrice", v);
+    }, 450);
+    return () => clearTimeout(t);
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [priceDraft]);
 
   const filters = (
     <div className="space-y-8">
@@ -99,6 +115,32 @@ export function ShopPageClient({ categories }: { categories: Category[] }) {
       </div>
 
       <div>
+        <h3 className="mb-3 text-xs font-semibold uppercase tracking-wide text-bark-700">Dietary</h3>
+        <div className="flex flex-wrap gap-2">
+          {[
+            { v: "millet", l: "Millet" },
+            { v: "pure-ghee", l: "Pure Ghee" },
+            { v: "eggless", l: "Eggless" },
+            { v: "gifting", l: "Gifting" },
+          ].map((t) => (
+            <button
+              key={t.v}
+              onClick={() => setParam("tag", tag === t.v ? "" : t.v)}
+              aria-pressed={tag === t.v}
+              className={cn(
+                "rounded-full border px-3 py-1.5 text-xs font-medium transition",
+                tag === t.v
+                  ? "border-leaf-600 bg-leaf-600 text-white"
+                  : "border-bark-800/15 text-bark-600 hover:border-bark-800/40"
+              )}
+            >
+              {t.l}
+            </button>
+          ))}
+        </div>
+      </div>
+
+      <div>
         <h3 className="mb-3 text-xs font-semibold uppercase tracking-wide text-bark-700">Pack Size</h3>
         <div className="flex flex-wrap gap-2">
           {PACK_OPTIONS.map((p) => (
@@ -108,7 +150,7 @@ export function ShopPageClient({ categories }: { categories: Category[] }) {
               className={cn(
                 "rounded-full border px-3 py-1.5 text-xs font-medium transition",
                 pack === p
-                  ? "border-caramel-500 bg-caramel-500 text-forest-900"
+                  ? "border-caramel-600 bg-caramel-600 text-white"
                   : "border-bark-800/15 text-bark-600 hover:border-bark-800/40"
               )}
             >
@@ -120,22 +162,19 @@ export function ShopPageClient({ categories }: { categories: Category[] }) {
 
       <div>
         <h3 className="mb-3 text-xs font-semibold uppercase tracking-wide text-bark-700">Max Price</h3>
-        <div className="flex flex-wrap gap-2">
-          {["300", "500", "1000", "2000"].map((p) => (
-            <button
-              key={p}
-              onClick={() => setParam("maxPrice", maxPrice === p ? "" : p)}
-              className={cn(
-                "rounded-full border px-3 py-1.5 text-xs font-medium transition",
-                maxPrice === p
-                  ? "border-caramel-500 bg-caramel-500 text-forest-900"
-                  : "border-bark-800/15 text-bark-600 hover:border-bark-800/40"
-              )}
-            >
-              Under ₹{p}
-            </button>
-          ))}
-        </div>
+        <input
+          type="range"
+          min={100}
+          max={2000}
+          step={50}
+          value={Number(priceDraft) || 2000}
+          onChange={(e) => setPriceDraft(e.target.value)}
+          aria-label="Maximum price"
+          className="w-full accent-caramel-600"
+        />
+        <p className="mt-1.5 text-xs font-semibold text-bark-700">
+          {priceDraft === "2000" ? "Any price" : `Under ₹${priceDraft}`}
+        </p>
       </div>
 
       <div>
@@ -148,7 +187,7 @@ export function ShopPageClient({ categories }: { categories: Category[] }) {
               className={cn(
                 "rounded-full border px-3 py-1.5 text-xs font-medium transition",
                 minDiscount === d
-                  ? "border-caramel-500 bg-caramel-500 text-forest-900"
+                  ? "border-caramel-600 bg-caramel-600 text-white"
                   : "border-bark-800/15 text-bark-600 hover:border-bark-800/40"
               )}
             >
@@ -163,7 +202,7 @@ export function ShopPageClient({ categories }: { categories: Category[] }) {
           type="checkbox"
           checked={inStock}
           onChange={(e) => setParam("inStock", e.target.checked ? "true" : "")}
-          className="h-4 w-4 rounded border-bark-800/20 text-caramel-500 focus:ring-caramel-500"
+          className="h-4 w-4 rounded border-bark-800/20 text-caramel-600 focus:ring-caramel-600"
         />
         In stock only
       </label>
@@ -176,6 +215,18 @@ export function ShopPageClient({ categories }: { categories: Category[] }) {
       </button>
     </div>
   );
+
+  const activeChips: { label: string; clear: () => void }[] = [];
+  if (category) {
+    const c = categories.find((x) => x.slug === category);
+    activeChips.push({ label: c?.name || category, clear: () => setParam("category", "") });
+  }
+  if (tag) activeChips.push({ label: tag.split("-").map((w) => w.charAt(0).toUpperCase() + w.slice(1)).join(" "), clear: () => setParam("tag", "") });
+  if (pack) activeChips.push({ label: pack, clear: () => setParam("pack", "") });
+  if (maxPrice) activeChips.push({ label: `Under ₹${maxPrice}`, clear: () => setParam("maxPrice", "") });
+  if (minDiscount) activeChips.push({ label: `${minDiscount}%+ off`, clear: () => setParam("minDiscount", "") });
+  if (inStock) activeChips.push({ label: "In stock", clear: () => setParam("inStock", "") });
+  if (q) activeChips.push({ label: `“${q}”`, clear: () => setParam("q", "") });
 
   return (
     <div className="grid gap-8 lg:grid-cols-[220px_1fr]">
@@ -199,7 +250,7 @@ export function ShopPageClient({ categories }: { categories: Category[] }) {
           <select
             value={sort}
             onChange={(e) => setParam("sort", e.target.value)}
-            className="rounded-lg border border-bark-800/15 bg-ivory-100 px-3 py-2 text-sm text-bark-700 focus:border-caramel-500 focus:outline-none"
+            className="rounded-lg border border-bark-800/15 bg-ivory-100 px-3 py-2 text-sm text-bark-700 focus:border-caramel-600 focus:outline-none"
             aria-label="Sort products"
           >
             {SORT_OPTIONS.map((o) => (
@@ -209,6 +260,28 @@ export function ShopPageClient({ categories }: { categories: Category[] }) {
             ))}
           </select>
         </div>
+
+        {activeChips.length > 0 && (
+          <div className="mb-5 flex flex-wrap items-center gap-2">
+            {activeChips.map((chip) => (
+              <button
+                key={chip.label}
+                onClick={chip.clear}
+                className="inline-flex min-h-[32px] items-center gap-1.5 rounded-full bg-brown-900 py-1 pl-3 pr-2 text-xs font-semibold text-ivory-50 transition hover:bg-brown-800"
+                aria-label={`Remove filter ${chip.label}`}
+              >
+                {chip.label}
+                <X size={13} />
+              </button>
+            ))}
+            <button
+              onClick={() => router.push(pathname, { scroll: false })}
+              className="text-xs font-semibold text-caramel-700 underline-offset-2 hover:underline"
+            >
+              Clear all
+            </button>
+          </div>
+        )}
 
         {loading ? (
           <div className="grid grid-cols-2 gap-3 sm:gap-5 lg:grid-cols-3 xl:grid-cols-4">
@@ -261,7 +334,7 @@ export function ShopPageClient({ categories }: { categories: Category[] }) {
       {/* Mobile filter drawer */}
       {filtersOpen && (
         <div className="fixed inset-0 z-[80] lg:hidden">
-          <div className="absolute inset-0 bg-forest-900/40" onClick={() => setFiltersOpen(false)} />
+          <div className="absolute inset-0 bg-brown-900/50" onClick={() => setFiltersOpen(false)} />
           <div className="absolute bottom-0 left-0 right-0 max-h-[80vh] overflow-y-auto rounded-t-2xl bg-ivory-50 p-6 animate-fadeUp">
             <div className="mb-5 flex items-center justify-between">
               <h2 className="font-serif text-lg text-bark-900">Filters</h2>
@@ -294,7 +367,7 @@ function FilterChip({
       onClick={onClick}
       className={cn(
         "block w-full rounded-lg px-3 py-2 text-left text-sm transition",
-        active ? "bg-caramel-500 text-forest-900" : "text-bark-600 hover:bg-forest-800/10"
+        active ? "bg-caramel-600 text-white" : "text-bark-600 hover:bg-caramel-500/10"
       )}
     >
       {label}

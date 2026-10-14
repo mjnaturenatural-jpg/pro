@@ -1,5 +1,6 @@
 import type { Metadata } from "next";
 import { getSettings } from "@/lib/queries";
+import { PolicyLayout } from "@/components/legal/PolicyLayout";
 export const revalidate = 300;
 
 export const metadata: Metadata = { title: "Shipping Policy" };
@@ -11,12 +12,8 @@ export default async function ShippingPolicyPage() {
   const flat = (settings.flatShipping as number) || 79;
   const email = (settings.contactEmail as string) || "";
   return (
-    <div className="container-site max-w-3xl py-14 sm:py-20">
-      <p className="eyebrow mb-3">Legal</p>
-      <h1 className="section-title">Shipping Policy</h1>
-      <p className="mt-2 text-xs text-bark-500">Last updated: {new Date().toLocaleDateString("en-IN", { month: "long", year: "numeric" })}</p>
-      <div className="mt-8 space-y-6 text-sm leading-relaxed text-bark-600">
-        <p>
+    <PolicyLayout title="Shipping Policy">
+      <p>
           We take care to pack every order securely so your products reach you in the best possible
           condition.
         </p>
@@ -49,7 +46,6 @@ export default async function ShippingPolicyPage() {
         </p>
         <h2 className="pt-2 font-serif text-lg text-bark-900">Contact</h2>
         <p>For shipping queries, reach us at {email || "our contact page"}.</p>
-      </div>
-    </div>
+    </PolicyLayout>
   );
 }
