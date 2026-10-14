@@ -10,7 +10,6 @@ import { CategoryTiles } from "@/components/home/CategoryTiles";
 import { StorySection } from "@/components/home/StorySection";
 import { Timeline } from "@/components/home/Timeline";
 import { FaqSection } from "@/components/home/FaqSection";
-import { NewsletterSection } from "@/components/home/NewsletterSection";
 import { BrandVideoSection } from "@/components/home/BrandVideoSection";
 import { SectionHeader } from "@/components/ui/SectionHeader";
 import { Reveal } from "@/components/ui/Reveal";
@@ -309,11 +308,6 @@ export default async function HomePage() {
       )}
 
       <FaqSection />
-
-      <NewsletterSection
-        newsletter={(content?.newsletter ?? {}) as { title?: string; body?: string; enabled?: boolean }}
-        instagramUrl={(content?.instagramUrl as string) || instagramUrl}
-      />
     </>
   );
 }

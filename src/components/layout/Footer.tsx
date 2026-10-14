@@ -1,5 +1,5 @@
 import Link from "next/link";
-import { Instagram, Facebook, Youtube, Mail, Phone, MapPin, Clock, ShieldCheck, BadgeCheck, Lock, Leaf, Truck } from "lucide-react";
+import { Instagram, Facebook, Youtube, Mail, Phone, MapPin, Clock, ShieldCheck, BadgeCheck } from "lucide-react";
 import { getSettings } from "@/lib/queries";
 import { DEFAULT_WHATSAPP_MESSAGE, getWhatsAppLink } from "@/lib/whatsapp";
 import { siteConfig } from "@config/site";
@@ -51,7 +51,7 @@ export async function Footer() {
   return (
     <footer className="mt-14 bg-brown-900 text-ivory-50/80">
       <div className="h-1 bg-gradient-to-r from-caramel-500 via-turmeric-400 to-leaf-500" />
-      <div className="container-site grid gap-10 py-12 sm:grid-cols-2 lg:grid-cols-4 lg:py-14">
+      <div className="container-site grid gap-8 py-10 sm:grid-cols-2 lg:grid-cols-4">
         <div className="space-y-4">
           <Link href="/" aria-label={`${brandName} home`}>
             <BrandLogo logo={logo} brandName={brandName} tone="dark" />
@@ -183,34 +183,6 @@ export async function Footer() {
               </li>
             )}
           </ul>
-        </div>
-      </div>
-
-      <div className="border-t border-white/10">
-        <div className="container-site flex flex-wrap items-center justify-center gap-x-6 gap-y-3 py-5 sm:justify-between">
-          <div className="flex flex-wrap items-center justify-center gap-2">
-            {foodLicence && (
-              <span className="inline-flex items-center gap-1.5 rounded-full bg-white/10 px-3 py-1 text-[11px] font-bold uppercase tracking-wider text-ivory-50/85 ring-1 ring-white/15">
-                <ShieldCheck size={12} className="text-leaf-200" /> FSSAI Lic. No. {foodLicence}
-              </span>
-            )}
-            <span className="inline-flex items-center gap-1.5 rounded-full bg-white/10 px-3 py-1 text-[11px] font-bold uppercase tracking-wider text-ivory-50/85 ring-1 ring-white/15">
-              <Leaf size={12} className="text-leaf-200" /> 100% Eggless
-            </span>
-            <span className="inline-flex items-center gap-1.5 rounded-full bg-white/10 px-3 py-1 text-[11px] font-bold uppercase tracking-wider text-ivory-50/85 ring-1 ring-white/15">
-              <Lock size={12} className="text-turmeric-300" /> Secure Payments
-            </span>
-            <span className="inline-flex items-center gap-1.5 rounded-full bg-white/10 px-3 py-1 text-[11px] font-bold uppercase tracking-wider text-ivory-50/85 ring-1 ring-white/15">
-              <Truck size={12} className="text-turmeric-300" /> Pan-India Shipping
-            </span>
-          </div>
-          <div className="flex items-center gap-1.5" aria-label="Accepted payment methods">
-            {["UPI", "Visa", "Mastercard", "RuPay"].map((p) => (
-              <span key={p} className="rounded-md bg-white/10 px-2 py-1 text-[10px] font-bold uppercase tracking-wider text-ivory-50/70 ring-1 ring-white/10">
-                {p}
-              </span>
-            ))}
-          </div>
         </div>
       </div>
 

@@ -10,8 +10,8 @@ export interface AccordionItem {
   body: React.ReactNode;
 }
 
-export function Accordion({ items, className }: { items: AccordionItem[]; className?: string }) {
-  const [open, setOpen] = useState<number | null>(0);
+export function Accordion({ items, className, defaultIndex = null }: { items: AccordionItem[]; className?: string; defaultIndex?: number | null }) {
+  const [open, setOpen] = useState<number | null>(defaultIndex);
   const baseId = useId();
   return (
     <div className={cn("divide-y divide-bark-800/10 border-y border-bark-800/10", className)}>
