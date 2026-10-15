@@ -52,7 +52,14 @@ export const authOptions: NextAuthOptions = {
 };
 
 export async function getSession() {
-  return getServerSession(authOptions);
+  try {
+    return await getServerSession(authOptions);
+  } catch (err) {
+    // Misconfigured NEXTAUTH_SECRET must fail closed as "not signed in"
+    // instead of crashing customer-facing routes.
+    console.error("getSession failed", err);
+    return null;
+  }
 }
 
 export async function getCurrentUser() {
