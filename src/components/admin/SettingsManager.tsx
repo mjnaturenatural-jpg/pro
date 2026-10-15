@@ -10,7 +10,7 @@ export function SettingsManager({
   integrations,
 }: {
   initial: Record<string, unknown>;
-  integrations: { razorpay: boolean; delhivery: boolean; cloudinary: boolean };
+  integrations: { razorpay: boolean; shiprocket: boolean; cloudinary: boolean };
 }) {
   const router = useRouter();
   const { toast } = useToast();
@@ -209,7 +209,7 @@ export function SettingsManager({
         </p>
         <div className="grid gap-3 sm:grid-cols-3">
           <Integration label="Razorpay" ok={integrations.razorpay} />
-          <Integration label="Delhivery" ok={integrations.delhivery} />
+          <Integration label="Shiprocket" ok={integrations.shiprocket} />
           <Integration label="Cloudinary" ok={integrations.cloudinary} />
         </div>
       </div>

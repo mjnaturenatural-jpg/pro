@@ -64,7 +64,9 @@ export async function GET() {
       },
       integrations: {
         razorpay: Boolean(process.env.RAZORPAY_KEY_ID && process.env.RAZORPAY_KEY_SECRET),
-        delhivery: Boolean(process.env.DELHIVERY_API_KEY && process.env.DELHIVERY_CLIENT_CODE),
+        shiprocket: Boolean(
+          process.env.SHIPROCKET_EMAIL && process.env.SHIPROCKET_PASSWORD && process.env.SHIPROCKET_PICKUP_LOCATION
+        ),
         cloudinary: Boolean(
           process.env.CLOUDINARY_CLOUD_NAME && process.env.CLOUDINARY_API_KEY && process.env.CLOUDINARY_API_SECRET
         ),

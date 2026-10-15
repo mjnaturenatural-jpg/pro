@@ -38,7 +38,7 @@ export default async function PrivacyPolicyPage() {
         <h2 className="pt-2 font-serif text-lg text-bark-900">Data Sharing</h2>
         <p>
           We share your data only with service providers necessary to fulfil your order — such as our
-          payment processor and shipping partner (Delhivery) — and where required by law. We do not
+          payment processor and shipping partners — and where required by law. We do not
           sell your personal information.
         </p>
         <h2 className="pt-2 font-serif text-lg text-bark-900">Cookies</h2>

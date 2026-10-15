@@ -24,7 +24,7 @@ export default async function ShippingPolicyPage() {
         </p>
         <h2 className="pt-2 font-serif text-lg text-bark-900">Delivery</h2>
         <p>
-          We ship across India via our delivery partner, Delhivery. Standard delivery usually takes
+          We ship across India via Shiprocket&apos;s courier partners. Standard delivery usually takes
           3–7 business days depending on your location. Remote areas may take slightly longer.
         </p>
         <h2 className="pt-2 font-serif text-lg text-bark-900">Shipping Charges</h2>

@@ -1,0 +1,1090 @@
+[
+ {
+  "slug": "roasted-coconut-dry-fruit-jaggery-laddu",
+  "packSizes": [
+   {
+    "label": "250g",
+    "mrp": 399,
+    "price": 299.25,
+    "stock": 20,
+    "sku": "RCDL-250G",
+    "weight": ""
+   },
+   {
+    "label": "500g",
+    "mrp": 798,
+    "price": 598.5,
+    "stock": 20,
+    "sku": "RCDL-500G",
+    "weight": ""
+   },
+   {
+    "label": "1kg",
+    "mrp": 1596,
+    "price": 1197,
+    "stock": 20,
+    "sku": "RCDL-1KG",
+    "weight": ""
+   }
+  ]
+ },
+ {
+  "slug": "roasted-coconut-jaggery-laddu",
+  "packSizes": [
+   {
+    "label": "250g",
+    "mrp": 349,
+    "price": 279.2,
+    "stock": 20,
+    "sku": "RCJL-250G",
+    "weight": ""
+   },
+   {
+    "label": "500g",
+    "mrp": 698,
+    "price": 558.4,
+    "stock": 20,
+    "sku": "RCJL-500G",
+    "weight": ""
+   },
+   {
+    "label": "1kg",
+    "mrp": 1396,
+    "price": 1116.8,
+    "stock": 20,
+    "sku": "RCJL-1KG",
+    "weight": ""
+   }
+  ]
+ },
+ {
+  "slug": "white-chocolate-black-chocolate-brownie",
+  "packSizes": [
+   {
+    "label": "250g",
+    "mrp": 559,
+    "price": 436,
+    "stock": 20,
+    "sku": "WBBB-250G",
+    "weight": ""
+   },
+   {
+    "label": "500g",
+    "mrp": 1118,
+    "price": 872,
+    "stock": 20,
+    "sku": "WBBB-500G",
+    "weight": ""
+   },
+   {
+    "label": "750g",
+    "mrp": 1677,
+    "price": 1308,
+    "stock": 20,
+    "sku": "WBBB-750G",
+    "weight": ""
+   },
+   {
+    "label": "1kg",
+    "mrp": 2236,
+    "price": 1744,
+    "stock": 20,
+    "sku": "WBBB-1KG",
+    "weight": ""
+   }
+  ]
+ },
+ {
+  "slug": "ragi-jaggery-dry-fruits-brownie",
+  "packSizes": [
+   {
+    "label": "250g",
+    "mrp": 599,
+    "price": 479,
+    "stock": 20,
+    "sku": "RJDB-250G",
+    "weight": ""
+   },
+   {
+    "label": "500g",
+    "mrp": 1198,
+    "price": 958,
+    "stock": 20,
+    "sku": "RJDB-500G",
+    "weight": ""
+   },
+   {
+    "label": "750g",
+    "mrp": 1797,
+    "price": 1438,
+    "stock": 20,
+    "sku": "RJDB-750G",
+    "weight": ""
+   },
+   {
+    "label": "1kg",
+    "mrp": 2396,
+    "price": 1917,
+    "stock": 20,
+    "sku": "RJDB-1KG",
+    "weight": ""
+   }
+  ]
+ },
+ {
+  "slug": "jowar-chocolate-dry-fruits-brownie",
+  "packSizes": [
+   {
+    "label": "250g",
+    "mrp": 599,
+    "price": 479,
+    "stock": 20,
+    "sku": "JCDB-250G",
+    "weight": ""
+   },
+   {
+    "label": "500g",
+    "mrp": 1198,
+    "price": 958,
+    "stock": 20,
+    "sku": "JCDB-500G",
+    "weight": ""
+   },
+   {
+    "label": "750g",
+    "mrp": 1797,
+    "price": 1438,
+    "stock": 20,
+    "sku": "JCDB-750G",
+    "weight": ""
+   },
+   {
+    "label": "1kg",
+    "mrp": 2396,
+    "price": 1917,
+    "stock": 20,
+    "sku": "JCDB-1KG",
+    "weight": ""
+   }
+  ]
+ },
+ {
+  "slug": "double-choco-chip-brownie",
+  "packSizes": [
+   {
+    "label": "250g",
+    "mrp": 549,
+    "price": 428,
+    "stock": 20,
+    "sku": "DCCB-250G",
+    "weight": ""
+   },
+   {
+    "label": "500g",
+    "mrp": 1098,
+    "price": 856,
+    "stock": 20,
+    "sku": "DCCB-500G",
+    "weight": ""
+   },
+   {
+    "label": "750g",
+    "mrp": 1647,
+    "price": 1285,
+    "stock": 20,
+    "sku": "DCCB-750G",
+    "weight": ""
+   },
+   {
+    "label": "1kg",
+    "mrp": 2196,
+    "price": 1713,
+    "stock": 20,
+    "sku": "DCCB-1KG",
+    "weight": ""
+   }
+  ]
+ },
+ {
+  "slug": "red-velvet-chocolate-cookies",
+  "packSizes": [
+   {
+    "label": "250g",
+    "mrp": 499,
+    "price": 349,
+    "stock": 20,
+    "sku": "RVCC-250G",
+    "weight": ""
+   },
+   {
+    "label": "500g",
+    "mrp": 998,
+    "price": 699,
+    "stock": 20,
+    "sku": "RVCC-500G",
+    "weight": ""
+   },
+   {
+    "label": "750g",
+    "mrp": 1497,
+    "price": 1048,
+    "stock": 20,
+    "sku": "RVCC-750G",
+    "weight": ""
+   },
+   {
+    "label": "1kg",
+    "mrp": 1996,
+    "price": 1397,
+    "stock": 20,
+    "sku": "RVCC-1KG",
+    "weight": ""
+   }
+  ]
+ },
+ {
+  "slug": "dry-fruits-mix-jaggery-cookies",
+  "packSizes": [
+   {
+    "label": "250g",
+    "mrp": 549,
+    "price": 412,
+    "stock": 20,
+    "sku": "DFMJ-250G",
+    "weight": ""
+   },
+   {
+    "label": "500g",
+    "mrp": 1098,
+    "price": 824,
+    "stock": 20,
+    "sku": "DFMJ-500G",
+    "weight": ""
+   },
+   {
+    "label": "750g",
+    "mrp": 1647,
+    "price": 1235,
+    "stock": 20,
+    "sku": "DFMJ-750G",
+    "weight": ""
+   },
+   {
+    "label": "1kg",
+    "mrp": 2196,
+    "price": 1647,
+    "stock": 20,
+    "sku": "DFMJ-1KG",
+    "weight": ""
+   }
+  ]
+ },
+ {
+  "slug": "oats-jaggery-dry-fruit-cookies",
+  "packSizes": [
+   {
+    "label": "250g",
+    "mrp": 599,
+    "price": 449,
+    "stock": 20,
+    "sku": "OJDC-250G",
+    "weight": ""
+   },
+   {
+    "label": "500g",
+    "mrp": 1198,
+    "price": 899,
+    "stock": 20,
+    "sku": "OJDC-500G",
+    "weight": ""
+   },
+   {
+    "label": "750g",
+    "mrp": 1797,
+    "price": 1348,
+    "stock": 20,
+    "sku": "OJDC-750G",
+    "weight": ""
+   },
+   {
+    "label": "1kg",
+    "mrp": 2396,
+    "price": 1797,
+    "stock": 20,
+    "sku": "OJDC-1KG",
+    "weight": ""
+   }
+  ]
+ },
+ {
+  "slug": "bajra-jaggery-cookies",
+  "packSizes": [
+   {
+    "label": "250g",
+    "mrp": 520,
+    "price": 390,
+    "stock": 20,
+    "sku": "BJC-250G",
+    "weight": ""
+   },
+   {
+    "label": "500g",
+    "mrp": 1040,
+    "price": 780,
+    "stock": 20,
+    "sku": "BJC-500G",
+    "weight": ""
+   },
+   {
+    "label": "750g",
+    "mrp": 1560,
+    "price": 1170,
+    "stock": 20,
+    "sku": "BJC-750G",
+    "weight": ""
+   },
+   {
+    "label": "1kg",
+    "mrp": 2080,
+    "price": 1560,
+    "stock": 20,
+    "sku": "BJC-1KG",
+    "weight": ""
+   }
+  ]
+ },
+ {
+  "slug": "ragi-elaichi-dry-fruit-jaggery-cookies",
+  "packSizes": [
+   {
+    "label": "250g",
+    "mrp": 599,
+    "price": 479,
+    "stock": 20,
+    "sku": "REJ-250G",
+    "weight": ""
+   },
+   {
+    "label": "500g",
+    "mrp": 1198,
+    "price": 958,
+    "stock": 20,
+    "sku": "REJ-500G",
+    "weight": ""
+   },
+   {
+    "label": "750g",
+    "mrp": 1797,
+    "price": 1438,
+    "stock": 20,
+    "sku": "REJ-750G",
+    "weight": ""
+   },
+   {
+    "label": "1kg",
+    "mrp": 2396,
+    "price": 1917,
+    "stock": 20,
+    "sku": "REJ-1KG",
+    "weight": ""
+   }
+  ]
+ },
+ {
+  "slug": "jowar-jaggery-cookies",
+  "packSizes": [
+   {
+    "label": "250g",
+    "mrp": 499,
+    "price": 374,
+    "stock": 20,
+    "sku": "JJC-250G",
+    "weight": ""
+   },
+   {
+    "label": "500g",
+    "mrp": 998,
+    "price": 749,
+    "stock": 20,
+    "sku": "JJC-500G",
+    "weight": ""
+   },
+   {
+    "label": "750g",
+    "mrp": 1497,
+    "price": 1123,
+    "stock": 20,
+    "sku": "JJC-750G",
+    "weight": ""
+   },
+   {
+    "label": "1kg",
+    "mrp": 1996,
+    "price": 1497,
+    "stock": 20,
+    "sku": "JJC-1KG",
+    "weight": ""
+   }
+  ]
+ },
+ {
+  "slug": "jowar-chocolate-almond-cookies",
+  "packSizes": [
+   {
+    "label": "250g",
+    "mrp": 499,
+    "price": 399,
+    "stock": 20,
+    "sku": "JCA-250G",
+    "weight": ""
+   },
+   {
+    "label": "500g",
+    "mrp": 998,
+    "price": 798,
+    "stock": 20,
+    "sku": "JCA-500G",
+    "weight": ""
+   },
+   {
+    "label": "750g",
+    "mrp": 1497,
+    "price": 1198,
+    "stock": 20,
+    "sku": "JCA-750G",
+    "weight": ""
+   },
+   {
+    "label": "1kg",
+    "mrp": 1996,
+    "price": 1597,
+    "stock": 20,
+    "sku": "JCA-1KG",
+    "weight": ""
+   }
+  ]
+ },
+ {
+  "slug": "millet-jaggery-cookies",
+  "packSizes": [
+   {
+    "label": "250g",
+    "mrp": 499,
+    "price": 399,
+    "stock": 20,
+    "sku": "MJC-250G",
+    "weight": ""
+   },
+   {
+    "label": "500g",
+    "mrp": 998,
+    "price": 798,
+    "stock": 20,
+    "sku": "MJC-500G",
+    "weight": ""
+   },
+   {
+    "label": "750g",
+    "mrp": 1497,
+    "price": 1198,
+    "stock": 20,
+    "sku": "MJC-750G",
+    "weight": ""
+   },
+   {
+    "label": "1kg",
+    "mrp": 1996,
+    "price": 1597,
+    "stock": 20,
+    "sku": "MJC-1KG",
+    "weight": ""
+   }
+  ]
+ },
+ {
+  "slug": "ragi-millet-jaggery-mini-chocolate-cookies",
+  "packSizes": [
+   {
+    "label": "250g",
+    "mrp": 599,
+    "price": 389,
+    "stock": 20,
+    "sku": "RMMC-250G",
+    "weight": ""
+   },
+   {
+    "label": "500g",
+    "mrp": 1198,
+    "price": 779,
+    "stock": 20,
+    "sku": "RMMC-500G",
+    "weight": ""
+   },
+   {
+    "label": "750g",
+    "mrp": 1797,
+    "price": 1168,
+    "stock": 20,
+    "sku": "RMMC-750G",
+    "weight": ""
+   },
+   {
+    "label": "1kg",
+    "mrp": 2396,
+    "price": 1557,
+    "stock": 20,
+    "sku": "RMMC-1KG",
+    "weight": ""
+   }
+  ]
+ },
+ {
+  "slug": "ragi-millet-jaggery-chocolate-cookies",
+  "packSizes": [
+   {
+    "label": "250g",
+    "mrp": 499,
+    "price": 349,
+    "stock": 20,
+    "sku": "RMJC-250G",
+    "weight": ""
+   },
+   {
+    "label": "500g",
+    "mrp": 998,
+    "price": 699,
+    "stock": 20,
+    "sku": "RMJC-500G",
+    "weight": ""
+   },
+   {
+    "label": "750g",
+    "mrp": 1497,
+    "price": 1049,
+    "stock": 20,
+    "sku": "RMJC-750G",
+    "weight": ""
+   },
+   {
+    "label": "1kg",
+    "mrp": 1996,
+    "price": 1397,
+    "stock": 20,
+    "sku": "RMJC-1KG",
+    "weight": ""
+   }
+  ]
+ },
+ {
+  "slug": "kaju-jaggery-chikki",
+  "packSizes": [
+   {
+    "label": "250 g",
+    "mrp": 499,
+    "price": 389.22,
+    "stock": 20,
+    "sku": "KJC-250G",
+    "weight": ""
+   },
+   {
+    "label": "500 g",
+    "mrp": 998,
+    "price": 778.44,
+    "stock": 20,
+    "sku": "KJC-500G",
+    "weight": ""
+   },
+   {
+    "label": "750 g",
+    "mrp": 1497,
+    "price": 1167.66,
+    "stock": 20,
+    "sku": "KJC-750G",
+    "weight": ""
+   },
+   {
+    "label": "1 kg",
+    "mrp": 1996,
+    "price": 1556.88,
+    "stock": 20,
+    "sku": "KJC-1KG",
+    "weight": ""
+   }
+  ]
+ },
+ {
+  "slug": "peanuts-pistachio-jaggery-chikki",
+  "packSizes": [
+   {
+    "label": "250 g",
+    "mrp": 599,
+    "price": 479.2,
+    "stock": 20,
+    "sku": "PPJC-250G",
+    "weight": ""
+   },
+   {
+    "label": "500 g",
+    "mrp": 1198,
+    "price": 958.4,
+    "stock": 20,
+    "sku": "PPJC-500G",
+    "weight": ""
+   },
+   {
+    "label": "750 g",
+    "mrp": 1797,
+    "price": 1437.6,
+    "stock": 20,
+    "sku": "PPJC-750G",
+    "weight": ""
+   },
+   {
+    "label": "1 kg",
+    "mrp": 2396,
+    "price": 1916.8,
+    "stock": 20,
+    "sku": "PPJC-1KG",
+    "weight": ""
+   }
+  ]
+ },
+ {
+  "slug": "black-sesame-almond-chikki",
+  "packSizes": [
+   {
+    "label": "250 g",
+    "mrp": 499,
+    "price": 399.2,
+    "stock": 20,
+    "sku": "BSAC-250G",
+    "weight": ""
+   },
+   {
+    "label": "500 g",
+    "mrp": 998,
+    "price": 798.4,
+    "stock": 20,
+    "sku": "BSAC-500G",
+    "weight": ""
+   },
+   {
+    "label": "750 g",
+    "mrp": 1497,
+    "price": 1197.6,
+    "stock": 20,
+    "sku": "BSAC-750G",
+    "weight": ""
+   },
+   {
+    "label": "1 kg",
+    "mrp": 1996,
+    "price": 1596.8,
+    "stock": 20,
+    "sku": "BSAC-1KG",
+    "weight": ""
+   }
+  ]
+ },
+ {
+  "slug": "black-sesame-kaju-chikki",
+  "packSizes": [
+   {
+    "label": "250 g",
+    "mrp": 499,
+    "price": 399.2,
+    "stock": 20,
+    "sku": "BSKC-250G",
+    "weight": ""
+   },
+   {
+    "label": "500 g",
+    "mrp": 998,
+    "price": 798.4,
+    "stock": 20,
+    "sku": "BSKC-500G",
+    "weight": ""
+   },
+   {
+    "label": "750 g",
+    "mrp": 1497,
+    "price": 1197.6,
+    "stock": 20,
+    "sku": "BSKC-750G",
+    "weight": ""
+   },
+   {
+    "label": "1 kg",
+    "mrp": 1996,
+    "price": 1596.8,
+    "stock": 20,
+    "sku": "BSKC-1KG",
+    "weight": ""
+   }
+  ]
+ },
+ {
+  "slug": "white-sesame-pistachio-almond-chikki",
+  "packSizes": [
+   {
+    "label": "250 g",
+    "mrp": 549,
+    "price": 439.2,
+    "stock": 20,
+    "sku": "WSPA-250G",
+    "weight": ""
+   },
+   {
+    "label": "500 g",
+    "mrp": 1098,
+    "price": 878.4,
+    "stock": 20,
+    "sku": "WSPA-500G",
+    "weight": ""
+   },
+   {
+    "label": "750 g",
+    "mrp": 1647,
+    "price": 1317.6,
+    "stock": 20,
+    "sku": "WSPA-750G",
+    "weight": ""
+   },
+   {
+    "label": "1 kg",
+    "mrp": 2196,
+    "price": 1756.8,
+    "stock": 20,
+    "sku": "WSPA-1KG",
+    "weight": ""
+   }
+  ]
+ },
+ {
+  "slug": "flax-seeds-jaggery-almond-chikki",
+  "packSizes": [
+   {
+    "label": "250 g",
+    "mrp": 399,
+    "price": 319.2,
+    "stock": 20,
+    "sku": "FSJA-250G",
+    "weight": ""
+   },
+   {
+    "label": "500 g",
+    "mrp": 798,
+    "price": 638.4,
+    "stock": 20,
+    "sku": "FSJA-500G",
+    "weight": ""
+   },
+   {
+    "label": "750 g",
+    "mrp": 1197,
+    "price": 957.6,
+    "stock": 20,
+    "sku": "FSJA-750G",
+    "weight": ""
+   },
+   {
+    "label": "1 kg",
+    "mrp": 1596,
+    "price": 1276.8,
+    "stock": 20,
+    "sku": "FSJA-1KG",
+    "weight": ""
+   }
+  ]
+ },
+ {
+  "slug": "dry-fruit-pumpkin-seeds-badam-kaju",
+  "packSizes": [
+   {
+    "label": "250 g",
+    "mrp": 599,
+    "price": 449.25,
+    "stock": 20,
+    "sku": "DPPK-250G",
+    "weight": ""
+   },
+   {
+    "label": "500 g",
+    "mrp": 1198,
+    "price": 898.5,
+    "stock": 20,
+    "sku": "DPPK-500G",
+    "weight": ""
+   },
+   {
+    "label": "750 g",
+    "mrp": 1797,
+    "price": 1347.75,
+    "stock": 20,
+    "sku": "DPPK-750G",
+    "weight": ""
+   },
+   {
+    "label": "1 kg",
+    "mrp": 2396,
+    "price": 1797,
+    "stock": 20,
+    "sku": "DPPK-1KG",
+    "weight": ""
+   }
+  ]
+ },
+ {
+  "slug": "poha-dry-fruit-chikki",
+  "packSizes": [
+   {
+    "label": "250 g",
+    "mrp": 399,
+    "price": 279.3,
+    "stock": 20,
+    "sku": "PDCF-250G",
+    "weight": ""
+   },
+   {
+    "label": "500 g",
+    "mrp": 798,
+    "price": 558.6,
+    "stock": 20,
+    "sku": "PDCF-500G",
+    "weight": ""
+   },
+   {
+    "label": "750 g",
+    "mrp": 1197,
+    "price": 837.9,
+    "stock": 20,
+    "sku": "PDCF-750G",
+    "weight": ""
+   },
+   {
+    "label": "1 kg",
+    "mrp": 1596,
+    "price": 1117.2,
+    "stock": 20,
+    "sku": "PDCF-1KG",
+    "weight": ""
+   }
+  ]
+ },
+ {
+  "slug": "dry-fruit-mixture-spicy",
+  "packSizes": [
+   {
+    "label": "250 g",
+    "mrp": 599,
+    "price": 479.2,
+    "stock": 20,
+    "sku": "DFMS-250G",
+    "weight": ""
+   },
+   {
+    "label": "500 g",
+    "mrp": 1198,
+    "price": 958.4,
+    "stock": 20,
+    "sku": "DFMS-500G",
+    "weight": ""
+   },
+   {
+    "label": "750 g",
+    "mrp": 1797,
+    "price": 1437.6,
+    "stock": 20,
+    "sku": "DFMS-750G",
+    "weight": ""
+   },
+   {
+    "label": "1 kg",
+    "mrp": 2396,
+    "price": 1916.8,
+    "stock": 20,
+    "sku": "DFMS-1KG",
+    "weight": ""
+   }
+  ]
+ },
+ {
+  "slug": "poha-coconut-dry-fruit-mixture-spicy",
+  "packSizes": [
+   {
+    "label": "250 g",
+    "mrp": 399,
+    "price": 279.3,
+    "stock": 20,
+    "sku": "PCDM-250G",
+    "weight": ""
+   },
+   {
+    "label": "500 g",
+    "mrp": 798,
+    "price": 558.6,
+    "stock": 20,
+    "sku": "PCDM-500G",
+    "weight": ""
+   },
+   {
+    "label": "750 g",
+    "mrp": 1197,
+    "price": 837.9,
+    "stock": 20,
+    "sku": "PCDM-750G",
+    "weight": ""
+   },
+   {
+    "label": "1 kg",
+    "mrp": 1596,
+    "price": 1117.2,
+    "stock": 20,
+    "sku": "PCDM-1KG",
+    "weight": ""
+   }
+  ]
+ },
+ {
+  "slug": "coconut-powder",
+  "packSizes": [
+   {
+    "label": "250 g",
+    "mrp": 299,
+    "price": 239.2,
+    "stock": 20,
+    "sku": "COPW-250G",
+    "weight": ""
+   },
+   {
+    "label": "500 g",
+    "mrp": 598,
+    "price": 478.4,
+    "stock": 20,
+    "sku": "COPW-500G",
+    "weight": ""
+   },
+   {
+    "label": "750 g",
+    "mrp": 897,
+    "price": 717.6,
+    "stock": 20,
+    "sku": "COPW-750G",
+    "weight": ""
+   },
+   {
+    "label": "1 kg",
+    "mrp": 1196,
+    "price": 956.8,
+    "stock": 20,
+    "sku": "COPW-1KG",
+    "weight": ""
+   }
+  ]
+ },
+ {
+  "slug": "red-chilli-powder-with-masala",
+  "packSizes": [
+   {
+    "label": "500 g",
+    "mrp": 399,
+    "price": 339.15,
+    "stock": 20,
+    "sku": "RCPM-500G",
+    "weight": ""
+   },
+   {
+    "label": "1 kg",
+    "mrp": 798,
+    "price": 678.3,
+    "stock": 20,
+    "sku": "RCPM-1KG",
+    "weight": ""
+   }
+  ]
+ },
+ {
+  "slug": "dry-amla",
+  "packSizes": [
+   {
+    "label": "250 g",
+    "mrp": 299,
+    "price": 224.25,
+    "stock": 20,
+    "sku": "DRAM-250G",
+    "weight": ""
+   },
+   {
+    "label": "500 g",
+    "mrp": 598,
+    "price": 448.5,
+    "stock": 20,
+    "sku": "DRAM-500G",
+    "weight": ""
+   },
+   {
+    "label": "750 g",
+    "mrp": 897,
+    "price": 672.75,
+    "stock": 20,
+    "sku": "DRAM-750G",
+    "weight": ""
+   },
+   {
+    "label": "1 kg",
+    "mrp": 1196,
+    "price": 897,
+    "stock": 20,
+    "sku": "DRAM-1KG",
+    "weight": ""
+   }
+  ]
+ },
+ {
+  "slug": "coconut-oil",
+  "packSizes": [
+   {
+    "label": "500 ml",
+    "mrp": 300,
+    "price": 300,
+    "stock": 20,
+    "sku": "COWL-500ML",
+    "weight": ""
+   },
+   {
+    "label": "1 L",
+    "mrp": 600,
+    "price": 600,
+    "stock": 20,
+    "sku": "COWL-1L",
+    "weight": ""
+   }
+  ]
+ },
+ {
+  "slug": "original-jaggery",
+  "packSizes": [
+   {
+    "label": "1 kg",
+    "mrp": 139,
+    "price": 139,
+    "stock": 20,
+    "sku": "ORJG-1KG",
+    "weight": ""
+   }
+  ]
+ },
+ {
+  "slug": "elaichi-black-pepper-dry-ginger-jaggery",
+  "packSizes": [
+   {
+    "label": "500 g",
+    "mrp": 150,
+    "price": 150,
+    "stock": 20,
+    "sku": "EBDJ-500G",
+    "weight": ""
+   }
+  ]
+ }
+]
