@@ -35,6 +35,9 @@ export default async function OrderSuccessPage({ params }: { params: { id: strin
       phone: string;
     };
     customer: { name: string; email: string };
+    awb: string;
+    trackingUrl: string;
+    shippingProvider: string;
   } | null;
 
   if (!order) notFound();
@@ -126,6 +129,24 @@ export default async function OrderSuccessPage({ params }: { params: { id: strin
             Phone: {order.address.phone}
           </p>
         </div>
+
+        {order.awb && (
+          <div className="mt-5 rounded-2xl bg-leaf-50 px-5 py-4 text-center">
+            <p className="text-xs font-bold uppercase tracking-wider text-leaf-700">
+              Shipment {order.shippingProvider ? `via ${order.shippingProvider.replace("Shiprocket:", "")}` : "created"} · AWB {order.awb}
+            </p>
+            {order.trackingUrl && (
+              <a
+                href={order.trackingUrl}
+                target="_blank"
+                rel="noopener noreferrer"
+                className="btn-secondary btn-sm mt-3"
+              >
+                Track Your Shipment
+              </a>
+            )}
+          </div>
+        )}
 
         <OrderSuccessActions orderId={order._id} orderNumber={order.orderNumber} />
       </div>

@@ -51,3 +51,4 @@ Branch: `redesign-v2`. No cart, checkout, payment, order, webhook, auth or admin
 - Instagram / Facebook / YouTube profile URLs; permission to show real customer reviews (names, cities, product bought).
 - Free-shipping threshold + flat rate confirmation; courier ETAs per zone; COD yes/no; newsletter discount rule (currently shows “₹50 off first order” as placeholder).
 - Cloudinary cloud name (exact dashboard value — admin uploads blocked until then); Razorpay live keys when ready to accept payments.
+- Shiprocket: warehouse **pickup pincode** (enables live checkout rates) + pickup location **nickname** exactly as saved in the Shiprocket dashboard (enables admin shipment creation). Email is configured; keep the password in the server env only.

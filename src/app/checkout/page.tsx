@@ -13,6 +13,7 @@ import { FREE_SHIPPING_THRESHOLD, INDIAN_STATES } from "@/lib/constants";
 import { siteConfig } from "@config/site";
 import { CouponBox } from "@/components/cart/CouponBox";
 import { FssaiLine } from "@/components/checkout/FssaiLine";
+import { DeliveryOptions, type CourierSelection } from "@/components/checkout/DeliveryOptions";
 
 declare global {
   interface Window {
@@ -52,6 +53,7 @@ export default function CheckoutPage() {
 
   const [address, setAddress] = useState<AddressForm>(EMPTY);
   const [coupon, setCoupon] = useState<{ code: string; discount: number } | null>(null);
+  const [courier, setCourier] = useState<CourierSelection | null>(null);
   const [loading, setLoading] = useState(false);
   const [errors, setErrors] = useState<Record<string, string>>({});
   const [rzpLoaded, setRzpLoaded] = useState(false);
@@ -83,7 +85,8 @@ export default function CheckoutPage() {
   const mrpTotal = items.reduce((s, i) => s + i.mrp * i.quantity, 0);
   const couponDiscount = coupon?.discount ?? 0;
   const net = subtotal - couponDiscount;
-  const shipping = net >= FREE_SHIPPING_THRESHOLD || net === 0 ? 0 : 79;
+  const flatShipping = net >= FREE_SHIPPING_THRESHOLD || net === 0 ? 0 : 79;
+  const shipping = courier ? courier.rate : flatShipping;
   const total = Math.max(0, net + shipping);
 
   const set = (key: keyof AddressForm, value: string) => {
@@ -130,6 +133,7 @@ export default function CheckoutPage() {
           })),
           address,
           couponCode: coupon?.code || null,
+          shippingOption: courier ? { courierId: courier.courierId, rate: courier.rate } : null,
         }),
       });
       const data = await res.json();
@@ -391,6 +395,14 @@ export default function CheckoutPage() {
                 </li>
               ))}
             </ul>
+            <DeliveryOptions
+              pincode={address.pincode}
+              lines={items.map((i) => ({ packSize: i.packSize, quantity: i.quantity }))}
+              standardRate={flatShipping}
+              freeShipping={net >= FREE_SHIPPING_THRESHOLD}
+              value={courier}
+              onChange={setCourier}
+            />
             <dl className="space-y-2.5 border-t border-bark-800/10 pt-4 text-sm">
               <div className="flex justify-between">
                 <dt className="text-bark-600">Subtotal</dt>

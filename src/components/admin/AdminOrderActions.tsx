@@ -11,6 +11,8 @@ export function AdminOrderActions({
   paymentStatus,
   awb,
   trackingUrl,
+  shippingProvider,
+  shiprocketReady,
   statuses,
   paymentStatuses,
 }: {
@@ -19,6 +21,8 @@ export function AdminOrderActions({
   paymentStatus: string;
   awb: string;
   trackingUrl: string;
+  shippingProvider: string;
+  shiprocketReady: boolean;
   statuses: string[];
   paymentStatuses: string[];
 }) {
@@ -47,6 +51,8 @@ export function AdminOrderActions({
       setLoading("");
     }
   };
+
+  const isShiprocket = shippingProvider.startsWith("Shiprocket");
 
   return (
     <div className="card space-y-4 p-5">
@@ -93,9 +99,18 @@ export function AdminOrderActions({
             <Truck size={14} /> {loading === "ship" ? "Creating…" : "Create Delhivery Shipment"}
           </button>
         )}
+        {!awb && shiprocketReady && (
+          <button
+            onClick={() => patch({ action: "create_shiprocket_shipment" }, "sr-ship")}
+            disabled={loading === "sr-ship"}
+            className="btn-primary btn-sm"
+          >
+            <Truck size={14} /> {loading === "sr-ship" ? "Creating…" : "Create Shiprocket Shipment"}
+          </button>
+        )}
         {awb && (
           <button
-            onClick={() => patch({ action: "refresh_tracking" }, "track")}
+            onClick={() => patch({ action: isShiprocket ? "refresh_shiprocket_tracking" : "refresh_tracking" }, "track")}
             disabled={loading === "track"}
             className="btn-secondary btn-sm"
           >
@@ -118,13 +133,14 @@ export function AdminOrderActions({
             rel="noopener noreferrer"
             className="btn-secondary btn-sm"
           >
-            Track on Delhivery
+            {isShiprocket ? "Track on Shiprocket" : "Track on Delhivery"}
           </a>
         )}
       </div>
       {!awb && (
         <p className="text-xs text-bark-400">
-          Shipment creation requires Delhivery API credentials to be configured in the environment.
+          Shipment creation requires courier API credentials. Delhivery uses the Delhivery
+          environment keys; Shiprocket needs its login plus a configured pickup location.
         </p>
       )}
     </div>

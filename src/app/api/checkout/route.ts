@@ -6,6 +6,12 @@ import { checkoutSchema } from "@/lib/validation";
 import { createRazorpayOrder, isRazorpayConfigured } from "@/lib/razorpay";
 import { Order } from "@/models";
 import crypto from "crypto";
+import {
+  getCourierRates,
+  isShiprocketConfigured,
+  packToKg,
+  SHIPROCKET_PICKUP_POSTCODE,
+} from "@/lib/shiprocket";
 
 export const dynamic = "force-dynamic";
 
@@ -19,7 +25,7 @@ export async function POST(req: Request) {
         { status: 400 }
       );
     }
-    const { items, address, couponCode } = parsed.data;
+    const { items, address, couponCode, shippingOption } = parsed.data;
 
     if (!isRazorpayConfigured()) {
       return NextResponse.json(
@@ -51,6 +57,40 @@ export async function POST(req: Request) {
       // coupon invalid — proceed without discount but inform
     }
 
+    // Verify an optional live Shiprocket courier selection server-side so the
+    // charged amount can never be tampered with from the client.
+    let shippingProvider = "";
+    if (shippingOption) {
+      if (!isShiprocketConfigured() || !SHIPROCKET_PICKUP_POSTCODE) {
+        return NextResponse.json(
+          { error: "Live delivery options are unavailable. Please choose standard delivery." },
+          { status: 502 }
+        );
+      }
+      try {
+        const weightKg = resolved.reduce((n, i) => n + packToKg(i.packSize) * i.quantity, 0);
+        const options = await getCourierRates(address.pincode, weightKg);
+        const match = options.find((o) => o.courierId === shippingOption.courierId);
+        if (!match || Math.abs(match.rate - shippingOption.rate) > 0.01) {
+          return NextResponse.json(
+            { error: "The selected delivery option changed. Please reselect your courier." },
+            { status: 409 }
+          );
+        }
+        totals.shipping = match.rate;
+        totals.total =
+          Math.round((totals.subtotal - totals.couponDiscount + match.rate + totals.tax) * 100) /
+          100;
+        shippingProvider = `Shiprocket:${match.courierName}`;
+      } catch (err) {
+        console.error("courier verification error", err);
+        return NextResponse.json(
+          { error: "Live courier rates are unavailable right now. Please choose standard delivery." },
+          { status: 502 }
+        );
+      }
+    }
+
     const orderNumber = `MJN${Date.now().toString(36).toUpperCase()}${crypto.randomBytes(2).toString("hex").toUpperCase()}`;
 
     const order = await Order.create({
@@ -74,6 +114,7 @@ export async function POST(req: Request) {
       shipping: totals.shipping,
       tax: totals.tax,
       total: totals.total,
+      shippingProvider,
       paymentStatus: "PENDING",
       status: "PENDING",
     });

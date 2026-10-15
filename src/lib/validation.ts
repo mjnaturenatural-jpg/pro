@@ -89,6 +89,13 @@ export const checkoutSchema = z.object({
     .min(1),
   address: addressSchema,
   couponCode: z.string().optional().nullable(),
+  shippingOption: z
+    .object({
+      courierId: z.number(),
+      rate: z.number().min(0).max(10000),
+    })
+    .optional()
+    .nullable(),
 });
 
 export type ProductInput = z.infer<typeof productInputSchema>;

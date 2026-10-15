@@ -5,6 +5,7 @@ import { formatINR, formatDate, orderNumber } from "@/lib/utils";
 import { StatusBadge } from "@/components/admin/StatusBadge";
 import { AdminOrderActions } from "@/components/admin/AdminOrderActions";
 import { ORDER_STATUSES, PAYMENT_STATUSES } from "@/lib/constants";
+import { isShiprocketShipReady } from "@/lib/shiprocket";
 
 export const metadata = { title: "Order Detail" };
 export const dynamic = "force-dynamic";
@@ -77,6 +78,8 @@ export default async function AdminOrderDetailPage({ params }: { params: { id: s
         paymentStatus={order.paymentStatus}
         awb={order.awb}
         trackingUrl={order.trackingUrl}
+        shippingProvider={order.shippingProvider || ""}
+        shiprocketReady={isShiprocketShipReady()}
         statuses={[...ORDER_STATUSES]}
         paymentStatuses={[...PAYMENT_STATUSES]}
       />
