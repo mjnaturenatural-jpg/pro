@@ -61,12 +61,23 @@ export async function GET(req: Request, { params }: { params: { id: string } }) 
   try {
     const token = new URL(req.url).searchParams.get("token") || "";
     await connectDB();
-    const order = (await Order.findById(params.id).lean()) as unknown as ReceiptOrder | null;
-    if (!order) return NextResponse.json({ error: "Order not found" }, { status: 404 });
-
     const session = await getSession();
     const isAdmin = session?.user?.role === "ADMIN";
-    if (!isAdmin && !tokensMatch(token, (order as unknown as { accessToken?: string }).accessToken)) {
+
+    let raw: unknown = null;
+    try {
+      raw = await Order.findById(params.id).lean();
+    } catch {
+      raw = null; // invalid ObjectId
+    }
+    const order = raw as unknown as (ReceiptOrder & { accessToken?: string }) | null;
+
+    if (!order) {
+      // Admins may ask for any id; customers never learn whether one exists.
+      if (isAdmin) return NextResponse.json({ error: "Order not found" }, { status: 404 });
+      return NextResponse.json({ error: "Unauthorized" }, { status: 401 });
+    }
+    if (!isAdmin && !tokensMatch(token, order.accessToken)) {
       return NextResponse.json({ error: "Unauthorized" }, { status: 401 });
     }
 

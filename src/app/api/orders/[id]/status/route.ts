@@ -16,8 +16,17 @@ export const dynamic = "force-dynamic";
 export async function GET(req: Request, { params }: { params: { id: string } }) {
   try {
     const token = new URL(req.url).searchParams.get("token") || "";
+    if (!token) {
+      return NextResponse.json({ error: "Unauthorized" }, { status: 401 });
+    }
     await connectDB();
-    const order = (await Order.findById(params.id).lean()) as unknown as {
+    let raw: unknown = null;
+    try {
+      raw = await Order.findById(params.id).lean();
+    } catch {
+      raw = null; // invalid ObjectId
+    }
+    const order = raw as unknown as {
       _id: unknown;
       orderNumber: string;
       paymentStatus: string;
@@ -31,8 +40,9 @@ export async function GET(req: Request, { params }: { params: { id: string } }) 
       paymentMethod: string;
     } | null;
 
-    if (!order) return NextResponse.json({ error: "Order not found" }, { status: 404 });
-    if (!tokensMatch(token, order.accessToken)) {
+    // Same response for missing, malformed, and foreign ids — never confirm
+    // whether an order id exists.
+    if (!order || !tokensMatch(token, order.accessToken)) {
       return NextResponse.json({ error: "Unauthorized" }, { status: 401 });
     }
 
