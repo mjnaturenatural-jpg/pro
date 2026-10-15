@@ -54,6 +54,7 @@ export interface RazorpayPaymentInfo {
   amount: number;
   currency: string;
   status: string;
+  method: string;
 }
 
 /** Authoritative payment state straight from Razorpay (never trust the client). */
@@ -66,6 +67,7 @@ export async function fetchRazorpayPayment(paymentId: string): Promise<RazorpayP
     amount: number;
     currency: string;
     status: string;
+    method?: string;
   };
   return {
     id: p.id,
@@ -73,7 +75,45 @@ export async function fetchRazorpayPayment(paymentId: string): Promise<RazorpayP
     amount: p.amount,
     currency: p.currency,
     status: p.status,
+    method: p.method || "",
   };
+}
+
+/** Capture an authorized payment (fallback when auto-capture is disabled). */
+export async function captureRazorpayPayment(paymentId: string, amountPaise: number) {
+  const razorpay = getRazorpay();
+  if (!razorpay) throw new Error("Razorpay is not configured");
+  return (await razorpay.payments.capture(paymentId, amountPaise, "INR")) as unknown as {
+    id: string;
+    status: string;
+    order_id: string;
+    amount: number;
+    method?: string;
+  };
+}
+
+/** All payments recorded against a Razorpay order. */
+export async function listPaymentsForOrder(rzpOrderId: string): Promise<RazorpayPaymentInfo[]> {
+  const razorpay = getRazorpay();
+  if (!razorpay) throw new Error("Razorpay is not configured");
+  const r = (await razorpay.orders.fetchPayments(rzpOrderId)) as unknown as {
+    items?: {
+      id: string;
+      order_id: string;
+      amount: number;
+      currency: string;
+      status: string;
+      method?: string;
+    }[];
+  };
+  return (r.items || []).map((p) => ({
+    id: p.id,
+    orderId: p.order_id,
+    amount: p.amount,
+    currency: p.currency,
+    status: p.status,
+    method: p.method || "",
+  }));
 }
 
 /** Verify a webhook payload signature against the raw request body. */

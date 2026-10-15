@@ -1,36 +1,37 @@
 import { NextResponse } from "next/server";
 import { connectDB } from "@/lib/db";
 import { Order } from "@/models";
-import { verifyWebhookSignature } from "@/lib/razorpay";
+import {
+  captureRazorpayPayment,
+  fetchRazorpayPayment,
+  verifyWebhookSignature,
+} from "@/lib/razorpay";
+import { finalizePaidOrder } from "@/lib/payments";
 
 export const dynamic = "force-dynamic";
 
+interface WebhookPayment {
+  id: string;
+  order_id: string;
+  status: string;
+  amount: number;
+  method?: string;
+}
+
 interface WebhookPayload {
+  id?: string;
   event: string;
   payload?: {
-    payment?: {
-      entity?: {
-        id: string;
-        order_id: string;
-        status: string;
-        amount: number;
-      };
-    };
-    order?: {
-      entity?: {
-        id: string;
-        receipt: string;
-        amount: number;
-      };
-    };
+    payment?: { entity?: WebhookPayment };
+    order?: { entity?: { id: string; receipt: string; amount: number } };
   };
 }
 
 /**
- * Razorpay webhook receiver. Configure the URL
- * https://www.mjnaturenatural.com/api/payments/webhook in the Razorpay
- * dashboard (live mode) with events payment.captured, order.paid and
- * payment.failed, and set RAZORPAY_WEBHOOK_SECRET in the server env.
+ * Razorpay webhook receiver. Configure in the Razorpay dashboard:
+ * URL    https://www.mjnaturenatural.com/api/payments/webhook
+ * Secret must match RAZORPAY_WEBHOOK_SECRET in the server env.
+ * Events payment.authorized, payment.captured, payment.failed, order.paid.
  */
 export async function POST(req: Request) {
   const rawBody = await req.text();
@@ -54,56 +55,93 @@ export async function POST(req: Request) {
   try {
     await connectDB();
 
-    if (event.event === "payment.captured" || event.event === "order.paid") {
-      const entity = event.payload?.payment?.entity;
-      const orderEntity = event.payload?.order?.entity;
-      const rzpOrderId = entity?.order_id || orderEntity?.id || "";
-      if (!rzpOrderId) return NextResponse.json({ received: true });
+    const paymentEntity = event.payload?.payment?.entity;
+    const orderEntity = event.payload?.order?.entity;
+    const rzpOrderId = paymentEntity?.order_id || orderEntity?.id || "";
+    if (!rzpOrderId) return NextResponse.json({ received: true });
 
-      const order = await Order.findOne({ razorpayOrderId: rzpOrderId });
-      if (!order) return NextResponse.json({ received: true });
+    const order = await Order.findOne({ razorpayOrderId: rzpOrderId });
+    if (!order) return NextResponse.json({ received: true });
 
-      // Never downgrade a paid order; only PENDING -> PAID transitions apply.
+    // Idempotency: record event ids; duplicate deliveries are acknowledged
+    // without reprocessing.
+    if (event.id) {
+      const already = (order as { webhookEvents?: string[] }).webhookEvents || [];
+      if (already.includes(event.id)) return NextResponse.json({ received: true, duplicate: true });
+    }
+
+    if (event.event === "payment.authorized") {
+      // Payment authorized but not captured — common when the Razorpay account
+      // does not have automatic capture enabled. Capture it now so the customer
+      // is actually charged and the dashboard reflects the collection.
+      if (!paymentEntity?.id) return NextResponse.json({ received: true });
       if (order.paymentStatus === "PAID") return NextResponse.json({ received: true });
-      if (entity && entity.status && entity.status !== "captured") {
+      const expectedPaise = Math.round(order.total * 100);
+      if (typeof paymentEntity.amount === "number" && paymentEntity.amount !== expectedPaise) {
+        console.error("webhook amount mismatch (authorized)", { rzpOrderId, got: paymentEntity.amount, expected: expectedPaise });
         return NextResponse.json({ received: true });
       }
-      if (entity && typeof entity.amount === "number") {
+      try {
+        const captured = await captureRazorpayPayment(paymentEntity.id, expectedPaise);
+        if (captured.status === "captured") {
+          await finalizePaidOrder(order._id, {
+            paymentId: captured.id,
+            method: captured.method || paymentEntity.method || "razorpay",
+          });
+        }
+      } catch (err) {
+        // Capture may fail if already captured elsewhere; confirm state.
+        console.error("capture on authorized failed", err);
+        try {
+          const p = await fetchRazorpayPayment(paymentEntity.id);
+          if (p.status === "captured") {
+            await finalizePaidOrder(order._id, { paymentId: p.id, method: p.method || "razorpay" });
+          }
+        } catch {
+          /* leave pending; browser verify or next event will reconcile */
+        }
+      }
+      if (event.id) {
+        await Order.updateOne({ _id: order._id }, { $addToSet: { webhookEvents: event.id }, $set: { lastReconciledAt: new Date() } });
+      }
+      return NextResponse.json({ received: true });
+    }
+
+    if (event.event === "payment.captured" || event.event === "order.paid") {
+      if (order.paymentStatus === "PAID") return NextResponse.json({ received: true });
+      if (paymentEntity && paymentEntity.status && paymentEntity.status !== "captured") {
+        return NextResponse.json({ received: true });
+      }
+      if (paymentEntity && typeof paymentEntity.amount === "number") {
         const expectedPaise = Math.round(order.total * 100);
-        if (entity.amount !== expectedPaise) {
-          console.error("webhook amount mismatch", { rzpOrderId, got: entity.amount, expected: expectedPaise });
+        if (paymentEntity.amount !== expectedPaise) {
+          console.error("webhook amount mismatch", { rzpOrderId, got: paymentEntity.amount, expected: expectedPaise });
           return NextResponse.json({ received: true });
         }
       }
-      order.paymentStatus = "PAID";
-      order.status = "CONFIRMED";
-      if (entity?.id) order.razorpayPaymentId = entity.id;
-      await order.save();
-
-      // Side effects exactly once (same guard as the verify API).
-      const { Product } = await import("@/models");
-      for (const item of order.items as unknown as { productId: unknown; packSize: string; quantity: number }[]) {
-        await Product.updateOne(
-          { _id: item.productId, "packSizes.label": item.packSize },
-          { $inc: { "packSizes.$.stock": -item.quantity, totalSold: item.quantity } }
-        );
-      }
-      if (order.couponCode) {
-        const { Coupon } = await import("@/models");
-        await Coupon.updateOne({ code: order.couponCode }, { $inc: { usedCount: 1 } });
+      await finalizePaidOrder(order._id, {
+        paymentId: paymentEntity?.id,
+        method: paymentEntity?.method || "razorpay",
+      });
+      if (event.id) {
+        await Order.updateOne({ _id: order._id }, { $addToSet: { webhookEvents: event.id }, $set: { lastReconciledAt: new Date() } });
       }
       return NextResponse.json({ received: true });
     }
 
     if (event.event === "payment.failed") {
-      const entity = event.payload?.payment?.entity;
-      const rzpOrderId = entity?.order_id || "";
-      if (!rzpOrderId) return NextResponse.json({ received: true });
       // Only ever mark PENDING orders as failed — never touch a PAID order.
       await Order.findOneAndUpdate(
         { razorpayOrderId: rzpOrderId, paymentStatus: "PENDING" },
-        { paymentStatus: "FAILED", ...(entity?.id ? { razorpayPaymentId: entity.id } : {}) }
+        {
+          paymentStatus: "FAILED",
+          lastReconciledAt: new Date(),
+          ...(paymentEntity?.id ? { razorpayPaymentId: paymentEntity.id } : {}),
+        }
       );
+      if (event.id) {
+        await Order.updateOne({ _id: order._id }, { $addToSet: { webhookEvents: event.id } });
+      }
       return NextResponse.json({ received: true });
     }
 

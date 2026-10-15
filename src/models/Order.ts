@@ -52,6 +52,10 @@ const OrderSchema = new Schema(
     razorpayOrderId: { type: String, default: "" },
     razorpayPaymentId: { type: String, default: "" },
     razorpaySignature: { type: String, default: "" },
+    paidAt: { type: Date, default: null },
+    lastReconciledAt: { type: Date, default: null },
+    accessToken: { type: String, default: "", index: true },
+    webhookEvents: { type: [String], default: [] },
     status: {
       type: String,
       enum: [

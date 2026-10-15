@@ -4,6 +4,7 @@ import { Product } from "@/models";
 import { resolveCart, computeTotals } from "@/lib/pricing";
 import { checkoutSchema } from "@/lib/validation";
 import { createRazorpayOrder, describeRazorpayError, isRazorpayConfigured } from "@/lib/razorpay";
+import { newOrderAccessToken } from "@/lib/payments";
 import { Order } from "@/models";
 import crypto from "crypto";
 import {
@@ -92,6 +93,7 @@ export async function POST(req: Request) {
     }
 
     const orderNumber = `MJN${Date.now().toString(36).toUpperCase()}${crypto.randomBytes(2).toString("hex").toUpperCase()}`;
+    const accessToken = newOrderAccessToken();
 
     const order = await Order.create({
       orderNumber,
@@ -117,6 +119,7 @@ export async function POST(req: Request) {
       shippingProvider,
       paymentStatus: "PENDING",
       status: "PENDING",
+      accessToken,
     });
 
     const rzpOrder = await createRazorpayOrder(totals.total, orderNumber);
@@ -131,6 +134,7 @@ export async function POST(req: Request) {
       amount: rzpOrder.amount,
       currency: rzpOrder.currency,
       keyId: process.env.RAZORPAY_KEY_ID,
+      accessToken,
       totals: {
         subtotal: totals.subtotal,
         couponDiscount: totals.couponDiscount,

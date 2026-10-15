@@ -2,6 +2,7 @@ import { NextResponse } from "next/server";
 import { connectDB } from "@/lib/db";
 import { Order } from "@/models";
 import { getSession } from "@/lib/auth";
+import { tokensMatch } from "@/lib/payments";
 import { isAdminOrderOwned } from "./helpers";
 
 export const dynamic = "force-dynamic";
@@ -22,9 +23,10 @@ export async function GET(req: Request, { params }: { params: { id: string } }) 
       if (allowed) return NextResponse.json({ order: JSON.parse(JSON.stringify(order)) });
     }
 
-    // Guest access: possession of the order number (shown on the confirmation page) acts as a receipt token
-    const on = new URL(req.url).searchParams.get("on");
-    if (on && on === (order as { orderNumber?: string }).orderNumber) {
+    // Guest access requires the order's private access token (not the
+    // order number, which is shown in places that shouldn't grant full access).
+    const token = new URL(req.url).searchParams.get("token");
+    if (tokensMatch(token, (order as { accessToken?: string }).accessToken)) {
       return NextResponse.json({ order: JSON.parse(JSON.stringify(order)) });
     }
 

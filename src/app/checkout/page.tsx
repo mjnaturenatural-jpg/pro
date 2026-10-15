@@ -167,25 +167,37 @@ export default function CheckoutPage() {
           razorpay_payment_id: string;
           razorpay_signature: string;
         }) => {
-          const verify = await fetch("/api/payments/verify", {
-            method: "POST",
-            headers: { "Content-Type": "application/json" },
-            body: JSON.stringify(response),
-          });
-          const vd = await verify.json();
-          if (vd.ok) {
-            clearCart();
-            router.push(`/order-success/${vd.orderId}`);
-          } else {
-            toast({ message: vd.error || "Payment verification failed", type: "error" });
-            setLoading(false);
+          try {
+            const verify = await fetch("/api/payments/verify", {
+              method: "POST",
+              headers: { "Content-Type": "application/json" },
+              body: JSON.stringify(response),
+            });
+            const vd = await verify.json();
+            if (vd.ok) {
+              clearCart();
+              const tok = vd.accessToken || data.accessToken;
+              router.push(`/order-success/${vd.orderId}?token=${encodeURIComponent(tok)}`);
+              return;
+            }
+            // Verification failed or slow — the pending page re-checks with the
+            // server (and the webhook) without charging the customer again.
+            toast({ message: vd.error || "We are confirming your payment…", type: "info" });
+            router.push(
+              `/order-success/${data.orderId}?token=${encodeURIComponent(data.accessToken)}`
+            );
+          } catch {
+            router.push(
+              `/order-success/${data.orderId}?token=${encodeURIComponent(data.accessToken)}`
+            );
           }
         },
         modal: {
           ondismiss: () => {
             setLoading(false);
             toast({
-              message: "Payment cancelled. Your order is saved as pending.",
+              message:
+                "Payment cancelled. If you completed a payment, your order will confirm automatically.",
               type: "info",
             });
           },
