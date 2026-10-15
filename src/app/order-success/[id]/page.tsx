@@ -42,17 +42,52 @@ export default async function OrderSuccessPage({ params }: { params: { id: strin
 
   if (!order) notFound();
 
+  const isPaid = order.paymentStatus === "PAID";
+
   return (
     <div className="container-site max-w-3xl py-14 sm:py-20">
       <div className="text-center">
-        <span className="mx-auto mb-5 flex h-16 w-16 items-center justify-center rounded-full bg-leaf-100 text-leaf-600">
+        <span
+          className={
+            isPaid
+              ? "mx-auto mb-5 flex h-16 w-16 items-center justify-center rounded-full bg-leaf-100 text-leaf-600"
+              : "mx-auto mb-5 flex h-16 w-16 items-center justify-center rounded-full bg-caramel-100 text-caramel-700"
+          }
+        >
           <CheckCircle2 size={30} />
         </span>
-        <h1 className="font-serif text-3xl text-bark-900 sm:text-4xl">Order Confirmed</h1>
+        <h1 className="font-serif text-3xl text-bark-900 sm:text-4xl">
+          {isPaid ? "Order Confirmed" : "Payment Not Confirmed"}
+        </h1>
         <p className="mt-3 text-sm text-bark-600">
-          Thank you{order.customer?.name ? `, ${order.customer.name.split(" ")[0]}` : ""}! Your order
-          has been received and is being prepared.
+          {isPaid ? (
+            <>
+              Thank you{order.customer?.name ? `, ${order.customer.name.split(" ")[0]}` : ""}! Your order
+              has been received and is being prepared.
+            </>
+          ) : order.paymentStatus === "FAILED" ? (
+            <>
+              Your payment did not go through and <strong>no money has been charged</strong>. Your
+              cart is intact — please try again or reach out for help.
+            </>
+          ) : (
+            <>
+              We are still confirming your payment with the bank. This usually takes a minute. If
+              the amount was debited, it will auto-confirm shortly — otherwise it is refunded
+              automatically.
+            </>
+          )}
         </p>
+        {!isPaid && (
+          <div className="mt-6 flex flex-wrap justify-center gap-3">
+            <Link href="/cart" className="btn-primary">
+              Back to Cart
+            </Link>
+            <Link href="/contact" className="btn-secondary">
+              Contact Us
+            </Link>
+          </div>
+        )}
       </div>
 
       <div className="mt-10 card p-6 sm:p-8">

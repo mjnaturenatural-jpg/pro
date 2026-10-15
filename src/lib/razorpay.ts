@@ -40,3 +40,43 @@ export function verifyRazorpaySignature(
     return false;
   }
 }
+
+export interface RazorpayPaymentInfo {
+  id: string;
+  orderId: string;
+  amount: number;
+  currency: string;
+  status: string;
+}
+
+/** Authoritative payment state straight from Razorpay (never trust the client). */
+export async function fetchRazorpayPayment(paymentId: string): Promise<RazorpayPaymentInfo> {
+  const razorpay = getRazorpay();
+  if (!razorpay) throw new Error("Razorpay is not configured");
+  const p = (await razorpay.payments.fetch(paymentId)) as unknown as {
+    id: string;
+    order_id: string;
+    amount: number;
+    currency: string;
+    status: string;
+  };
+  return {
+    id: p.id,
+    orderId: p.order_id,
+    amount: p.amount,
+    currency: p.currency,
+    status: p.status,
+  };
+}
+
+/** Verify a webhook payload signature against the raw request body. */
+export function verifyWebhookSignature(rawBody: string, signature: string): boolean {
+  const secret = process.env.RAZORPAY_WEBHOOK_SECRET;
+  if (!secret || !signature) return false;
+  const expected = crypto.createHmac("sha256", secret).update(rawBody).digest("hex");
+  try {
+    return crypto.timingSafeEqual(Buffer.from(expected), Buffer.from(signature));
+  } catch {
+    return false;
+  }
+}
