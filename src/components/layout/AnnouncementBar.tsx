@@ -3,12 +3,11 @@
 import { useEffect, useState } from "react";
 import { AnimatePresence, motion } from "framer-motion";
 import { X } from "lucide-react";
-import { siteConfig } from "@config/site";
 
 export function AnnouncementBar({ adminText = "" }: { adminText?: string }) {
   const messages = [
     ...(adminText ? [adminText] : []),
-    `Free shipping on orders above \u20B9${siteConfig.freeShippingThreshold}`,
+    `Free shipping on all orders`,
     "100% Eggless \u2022 No Maida \u2022 No Refined Sugar",
     "Made fresh in small batches",
     "Festive gifting hampers available",

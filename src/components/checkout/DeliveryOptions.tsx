@@ -76,7 +76,7 @@ export function DeliveryOptions({ pincode, lines, standardRate, freeShipping, va
   if (!ready) return null;
   if (!loading && options && options.length === 0) return null;
 
-  const standardLabel = freeShipping ? "Free" : formatPrice(standardRate);
+  const standardLabel = freeShipping || standardRate === 0 ? "Free" : formatPrice(standardRate);
 
   return (
     <div className="mt-4 rounded-2xl border border-bark-800/10 bg-ivory-100 p-4">

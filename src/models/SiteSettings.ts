@@ -16,7 +16,7 @@ const SiteSettingsSchema = new Schema(
     announcementText: { type: String, default: "" },
     announcementEnabled: { type: Boolean, default: false },
     freeShippingThreshold: { type: Number, default: 999 },
-    flatShipping: { type: Number, default: 79 },
+    flatShipping: { type: Number, default: 0 },
     taxRate: { type: Number, default: 0 },
     gstNumber: { type: String, default: "" },
     foodLicence: { type: String, default: "" },

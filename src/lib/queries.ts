@@ -19,7 +19,7 @@ export async function getSettings() {
       announcementText: "",
       announcementEnabled: false,
       freeShippingThreshold: 999,
-      flatShipping: 79,
+      flatShipping: 0,
       taxRate: 0,
       gstNumber: "",
       foodLicence: "",

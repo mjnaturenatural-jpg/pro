@@ -51,7 +51,7 @@ export const SORT_OPTIONS = [
 ] as const;
 
 export const FREE_SHIPPING_THRESHOLD = 999;
-export const FLAT_SHIPPING = 79;
+export const FLAT_SHIPPING = 0;
 
 // Verified business WhatsApp number (international format, no +). Configure via
 // Site Settings → WhatsApp in the admin, or the NEXT_PUBLIC_WHATSAPP_NUMBER env var.
