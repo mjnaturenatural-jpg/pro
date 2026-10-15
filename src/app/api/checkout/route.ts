@@ -3,7 +3,7 @@ import { connectDB } from "@/lib/db";
 import { Product } from "@/models";
 import { resolveCart, computeTotals } from "@/lib/pricing";
 import { checkoutSchema } from "@/lib/validation";
-import { createRazorpayOrder, isRazorpayConfigured } from "@/lib/razorpay";
+import { createRazorpayOrder, describeRazorpayError, isRazorpayConfigured } from "@/lib/razorpay";
 import { Order } from "@/models";
 import crypto from "crypto";
 import {
@@ -142,7 +142,9 @@ export async function POST(req: Request) {
     });
   } catch (err) {
     console.error("checkout error", err);
-    const message = err instanceof Error ? err.message : "Checkout failed";
-    return NextResponse.json({ error: message }, { status: 500 });
+    return NextResponse.json(
+      { error: describeRazorpayError(err, "Checkout failed") },
+      { status: 500 }
+    );
   }
 }

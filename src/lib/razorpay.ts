@@ -23,6 +23,13 @@ export async function createRazorpayOrder(amountInRupees: number, receipt: strin
   });
 }
 
+/** razorpay-node rejects with a plain `{ error: { description } }` object, not an Error. */
+export function describeRazorpayError(err: unknown, fallback: string): string {
+  if (err instanceof Error) return err.message;
+  const e = err as { error?: { description?: string } } | null;
+  return e?.error?.description || fallback;
+}
+
 export function verifyRazorpaySignature(
   orderId: string,
   paymentId: string,
