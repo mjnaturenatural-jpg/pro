@@ -304,10 +304,122 @@ export async function createShiprocketOrder(input: ShiprocketOrderInput) {
   });
   return {
     ok: Boolean(data.awb_code || data.shipment_id || data.order_id),
-    awb: data.awb_code || "",
+    orderId: data.order_id || 0,
     shipmentId: data.shipment_id || 0,
+    awb: data.awb_code || "",
     courier: data.courier_name || "",
     raw: data,
+  };
+}
+
+interface AssignAwbResponse {
+  awb_assign_status?: unknown;
+  response?: { data?: { awb_code?: unknown; courier_name?: unknown } };
+  message?: unknown;
+}
+
+/**
+ * Explicitly assign an AWB/courier to an existing shipment. Needed when adhoc
+ * order creation does not auto-assign a courier (or the recommended courier was
+ * not booked). Shiprocket expects a single numeric shipment id here.
+ */
+export async function assignShiprocketAwb(shipmentId: string) {
+  const data = await api<AssignAwbResponse>("/courier/assign/awb", {
+    method: "POST",
+    body: JSON.stringify({ shipment_id: Number(shipmentId) }),
+  });
+  const d = data.response?.data;
+  const awb = typeof d?.awb_code === "string" ? d.awb_code.trim() : "";
+  const courier = typeof d?.courier_name === "string" ? d.courier_name.trim() : "";
+  if (!awb) {
+    const msg =
+      typeof data.message === "string" && data.message
+        ? data.message
+        : "Shiprocket did not assign an AWB for this shipment.";
+    throw new ShiprocketError(msg, "UPSTREAM", false);
+  }
+  return { awb, courier };
+}
+
+interface LabelResponse {
+  label_created?: unknown;
+  label_url?: unknown;
+  response?: { label_url?: unknown };
+  message?: unknown;
+}
+
+/** Generate a shipping label (PDF URL) for a shipment. */
+export async function generateShiprocketLabel(shipmentId: string) {
+  const data = await api<LabelResponse>("/courier/generate/label", {
+    method: "POST",
+    body: JSON.stringify({ shipment_id: [Number(shipmentId)] }),
+  });
+  const url =
+    (typeof data.label_url === "string" && data.label_url) ||
+    (typeof data.response?.label_url === "string" ? data.response.label_url : "");
+  if (!url) {
+    const msg =
+      typeof data.message === "string" && data.message
+        ? data.message
+        : "Shiprocket did not return a label URL.";
+    throw new ShiprocketError(msg, "UPSTREAM", false);
+  }
+  return { labelUrl: url };
+}
+
+interface ManifestResponse {
+  manifest_url?: unknown;
+  response?: { manifest_url?: unknown };
+  message?: unknown;
+}
+
+/** Generate a manifest (PDF URL) for a shipment. */
+export async function generateShiprocketManifest(shipmentId: string) {
+  const data = await api<ManifestResponse>("/manifests/generate", {
+    method: "POST",
+    body: JSON.stringify({ shipment_id: [Number(shipmentId)] }),
+  });
+  const url =
+    (typeof data.manifest_url === "string" && data.manifest_url) ||
+    (typeof data.response?.manifest_url === "string" ? data.response.manifest_url : "");
+  if (!url) {
+    const msg =
+      typeof data.message === "string" && data.message
+        ? data.message
+        : "Shiprocket did not return a manifest URL.";
+    throw new ShiprocketError(msg, "UPSTREAM", false);
+  }
+  return { manifestUrl: url };
+}
+
+interface PickupResponse {
+  pickup_status?: unknown;
+  response?: { pickup_scheduled_date?: unknown; pickup_token_number?: unknown };
+  message?: unknown;
+}
+
+/** Request courier pickup for a shipment. */
+export async function requestShiprocketPickup(shipmentId: string) {
+  const data = await api<PickupResponse>("/courier/generate/pickup", {
+    method: "POST",
+    body: JSON.stringify({ shipment_id: [Number(shipmentId)] }),
+  });
+  if (Number(data.pickup_status) !== 1) {
+    const msg =
+      typeof data.message === "string" && data.message
+        ? data.message
+        : "Shiprocket could not schedule a pickup for this shipment.";
+    throw new ShiprocketError(msg, "UPSTREAM", false);
+  }
+  return {
+    scheduledDate:
+      typeof data.response?.pickup_scheduled_date === "string"
+        ? data.response.pickup_scheduled_date
+        : "",
+    token:
+      typeof data.response?.pickup_token_number === "string"
+        ? data.response.pickup_token_number
+        : "",
   };
 }
 

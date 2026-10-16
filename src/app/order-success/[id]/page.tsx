@@ -186,6 +186,12 @@ export default async function OrderSuccessPage({
               </p>
             )}
           </div>
+          <div>
+            <p className="text-xs uppercase tracking-wide text-bark-500">Order Status</p>
+            <p className="mt-0.5 text-sm font-semibold text-bark-800">
+              {order.status.replace(/_/g, " ")}
+            </p>
+          </div>
         </div>
 
         {/* Items */}

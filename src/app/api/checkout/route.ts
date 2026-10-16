@@ -4,7 +4,7 @@ import { Product } from "@/models";
 import { resolveCart, computeTotals } from "@/lib/pricing";
 import { checkoutSchema } from "@/lib/validation";
 import { createRazorpayOrder, describeRazorpayError, isRazorpayConfigured } from "@/lib/razorpay";
-import { newOrderAccessToken } from "@/lib/payments";
+import { newOrderAccessToken, reconcileOrderPayment } from "@/lib/payments";
 import { Order } from "@/models";
 import crypto from "crypto";
 import {
@@ -30,8 +30,14 @@ export async function POST(req: Request) {
     const { items, address, couponCode, shippingOption } = parsed.data;
 
     if (!isRazorpayConfigured()) {
+      const missing = ["RAZORPAY_KEY_ID", "RAZORPAY_KEY_SECRET"].filter((k) => !process.env[k]);
+      console.error(`checkout rejected: Razorpay not configured (missing ${missing.join(", ")})`);
       return NextResponse.json(
-        { error: "Online payments are not configured yet. Please try again later." },
+        {
+          error: "Online payments are not configured yet. Please try again later.",
+          code: "NOT_CONFIGURED",
+          missing,
+        },
         { status: 503 }
       );
     }
@@ -102,6 +108,99 @@ export async function POST(req: Request) {
       }
     }
 
+    const totalsOut = {
+      subtotal: totals.subtotal,
+      couponDiscount: totals.couponDiscount,
+      couponCode: totals.couponCode,
+      shipping: totals.shipping,
+      tax: totals.tax,
+      total: totals.total,
+    };
+
+    // Reuse a recent unpaid attempt for the same customer and identical order
+    // instead of creating a duplicate internal order on retries/double submits.
+    const reuseCandidates = await Order.find({
+      "customer.email": address.email,
+      paymentStatus: "PENDING",
+      status: "PENDING",
+      razorpayOrderId: { $ne: "" },
+      total: totals.total,
+      shipping: totals.shipping,
+      couponCode: totals.couponCode,
+      createdAt: { $gte: new Date(Date.now() - 30 * 60 * 1000) },
+    })
+      .sort({ createdAt: -1 })
+      .limit(5)
+      .lean();
+
+    const itemKey = (items: { productId: unknown; packSize: string; quantity: number }[]) =>
+      items
+        .map((i) => `${String(i.productId)}|${i.packSize}|${i.quantity}`)
+        .sort()
+        .join(";");
+    const wantedKey = itemKey(
+      resolved as unknown as { productId: unknown; packSize: string; quantity: number }[]
+    );
+
+    for (const candidate of reuseCandidates) {
+      const cand = candidate as unknown as {
+        _id: unknown;
+        orderNumber: string;
+        razorpayOrderId: string;
+        accessToken: string;
+        paymentStatus: string;
+        items: { productId: unknown; packSize: string; quantity: number }[];
+      };
+      if (itemKey(cand.items) !== wantedKey) continue;
+
+      // Authoritative check: if this attempt was already paid but the webhook
+      // has not landed in the UI yet, report success instead of re-opening it.
+      let paidNow = false;
+      try {
+        const rec = await reconcileOrderPayment({
+          _id: cand._id,
+          razorpayOrderId: cand.razorpayOrderId,
+          total: totals.total,
+          paymentStatus: cand.paymentStatus,
+        });
+        paidNow = rec.paymentStatus === "PAID";
+      } catch (err) {
+        console.error("checkout attempt reuse: reconcile failed", err);
+        continue; // cannot confirm this attempt — start a fresh one
+      }
+      if (paidNow) {
+        const fresh = (await Order.findById(cand._id).lean()) as { accessToken?: string } | null;
+        return NextResponse.json({
+          orderId: String(cand._id),
+          orderNumber: cand.orderNumber,
+          paid: true,
+          accessToken: (fresh && fresh.accessToken) || cand.accessToken || "",
+        });
+      }
+
+      const reused = await Order.findOneAndUpdate(
+        { _id: cand._id, paymentStatus: "PENDING", status: "PENDING" },
+        {
+          $set: {
+            customer: { name: address.fullName, email: address.email, phone: address.phone },
+            address,
+          },
+        },
+        { new: true }
+      );
+      if (!reused) continue; // paid or changed while we looked — start fresh
+      return NextResponse.json({
+        orderId: reused._id.toString(),
+        orderNumber: reused.orderNumber,
+        razorpayOrderId: reused.razorpayOrderId,
+        amount: Math.round(totals.total * 100),
+        currency: "INR",
+        keyId: process.env.RAZORPAY_KEY_ID,
+        accessToken: reused.accessToken,
+        totals: totalsOut,
+      });
+    }
+
     const orderNumber = `MJN${Date.now().toString(36).toUpperCase()}${crypto.randomBytes(2).toString("hex").toUpperCase()}`;
     const accessToken = newOrderAccessToken();
 
@@ -126,38 +225,54 @@ export async function POST(req: Request) {
       shipping: totals.shipping,
       tax: totals.tax,
       total: totals.total,
+      currency: "INR",
       shippingProvider,
       paymentStatus: "PENDING",
       status: "PENDING",
       accessToken,
     });
 
-    const rzpOrder = await createRazorpayOrder(totals.total, orderNumber);
-
-    order.razorpayOrderId = rzpOrder.id;
-    await order.save();
-
-    return NextResponse.json({
-      orderId: order._id.toString(),
-      orderNumber,
-      razorpayOrderId: rzpOrder.id,
-      amount: rzpOrder.amount,
-      currency: rzpOrder.currency,
-      keyId: process.env.RAZORPAY_KEY_ID,
-      accessToken,
-      totals: {
-        subtotal: totals.subtotal,
-        couponDiscount: totals.couponDiscount,
-        couponCode: totals.couponCode,
-        shipping: totals.shipping,
-        tax: totals.tax,
-        total: totals.total,
-      },
-    });
+    try {
+      const rzpOrder = await createRazorpayOrder(totals.total, orderNumber);
+      order.razorpayOrderId = rzpOrder.id;
+      await order.save();
+      return NextResponse.json({
+        orderId: order._id.toString(),
+        orderNumber,
+        razorpayOrderId: rzpOrder.id,
+        amount: rzpOrder.amount,
+        currency: rzpOrder.currency,
+        keyId: process.env.RAZORPAY_KEY_ID,
+        accessToken,
+        totals: totalsOut,
+      });
+    } catch (err) {
+      // Razorpay order creation failed after the internal order was written.
+      // Keep the internal order (unpaid, no Razorpay id) for the audit trail
+      // and surface only a safe message — no internal details.
+      console.error("razorpay order creation failed", {
+        orderNumber,
+        err: describeRazorpayError(err, "unknown error"),
+      });
+      return NextResponse.json(
+        { error: "Could not start the payment. Please try again.", code: "RAZORPAY_ORDER_FAILED" },
+        { status: 502 }
+      );
+    }
   } catch (err) {
     console.error("checkout error", err);
+    // Razorpay SDK rejections carry a description; anything else is internal —
+    // return a generic message so DB/driver details never reach the client.
+    const razorpayDescription =
+      !(err instanceof Error) &&
+      ((err as { error?: { description?: string } } | null)?.error?.description || null);
     return NextResponse.json(
-      { error: describeRazorpayError(err, "Checkout failed") },
+      {
+        error: razorpayDescription
+          ? describeRazorpayError(err, "Checkout failed")
+          : "Checkout failed. Please try again.",
+        code: razorpayDescription ? "RAZORPAY_ERROR" : "INTERNAL",
+      },
       { status: 500 }
     );
   }

@@ -15,6 +15,7 @@ interface WebhookPayment {
   order_id: string;
   status: string;
   amount: number;
+  currency?: string;
   method?: string;
 }
 
@@ -77,8 +78,11 @@ export async function POST(req: Request) {
       if (!paymentEntity?.id) return NextResponse.json({ received: true });
       if (order.paymentStatus === "PAID") return NextResponse.json({ received: true });
       const expectedPaise = Math.round(order.total * 100);
-      if (typeof paymentEntity.amount === "number" && paymentEntity.amount !== expectedPaise) {
-        console.error("webhook amount mismatch (authorized)", { rzpOrderId, got: paymentEntity.amount, expected: expectedPaise });
+      if (
+        (typeof paymentEntity.amount === "number" && paymentEntity.amount !== expectedPaise) ||
+        (paymentEntity.currency && paymentEntity.currency !== "INR")
+      ) {
+        console.error("webhook amount/currency mismatch (authorized)", { rzpOrderId, got: paymentEntity.amount, currency: paymentEntity.currency, expected: expectedPaise });
         return NextResponse.json({ received: true });
       }
       try {
@@ -114,8 +118,8 @@ export async function POST(req: Request) {
       }
       if (paymentEntity && typeof paymentEntity.amount === "number") {
         const expectedPaise = Math.round(order.total * 100);
-        if (paymentEntity.amount !== expectedPaise) {
-          console.error("webhook amount mismatch", { rzpOrderId, got: paymentEntity.amount, expected: expectedPaise });
+        if (paymentEntity.amount !== expectedPaise || (paymentEntity.currency && paymentEntity.currency !== "INR")) {
+          console.error("webhook amount/currency mismatch", { rzpOrderId, got: paymentEntity.amount, currency: paymentEntity.currency, expected: expectedPaise });
           return NextResponse.json({ received: true });
         }
       }

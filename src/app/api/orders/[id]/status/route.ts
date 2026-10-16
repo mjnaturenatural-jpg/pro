@@ -1,8 +1,7 @@
 import { NextResponse } from "next/server";
 import { connectDB } from "@/lib/db";
 import { Order } from "@/models";
-import { listPaymentsForOrder, captureRazorpayPayment } from "@/lib/razorpay";
-import { finalizePaidOrder, tokensMatch } from "@/lib/payments";
+import { reconcileOrderPayment, tokensMatch } from "@/lib/payments";
 
 export const dynamic = "force-dynamic";
 
@@ -52,29 +51,7 @@ export async function GET(req: Request, { params }: { params: { id: string } }) 
       if (Date.now() - last > 8000) {
         await Order.updateOne({ _id: order._id }, { $set: { lastReconciledAt: new Date() } });
         try {
-          const payments = await listPaymentsForOrder(order.razorpayOrderId);
-          const expectedPaise = Math.round(order.total * 100);
-          const captured = payments.find((p) => p.status === "captured" && p.amount === expectedPaise);
-          if (captured) {
-            await finalizePaidOrder(order._id, { paymentId: captured.id, method: captured.method || "razorpay" });
-          } else {
-            const authorized = payments.find((p) => p.status === "authorized" && p.amount === expectedPaise);
-            if (authorized) {
-              try {
-                const cap = await captureRazorpayPayment(authorized.id, expectedPaise);
-                if (cap.status === "captured") {
-                  await finalizePaidOrder(order._id, { paymentId: cap.id, method: cap.method || authorized.method || "razorpay" });
-                }
-              } catch {
-                /* webhook or browser verify will finalize */
-              }
-            } else if (payments.some((p) => p.status === "failed") && !payments.some((p) => p.status === "captured" || p.status === "authorized")) {
-              await Order.updateOne(
-                { _id: order._id, paymentStatus: "PENDING" },
-                { $set: { paymentStatus: "FAILED" } }
-              );
-            }
-          }
+          await reconcileOrderPayment(order);
         } catch (err) {
           console.error("status reconciliation error", err);
         }

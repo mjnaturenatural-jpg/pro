@@ -17,7 +17,7 @@ import { DeliveryOptions, type CourierSelection } from "@/components/checkout/De
 
 declare global {
   interface Window {
-    Razorpay: new (options: Record<string, unknown>) => { open: () => void };
+    Razorpay: new (options: Record<string, unknown>) => { open: () => void; close: () => void };
   }
 }
 
@@ -143,6 +143,14 @@ export default function CheckoutPage() {
         return;
       }
 
+      // Server reused a recent attempt that is already verified as paid —
+      // no popup, no second charge.
+      if (data.paid) {
+        clearCart();
+        router.push(`/order-success/${data.orderId}?token=${encodeURIComponent(data.accessToken || "")}`);
+        return;
+      }
+
       if (!rzpLoaded || !window.Razorpay) {
         toast({ message: "Payment gateway is still loading. Please try again.", type: "error" });
         setLoading(false);
@@ -167,11 +175,18 @@ export default function CheckoutPage() {
           razorpay_payment_id: string;
           razorpay_signature: string;
         }) => {
+          // Close the modal first so a client-side navigation never leaves the
+          // Razorpay screen covering the confirmation page.
+          try {
+            rzp.close();
+          } catch {
+            /* modal already closed */
+          }
           try {
             const verify = await fetch("/api/payments/verify", {
               method: "POST",
               headers: { "Content-Type": "application/json" },
-              body: JSON.stringify(response),
+              body: JSON.stringify({ ...response, internal_order_id: data.orderId }),
             });
             const vd = await verify.json();
             if (vd.ok) {

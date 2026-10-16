@@ -42,6 +42,8 @@ const OrderSchema = new Schema(
     shipping: { type: Number, default: 0 },
     tax: { type: Number, default: 0 },
     total: { type: Number, required: true },
+    // Expected payment currency; matches the Razorpay order created for it.
+    currency: { type: String, default: "INR" },
     paymentStatus: {
       type: String,
       enum: ["PENDING", "PAID", "FAILED", "REFUNDED"],
@@ -72,9 +74,18 @@ const OrderSchema = new Schema(
       index: true,
     },
     shippingProvider: { type: String, default: "" },
+    // Shiprocket identifiers (server-generated; never trusted from the client).
+    shiprocketOrderId: { type: String, default: "" },
+    shiprocketShipmentId: { type: String, default: "" },
     awb: { type: String, default: "" },
     trackingUrl: { type: String, default: "" },
+    labelUrl: { type: String, default: "" },
+    manifestUrl: { type: String, default: "" },
     shipmentStatus: { type: String, default: "" },
+    // Last shipping error surfaced to admin; cleared on the next success.
+    shipmentError: { type: String, default: "" },
+    shipmentCreatedAt: { type: Date, default: null },
+    shipmentUpdatedAt: { type: Date, default: null },
     shipmentHistory: [
       {
         status: String,
@@ -90,6 +101,23 @@ const OrderSchema = new Schema(
 
 OrderSchema.index({ createdAt: -1 });
 OrderSchema.index({ "customer.email": 1, createdAt: -1 });
+// Payment identifiers are unique per order and unique across orders. Partial
+// filters keep legacy/COD orders (empty strings) out of the unique constraint.
+OrderSchema.index(
+  { razorpayOrderId: 1 },
+  { unique: true, partialFilterExpression: { razorpayOrderId: { $gt: "" } } }
+);
+OrderSchema.index(
+  { razorpayPaymentId: 1 },
+  { unique: true, partialFilterExpression: { razorpayPaymentId: { $gt: "" } } }
+);
+// A Shiprocket shipment/AWB belongs to exactly one order. Partial filters keep
+// unpaid/legacy orders (empty strings) out of the unique constraint.
+OrderSchema.index(
+  { shiprocketShipmentId: 1 },
+  { unique: true, partialFilterExpression: { shiprocketShipmentId: { $gt: "" } } }
+);
+OrderSchema.index({ awb: 1 }, { unique: true, partialFilterExpression: { awb: { $gt: "" } } });
 
 export type OrderDoc = InferSchemaType<typeof OrderSchema>;
 export const Order: Model<OrderDoc> = models.Order || model("Order", OrderSchema);

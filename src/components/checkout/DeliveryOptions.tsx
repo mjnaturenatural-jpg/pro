@@ -55,6 +55,7 @@ export function DeliveryOptions({ pincode, lines, standardRate, freeShipping, va
   const [options, setOptions] = useState<CourierOption[] | null>(null);
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState<string | null>(null);
+  const [unserviceable, setUnserviceable] = useState(false);
   const [attempt, setAttempt] = useState(0);
   const availabilityRef = useRef<boolean | null>(null);
   const onChangeRef = useRef(onChange);
@@ -68,6 +69,7 @@ export function DeliveryOptions({ pincode, lines, standardRate, freeShipping, va
     if (!ready) {
       setOptions(null);
       setError(null);
+      setUnserviceable(false);
       setLoading(false);
       return;
     }
@@ -104,6 +106,7 @@ export function DeliveryOptions({ pincode, lines, standardRate, freeShipping, va
         if (cancelled) return;
         if (availabilityRef.current === false) {
           setOptions([]);
+          setUnserviceable(false);
           return;
         }
 
@@ -119,14 +122,20 @@ export function DeliveryOptions({ pincode, lines, standardRate, freeShipping, va
         const data = (await res.json().catch(() => null)) as RatesBody | null;
         if (cancelled) return;
         if (res.ok) {
-          setOptions(sanitizeOptions(data?.options));
+          const parsed = sanitizeOptions(data?.options);
+          setOptions(parsed);
+          // Rates are configured but no courier serves this route — tell the
+          // customer rather than silently falling back.
+          setUnserviceable(parsed.length === 0);
           return;
         }
         if (res.status === 503 || data?.code === "NOT_CONFIGURED") {
           availabilityRef.current = false;
           setOptions([]);
+          setUnserviceable(false);
           return;
         }
+        setUnserviceable(false);
         fail(data?.error || "We couldn't load live courier rates right now.");
       } catch {
         if (cancelled || controller.signal.aborted) return;
@@ -150,7 +159,7 @@ export function DeliveryOptions({ pincode, lines, standardRate, freeShipping, va
   }, [options, value]);
 
   if (!ready) return null;
-  if (!error && !loading && (!options || options.length === 0)) return null;
+  if (!error && !loading && !unserviceable && (!options || options.length === 0)) return null;
 
   const standardLabel = freeShipping || standardRate === 0 ? "Free" : formatPrice(standardRate);
   const standardRow = (
@@ -197,7 +206,16 @@ export function DeliveryOptions({ pincode, lines, standardRate, freeShipping, va
           </div>
         </div>
       )}
-      {!loading && !error && options && options.length > 0 && (
+      {!loading && !error && unserviceable && (
+        <div className="mt-2.5 space-y-2">
+          <p className="text-sm text-bark-700">
+            Live courier delivery is not available to this pincode. You can still place the order with standard
+            delivery.
+          </p>
+          {standardRow}
+        </div>
+      )}
+      {!loading && !error && !unserviceable && options && options.length > 0 && (
         <div className="mt-2.5 space-y-2" role="radiogroup" aria-label="Delivery options">
           {standardRow}
           {options.map((o) => {

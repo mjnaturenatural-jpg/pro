@@ -4,7 +4,7 @@ import { Order } from "@/models";
 import { formatINR, formatDate, orderNumber } from "@/lib/utils";
 import { StatusBadge } from "@/components/admin/StatusBadge";
 import { AdminOrderActions } from "@/components/admin/AdminOrderActions";
-import { ORDER_STATUSES, PAYMENT_STATUSES } from "@/lib/constants";
+import { ORDER_STATUSES } from "@/lib/constants";
 import { isShiprocketShipReady } from "@/lib/shiprocket";
 
 export const metadata = { title: "Order Detail" };
@@ -44,7 +44,14 @@ export default async function AdminOrderDetailPage({ params }: { params: { id: s
         awb: string;
         trackingUrl: string;
         shippingProvider: string;
+        shiprocketOrderId: string;
+        shiprocketShipmentId: string;
+        labelUrl: string;
+        manifestUrl: string;
         shipmentStatus: string;
+        shipmentError: string;
+        shipmentCreatedAt: string | null;
+        shipmentUpdatedAt: string | null;
         shipmentHistory: { status: string; location: string; timestamp: string }[];
       }
     | null;
@@ -76,11 +83,17 @@ export default async function AdminOrderDetailPage({ params }: { params: { id: s
         orderId={order._id}
         status={order.status}
         paymentStatus={order.paymentStatus}
+        razorpayOrderId={order.razorpayOrderId}
+        razorpayPaymentId={order.razorpayPaymentId}
         awb={order.awb}
         trackingUrl={order.trackingUrl}
+        shiprocketShipmentId={order.shiprocketShipmentId}
+        shipmentStatus={order.shipmentStatus}
+        shipmentError={order.shipmentError}
+        labelUrl={order.labelUrl}
+        manifestUrl={order.manifestUrl}
         shiprocketReady={isShiprocketShipReady()}
         statuses={[...ORDER_STATUSES]}
-        paymentStatuses={[...PAYMENT_STATUSES]}
       />
 
       <div className="grid gap-6 lg:grid-cols-3">
@@ -144,7 +157,7 @@ export default async function AdminOrderDetailPage({ params }: { params: { id: s
             </dl>
           </div>
 
-          {order.awb && (
+          {(order.awb || order.shiprocketShipmentId) && (
             <div className="card p-5">
               <h2 className="mb-4 text-sm font-semibold uppercase tracking-wide text-bark-700">
                 Shipment
@@ -156,7 +169,15 @@ export default async function AdminOrderDetailPage({ params }: { params: { id: s
                 </div>
                 <div>
                   <dt className="text-xs uppercase tracking-wide text-bark-400">AWB</dt>
-                  <dd className="font-mono text-xs">{order.awb}</dd>
+                  <dd className="font-mono text-xs">{order.awb || "—"}</dd>
+                </div>
+                <div>
+                  <dt className="text-xs uppercase tracking-wide text-bark-400">Shiprocket Order ID</dt>
+                  <dd className="font-mono text-xs">{order.shiprocketOrderId || "—"}</dd>
+                </div>
+                <div>
+                  <dt className="text-xs uppercase tracking-wide text-bark-400">Shiprocket Shipment ID</dt>
+                  <dd className="font-mono text-xs">{order.shiprocketShipmentId || "—"}</dd>
                 </div>
                 <div>
                   <dt className="text-xs uppercase tracking-wide text-bark-400">Status</dt>
@@ -177,7 +198,39 @@ export default async function AdminOrderDetailPage({ params }: { params: { id: s
                     )}
                   </dd>
                 </div>
+                {(order.labelUrl || order.manifestUrl) && (
+                  <div className="sm:col-span-2">
+                    <dt className="text-xs uppercase tracking-wide text-bark-400">Documents</dt>
+                    <dd className="flex flex-wrap gap-3">
+                      {order.labelUrl && (
+                        <a
+                          href={order.labelUrl}
+                          target="_blank"
+                          rel="noopener noreferrer"
+                          className="text-caramel-600 hover:underline"
+                        >
+                          Shipping label
+                        </a>
+                      )}
+                      {order.manifestUrl && (
+                        <a
+                          href={order.manifestUrl}
+                          target="_blank"
+                          rel="noopener noreferrer"
+                          className="text-caramel-600 hover:underline"
+                        >
+                          Manifest
+                        </a>
+                      )}
+                    </dd>
+                  </div>
+                )}
               </dl>
+              {order.shipmentError && (
+                <p className="mt-3 rounded-lg bg-red-50 px-3 py-2 text-xs font-medium text-red-600">
+                  {order.shipmentError}
+                </p>
+              )}
               {order.shipmentHistory?.length > 0 && (
                 <ul className="mt-4 space-y-1.5 border-t border-bark-800/10 pt-3 text-xs text-bark-600">
                   {[...order.shipmentHistory].reverse().map((s, i) => (

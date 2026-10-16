@@ -4,12 +4,18 @@ import { Order } from "@/models";
 import { requireAdmin } from "@/lib/auth";
 import { z } from "zod";
 import {
+  assignShiprocketAwb,
   createShiprocketOrder,
+  generateShiprocketLabel,
+  generateShiprocketManifest,
   isShiprocketShipReady,
   packToKg,
+  requestShiprocketPickup,
   shiprocketTrackingUrl,
   trackShiprocketAwb,
 } from "@/lib/shiprocket";
+import { isRazorpayConfigured } from "@/lib/razorpay";
+import { reconcileOrderPayment } from "@/lib/payments";
 import crypto from "crypto";
 
 export const dynamic = "force-dynamic";
@@ -27,9 +33,21 @@ const updateSchema = z.object({
       "REFUNDED",
     ])
     .optional(),
-  paymentStatus: z.enum(["PENDING", "PAID", "FAILED", "REFUNDED"]).optional(),
+  // PAID is intentionally absent: an order may only become PAID through a
+  // verified Razorpay payment (verify endpoint, webhook or reconcile below).
+  paymentStatus: z.enum(["FAILED", "REFUNDED"]).optional(),
   notes: z.string().optional(),
-  action: z.enum(["create_shiprocket_shipment", "refresh_shiprocket_tracking"]).optional(),
+  action: z
+    .enum([
+      "create_shiprocket_shipment",
+      "assign_shiprocket_awb",
+      "refresh_shiprocket_tracking",
+      "generate_shiprocket_label",
+      "generate_shiprocket_manifest",
+      "request_shiprocket_pickup",
+      "reconcile_payment",
+    ])
+    .optional(),
 });
 
 export async function GET(_req: Request, { params }: { params: { id: string } }) {
@@ -66,8 +84,16 @@ export async function PATCH(req: Request, { params }: { params: { id: string } }
     if (!order) return NextResponse.json({ error: "Order not found" }, { status: 404 });
 
     if (parsed.data.action === "create_shiprocket_shipment") {
-      if (order.awb) {
+      if (order.awb || order.shiprocketShipmentId) {
         return NextResponse.json({ error: "A shipment already exists for this order" }, { status: 400 });
+      }
+      // A prepaid order may only be fulfilled after a verified payment. Nothing
+      // here touches payment state — shipping and payment stay independent.
+      if (order.paymentStatus !== "PAID") {
+        return NextResponse.json(
+          { error: "This order is not paid yet. A shipment is created only after a verified payment." },
+          { status: 409 }
+        );
       }
       if (!isShiprocketShipReady()) {
         return NextResponse.json(
@@ -112,22 +138,119 @@ export async function PATCH(req: Request, { params }: { params: { id: string } }
           weightKg,
           prepaid: order.paymentStatus === "PAID",
         });
-        if (result.ok && result.awb) {
+        // Persist the Shiprocket identifiers even when no AWB came back, so a
+        // retry never creates a second shipment for the same order.
+        if (result.orderId) order.shiprocketOrderId = String(result.orderId);
+        if (result.shipmentId) order.shiprocketShipmentId = String(result.shipmentId);
+        if (!result.ok) {
+          order.shipmentError = "Shiprocket did not return a shipment for this order.";
+          await order.save();
+          return NextResponse.json({ error: order.shipmentError }, { status: 502 });
+        }
+        order.shipmentCreatedAt = order.shipmentCreatedAt || new Date();
+        order.shipmentUpdatedAt = new Date();
+        order.shipmentError = "";
+        if (result.awb) {
           order.awb = result.awb;
           order.shippingProvider = result.courier ? `Shiprocket:${result.courier}` : "Shiprocket";
           order.trackingUrl = shiprocketTrackingUrl(result.awb);
           order.shipmentStatus = "Shipment created";
-          order.status = "SHIPPED";
+          if (["PENDING", "CONFIRMED", "PROCESSING"].includes(order.status)) order.status = "SHIPPED";
           await order.save();
           return NextResponse.json({ ok: true, order: JSON.parse(JSON.stringify(order)) });
         }
-        return NextResponse.json(
-          { error: "Shiprocket accepted the order but did not assign an AWB. Check the pickup location and courier assignment in Shiprocket." },
-          { status: 502 }
-        );
+        // Shipment exists but no courier/AWB was auto-assigned — the admin can
+        // assign one explicitly via "Assign AWB".
+        order.shipmentStatus = "Shipment created (AWB pending)";
+        await order.save();
+        return NextResponse.json({
+          ok: true,
+          message: "Shipment created. No AWB was auto-assigned — use Assign AWB.",
+          order: JSON.parse(JSON.stringify(order)),
+        });
       } catch (err) {
         console.error("shiprocket create error", err);
         const message = err instanceof Error ? err.message : "Failed to create shipment with Shiprocket";
+        order.shipmentError = message;
+        await order.save().catch(() => {});
+        return NextResponse.json({ error: message }, { status: 502 });
+      }
+    }
+
+    if (
+      parsed.data.action === "assign_shiprocket_awb" ||
+      parsed.data.action === "generate_shiprocket_label" ||
+      parsed.data.action === "generate_shiprocket_manifest" ||
+      parsed.data.action === "request_shiprocket_pickup"
+    ) {
+      if (!order.shiprocketShipmentId) {
+        return NextResponse.json(
+          { error: "No Shiprocket shipment exists for this order yet" },
+          { status: 400 }
+        );
+      }
+      if (!isShiprocketShipReady()) {
+        return NextResponse.json(
+          { error: "Shiprocket is not configured. Set SHIPROCKET_EMAIL, SHIPROCKET_PASSWORD and SHIPROCKET_PICKUP_LOCATION." },
+          { status: 503 }
+        );
+      }
+      try {
+        if (parsed.data.action === "assign_shiprocket_awb") {
+          if (order.awb) {
+            return NextResponse.json(
+              { error: "An AWB is already assigned to this order" },
+              { status: 400 }
+            );
+          }
+          const res = await assignShiprocketAwb(order.shiprocketShipmentId);
+          order.awb = res.awb;
+          order.shippingProvider = res.courier ? `Shiprocket:${res.courier}` : "Shiprocket";
+          order.trackingUrl = shiprocketTrackingUrl(res.awb);
+          order.shipmentStatus = "Shipment created";
+          if (["PENDING", "CONFIRMED", "PROCESSING"].includes(order.status)) order.status = "SHIPPED";
+          order.shipmentUpdatedAt = new Date();
+          order.shipmentError = "";
+          await order.save();
+          return NextResponse.json({ ok: true, order: JSON.parse(JSON.stringify(order)) });
+        }
+        if (parsed.data.action === "generate_shiprocket_label") {
+          const res = await generateShiprocketLabel(order.shiprocketShipmentId);
+          order.labelUrl = res.labelUrl;
+          order.shipmentUpdatedAt = new Date();
+          order.shipmentError = "";
+          await order.save();
+          return NextResponse.json({
+            ok: true,
+            labelUrl: res.labelUrl,
+            order: JSON.parse(JSON.stringify(order)),
+          });
+        }
+        if (parsed.data.action === "generate_shiprocket_manifest") {
+          const res = await generateShiprocketManifest(order.shiprocketShipmentId);
+          order.manifestUrl = res.manifestUrl;
+          order.shipmentUpdatedAt = new Date();
+          order.shipmentError = "";
+          await order.save();
+          return NextResponse.json({
+            ok: true,
+            manifestUrl: res.manifestUrl,
+            order: JSON.parse(JSON.stringify(order)),
+          });
+        }
+        const res = await requestShiprocketPickup(order.shiprocketShipmentId);
+        order.shipmentStatus = res.scheduledDate
+          ? `Pickup scheduled (${res.scheduledDate})`
+          : "Pickup requested";
+        order.shipmentUpdatedAt = new Date();
+        order.shipmentError = "";
+        await order.save();
+        return NextResponse.json({ ok: true, order: JSON.parse(JSON.stringify(order)) });
+      } catch (err) {
+        console.error("shiprocket operation error", parsed.data.action, err);
+        const message = err instanceof Error ? err.message : "Shiprocket operation failed";
+        order.shipmentError = message;
+        await order.save().catch(() => {});
         return NextResponse.json({ error: message }, { status: 502 });
       }
     }
@@ -152,17 +275,78 @@ export async function PATCH(req: Request, { params }: { params: { id: string } }
         } else if (t.status) {
           order.shipmentStatus = t.status;
         }
+        order.shipmentUpdatedAt = new Date();
+        order.shipmentError = "";
         await order.save();
         return NextResponse.json({ ok: true, order: JSON.parse(JSON.stringify(order)) });
       } catch (err) {
         console.error("shiprocket tracking error", err);
         const message = err instanceof Error ? err.message : "Failed to refresh tracking";
+        order.shipmentError = message;
+        await order.save().catch(() => {});
         return NextResponse.json({ error: message }, { status: 502 });
       }
     }
 
+    if (parsed.data.action === "reconcile_payment") {
+      if (!order.razorpayOrderId) {
+        return NextResponse.json(
+          { error: "No Razorpay payment attempt exists for this order" },
+          { status: 400 }
+        );
+      }
+      if (order.paymentStatus === "PAID" || order.paymentStatus === "REFUNDED") {
+        return NextResponse.json({
+          ok: true,
+          paymentStatus: order.paymentStatus,
+          order: JSON.parse(JSON.stringify(order)),
+        });
+      }
+      if (!isRazorpayConfigured()) {
+        const missing = ["RAZORPAY_KEY_ID", "RAZORPAY_KEY_SECRET"].filter((k) => !process.env[k]);
+        return NextResponse.json(
+          { error: `Razorpay is not configured. Set ${missing.join(" and ")} in the server environment.` },
+          { status: 503 }
+        );
+      }
+      try {
+        const result = await reconcileOrderPayment(order);
+        const fresh = await Order.findById(params.id);
+        return NextResponse.json({
+          ok: true,
+          paymentStatus: result.paymentStatus,
+          order: JSON.parse(JSON.stringify(fresh || order)),
+        });
+      } catch (err) {
+        console.error("admin reconcile error", err);
+        return NextResponse.json(
+          { error: "Could not verify the payment with Razorpay. Please try again shortly." },
+          { status: 502 }
+        );
+      }
+    }
+
     if (parsed.data.status) order.status = parsed.data.status;
-    if (parsed.data.paymentStatus) order.paymentStatus = parsed.data.paymentStatus;
+    if (parsed.data.paymentStatus) {
+      const target = parsed.data.paymentStatus;
+      const current = order.paymentStatus;
+      // Paid is unreachable here (schema has no PAID); REFUNDED requires a
+      // paid order and FAILED can only regress a still-pending payment, so a
+      // confirmed payment can never be downgraded by hand.
+      if (target === "REFUNDED" && current !== "PAID") {
+        return NextResponse.json(
+          { error: "Only a paid order can be marked as refunded" },
+          { status: 400 }
+        );
+      }
+      if (target === "FAILED" && current !== "PENDING") {
+        return NextResponse.json(
+          { error: "Only a pending payment can be marked as failed" },
+          { status: 400 }
+        );
+      }
+      order.paymentStatus = target;
+    }
     if (parsed.data.notes !== undefined) order.notes = parsed.data.notes;
     await order.save();
     return NextResponse.json({ ok: true, order: JSON.parse(JSON.stringify(order)) });

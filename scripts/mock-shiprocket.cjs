@@ -1,6 +1,6 @@
 /**
  * Mock Shiprocket API for scripts/shipping-tests.ps1.
- * Behavior is selected by the delivery postcode query param:
+ * Serviceability behavior is selected by the delivery postcode query param:
  *   500001 healthy (mixed valid/invalid courier entries)
  *   500002 flaky  — first request 500, then healthy (tests bounded read retry)
  *   500003 slow   — responds after 2.5s (tests timeout)
@@ -9,7 +9,19 @@
  *   500006 token expiry — first request 401, then healthy (tests refresh guard)
  *   500007 always 500 (tests bounded retry → UPSTREAM)
  *   500008 always 401 (tests bounded refresh → no recursion)
- * GET  /__stats returns request counts; POST /__reset clears them.
+ *
+ * Shipment lifecycle endpoints:
+ *   POST /orders/create/adhoc        — returns shipment_id, and awb_code unless
+ *                                      config.createAwb === false
+ *   POST /courier/assign/awb         — returns an AWB
+ *   POST /courier/generate/label     — returns label_url
+ *   POST /manifests/generate         — returns manifest_url
+ *   POST /courier/generate/pickup    — returns pickup_status 1 + schedule
+ *   GET  /courier/track/awb/:awb     — returns tracking scans
+ *
+ * Control:
+ *   GET  /__stats  returns counts; POST /__reset clears them
+ *   POST /__config { "createAwb": false } toggles AWB auto-assignment
  */
 const http = require("http");
 
@@ -28,7 +40,8 @@ const healthy = {
   },
 };
 
-const counts = { logins: 0, serviceability: {} };
+const config = { createAwb: true, failCreate: false };
+const counts = { logins: 0, serviceability: {}, ops: {} };
 const seen = {};
 
 function json(res, status, body) {
@@ -43,7 +56,30 @@ function bump(pin) {
   return counts.serviceability[pin];
 }
 
-const server = http.createServer((req, res) => {
+function op(name) {
+  counts.ops[name] = (counts.ops[name] || 0) + 1;
+  return counts.ops[name];
+}
+
+function readBody(req) {
+  return new Promise((resolve) => {
+    let raw = "";
+    req.on("data", (c) => {
+      raw += c;
+      if (raw.length > 1e6) req.destroy();
+    });
+    req.on("end", () => {
+      try {
+        resolve(raw ? JSON.parse(raw) : {});
+      } catch {
+        resolve({});
+      }
+    });
+    req.on("error", () => resolve({}));
+  });
+}
+
+const server = http.createServer(async (req, res) => {
   const url = new URL(req.url, `http://127.0.0.1:${PORT}`);
   try {
     if (req.method === "GET" && url.pathname === "/__stats") {
@@ -52,8 +88,17 @@ const server = http.createServer((req, res) => {
     if (req.method === "POST" && url.pathname === "/__reset") {
       counts.logins = 0;
       counts.serviceability = {};
+      counts.ops = {};
+      config.createAwb = true;
+      config.failCreate = false;
       for (const k of Object.keys(seen)) delete seen[k];
       return json(res, 200, { ok: true });
+    }
+    if (req.method === "POST" && url.pathname === "/__config") {
+      const body = await readBody(req);
+      if (typeof body.createAwb === "boolean") config.createAwb = body.createAwb;
+      if (typeof body.failCreate === "boolean") config.failCreate = body.failCreate;
+      return json(res, 200, { ok: true, config });
     }
     if (req.method === "POST" && url.pathname === "/v1/external/auth/login") {
       counts.logins += 1;
@@ -93,6 +138,55 @@ const server = http.createServer((req, res) => {
         return json(res, 401, { message: "Token rejected" });
       }
       return json(res, 200, healthy);
+    }
+    if (req.method === "POST" && url.pathname === "/v1/external/orders/create/adhoc") {
+      const n = op("create");
+      const body = await readBody(req);
+      if (config.failCreate) return json(res, 500, { message: "shipment creation failed upstream" });
+      return json(res, 200, {
+        order_id: 90000 + n,
+        shipment_id: 80000 + n,
+        awb_code: config.createAwb ? `AWB${10000 + n}` : null,
+        courier_name: config.createAwb ? "Test Surface" : "",
+        status: "NEW",
+        // Echo enough for debugging without leaking anything.
+        order_id_internal: body.order_id || "",
+      });
+    }
+    if (req.method === "POST" && url.pathname === "/v1/external/courier/assign/awb") {
+      op("assign_awb");
+      return json(res, 200, {
+        awb_assign_status: 1,
+        response: { data: { awb_code: "AWB99999", courier_name: "Test Air", courier_company_id: 102 } },
+      });
+    }
+    if (req.method === "POST" && url.pathname === "/v1/external/courier/generate/label") {
+      op("label");
+      return json(res, 200, { label_created: 1, label_url: `http://127.0.0.1:${PORT}/label.pdf` });
+    }
+    if (req.method === "POST" && url.pathname === "/v1/external/manifests/generate") {
+      op("manifest");
+      return json(res, 200, { manifest_url: `http://127.0.0.1:${PORT}/manifest.pdf` });
+    }
+    if (req.method === "POST" && url.pathname === "/v1/external/courier/generate/pickup") {
+      op("pickup");
+      return json(res, 200, {
+        pickup_status: 1,
+        response: { pickup_scheduled_date: "2026-01-01 10:00:00", pickup_token_number: "PT123" },
+      });
+    }
+    if (req.method === "GET" && url.pathname.startsWith("/v1/external/courier/track/awb/")) {
+      op("track");
+      const awb = decodeURIComponent(url.pathname.split("/").pop() || "");
+      return json(res, 200, {
+        tracking_data: {
+          track_status: 1,
+          track_status_name: "In Transit",
+          etd: "2026-01-05",
+          shipment_track: [{ status: "Picked up", location: "Delhi", date: "2026-01-01 10:00:00" }],
+        },
+        awb,
+      });
     }
     json(res, 404, { message: "not found" });
   } catch {
