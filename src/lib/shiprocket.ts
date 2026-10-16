@@ -3,7 +3,10 @@
  * Docs: https://apidocs.shiprocket.in
  */
 
-const BASE = "https://apiv2.shiprocket.in/v1/external";
+const BASE = (process.env.SHIPROCKET_BASE_URL || "https://apiv2.shiprocket.in/v1/external").replace(
+  /\/+$/,
+  ""
+);
 
 const EMAIL = process.env.SHIPROCKET_EMAIL || "";
 const PASSWORD = process.env.SHIPROCKET_PASSWORD || "";
@@ -15,6 +18,52 @@ export const SHIPROCKET_PICKUP_LOCATION = process.env.SHIPROCKET_PICKUP_LOCATION
 const PARCEL_LENGTH = 25;
 const PARCEL_BREADTH = 18;
 const PARCEL_HEIGHT = 12;
+
+function requestTimeoutMs(): number {
+  const n = Number(process.env.SHIPROCKET_TIMEOUT_MS);
+  return Number.isFinite(n) && n >= 100 && n <= 60000 ? Math.round(n) : 8000;
+}
+
+export type ShiprocketErrorCode =
+  | "NOT_CONFIGURED"
+  | "LOGIN_FAILED"
+  | "TIMEOUT"
+  | "NETWORK"
+  | "RATE_LIMITED"
+  | "UPSTREAM"
+  | "MALFORMED"
+  | "UNAUTHORIZED";
+
+export class ShiprocketError extends Error {
+  readonly code: ShiprocketErrorCode;
+  readonly retryable: boolean;
+  constructor(message: string, code: ShiprocketErrorCode, retryable: boolean) {
+    super(message);
+    this.name = "ShiprocketError";
+    this.code = code;
+    this.retryable = retryable;
+  }
+}
+
+function delay(ms: number): Promise<void> {
+  return new Promise((resolve) => setTimeout(resolve, ms));
+}
+
+async function fetchJson(url: string, init: RequestInit): Promise<Response> {
+  try {
+    return await fetch(url, {
+      ...init,
+      cache: "no-store",
+      signal: AbortSignal.timeout(requestTimeoutMs()),
+    });
+  } catch (err) {
+    const name = err instanceof Error ? err.name : "";
+    if (name === "TimeoutError" || name === "AbortError") {
+      throw new ShiprocketError("Shiprocket did not respond in time", "TIMEOUT", true);
+    }
+    throw new ShiprocketError("Could not reach Shiprocket", "NETWORK", true);
+  }
+}
 
 export function isShiprocketConfigured(): boolean {
   return Boolean(EMAIL && PASSWORD);
@@ -36,15 +85,21 @@ interface TokenCache {
 const cache: TokenCache = { token: "", expiresAt: 0 };
 
 async function login(): Promise<string> {
-  const res = await fetch(`${BASE}/auth/login`, {
+  if (!isShiprocketConfigured()) {
+    throw new ShiprocketError("Shiprocket is not configured", "NOT_CONFIGURED", false);
+  }
+  const res = await fetchJson(`${BASE}/auth/login`, {
     method: "POST",
     headers: { "Content-Type": "application/json" },
     body: JSON.stringify({ email: EMAIL, password: PASSWORD }),
-    cache: "no-store",
   });
   const data = (await res.json().catch(() => ({}))) as { token?: string; message?: string };
   if (!res.ok || !data.token) {
-    throw new Error(data.message || "Shiprocket login failed. Check email/password.");
+    throw new ShiprocketError(
+      data.message || "Shiprocket login failed. Check email/password.",
+      "LOGIN_FAILED",
+      false
+    );
   }
   cache.token = data.token;
   cache.expiresAt = Date.now() + 20 * 60 * 60 * 1000;
@@ -52,29 +107,65 @@ async function login(): Promise<string> {
 }
 
 async function authHeaders(): Promise<Record<string, string>> {
-  if (!isShiprocketConfigured()) throw new Error("Shiprocket is not configured");
+  if (!isShiprocketConfigured()) {
+    throw new ShiprocketError("Shiprocket is not configured", "NOT_CONFIGURED", false);
+  }
   const token = Date.now() < cache.expiresAt && cache.token ? cache.token : await login();
   return { Authorization: `Bearer ${token}`, "Content-Type": "application/json" };
 }
 
-async function api<T>(path: string, init?: RequestInit): Promise<T> {
-  const res = await fetch(`${BASE}${path}`, {
-    ...init,
-    headers: { ...(await authHeaders()), ...(init?.headers || {}) },
-    cache: "no-store",
-  });
-  const data = (await res.json().catch(() => ({}))) as T & { message?: string };
-  if (res.status === 401 && cache.token) {
+async function api<T>(path: string, init: RequestInit = {}, opts: { attempt?: number } = {}): Promise<T> {
+  const attempt = opts.attempt ?? 0;
+  const isRead = !init.method || init.method.toUpperCase() === "GET";
+  let res: Response;
+  try {
+    res = await fetchJson(`${BASE}${path}`, {
+      ...init,
+      headers: { ...(await authHeaders()), ...((init.headers as Record<string, string>) || {}) },
+    });
+  } catch (err) {
+    // One bounded retry for transient read failures — never loop.
+    if (isRead && attempt < 1 && err instanceof ShiprocketError && err.retryable) {
+      await delay(250 * (attempt + 1));
+      return api<T>(path, init, { attempt: attempt + 1 });
+    }
+    throw err;
+  }
+  if (res.status === 401 && attempt < 1) {
     // Token may have expired early — refresh once and retry.
     cache.token = "";
     cache.expiresAt = 0;
-    return api<T>(path, init);
+    return api<T>(path, init, { attempt: attempt + 1 });
+  }
+  if (res.status === 401) {
+    throw new ShiprocketError("Shiprocket rejected the session", "UNAUTHORIZED", true);
+  }
+  let data: unknown;
+  try {
+    data = await res.json();
+  } catch {
+    data = null;
   }
   if (!res.ok) {
-    const msg = (data as { message?: string }).message || `Shiprocket request failed (${res.status})`;
-    throw new Error(msg);
+    const message =
+      data && typeof data === "object" && typeof (data as { message?: unknown }).message === "string"
+        ? ((data as { message: string }).message)
+        : "";
+    const msg = message || `Shiprocket request failed (${res.status})`;
+    if (res.status === 429) throw new ShiprocketError(msg, "RATE_LIMITED", true);
+    if (res.status >= 500) {
+      if (isRead && attempt < 1) {
+        await delay(250 * (attempt + 1));
+        return api<T>(path, init, { attempt: attempt + 1 });
+      }
+      throw new ShiprocketError(msg, "UPSTREAM", true);
+    }
+    throw new ShiprocketError(msg, "UPSTREAM", false);
   }
-  return data;
+  if (data === null) {
+    throw new ShiprocketError("Shiprocket returned an unreadable response", "MALFORMED", true);
+  }
+  return data as T;
 }
 
 /** Parse a pack label like "250g", "250 g" or "1kg" into kilograms. Defaults to 0.5. */
@@ -93,41 +184,58 @@ export interface CourierOption {
   etd: string;
 }
 
+interface ServiceabilityCourier {
+  courier_company_id: unknown;
+  courier_name: unknown;
+  freight_charge?: unknown;
+  rate?: unknown;
+  etd?: unknown;
+}
+
 interface ServiceabilityResponse {
   data?: {
-    available_courier_companies?: {
-      courier_company_id: number;
-      courier_name: string;
-      freight_charge: number;
-      cod_charges?: number;
-      etd?: string;
-    }[];
+    available_courier_companies?: ServiceabilityCourier[];
   };
+  message?: unknown;
 }
 
 /** Live courier rates + ETAs for a delivery pincode. Cheapest first, max 5. */
 export async function getCourierRates(deliveryPincode: string, weightKg: number): Promise<CourierOption[]> {
-  const weight = Math.max(0.5, Math.min(50, Math.round(weightKg * 100) / 100));
+  const weight = Number.isFinite(weightKg)
+    ? Math.max(0.5, Math.min(50, Math.round(weightKg * 100) / 100))
+    : 0.5;
   const params = new URLSearchParams({
     pickup_postcode: SHIPROCKET_PICKUP_POSTCODE,
     delivery_postcode: deliveryPincode,
     weight: String(weight),
     cod: "0",
   });
-  const data = await api<ServiceabilityResponse>(`/courier/serviceability/?${params.toString()}`, {
+  const body = await api<ServiceabilityResponse>(`/courier/serviceability/?${params.toString()}`, {
     method: "GET",
   });
-  const list = data.data?.available_courier_companies || [];
-  return list
-    .filter((c) => Number.isFinite(c.freight_charge))
-    .map((c) => ({
-      courierId: c.courier_company_id,
-      courierName: c.courier_name,
-      rate: Math.round(Number(c.freight_charge)),
-      etd: c.etd || "",
-    }))
-    .sort((a, b) => a.rate - b.rate)
-    .slice(0, 5);
+  const list = Array.isArray(body?.data?.available_courier_companies)
+    ? body.data.available_courier_companies
+    : null;
+  if (!list) {
+    // Shiprocket answered but without a serviceability payload — treat a
+    // message-only body as "no couriers", anything else as malformed.
+    if (body && typeof body === "object" && "message" in body) return [];
+    throw new ShiprocketError("Shiprocket returned an unexpected rates response", "MALFORMED", true);
+  }
+  const options: CourierOption[] = [];
+  for (const c of list) {
+    const id = Number(c.courier_company_id);
+    const charge = Number(c.freight_charge ?? c.rate);
+    const name = typeof c.courier_name === "string" ? c.courier_name.trim() : "";
+    if (!Number.isFinite(id) || !Number.isFinite(charge) || charge < 0 || !name) continue;
+    options.push({
+      courierId: id,
+      courierName: name,
+      rate: Math.round(charge),
+      etd: typeof c.etd === "string" ? c.etd : "",
+    });
+  }
+  return options.sort((a, b) => a.rate - b.rate).slice(0, 5);
 }
 
 export interface ShiprocketOrderItem {

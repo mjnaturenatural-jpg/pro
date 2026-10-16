@@ -4,8 +4,9 @@
  * Nothing here is shown as "verified" unless the client supplied it.
  */
 
-export const SITE_URL =
-  process.env.NEXT_PUBLIC_SITE_URL || "https://www.mjnaturenatural.com";
+import { resolveSiteUrl } from "../src/lib/site-url";
+
+export const SITE_URL = resolveSiteUrl(process.env.NEXT_PUBLIC_SITE_URL, process.env.NEXT_PUBLIC_APP_URL);
 
 export const siteConfig = {
   brandName: "MJ Nature Natural",

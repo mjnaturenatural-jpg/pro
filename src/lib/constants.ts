@@ -1,8 +1,7 @@
+import { resolveSiteUrl } from "./site-url";
+
 export const APP_NAME = process.env.NEXT_PUBLIC_APP_NAME || "MJ Nature Natural";
-export const APP_URL =
-  process.env.NEXT_PUBLIC_SITE_URL ||
-  process.env.NEXT_PUBLIC_APP_URL ||
-  "https://www.mjnaturenatural.com";
+export const APP_URL = resolveSiteUrl(process.env.NEXT_PUBLIC_SITE_URL, process.env.NEXT_PUBLIC_APP_URL);
 
 export const CATEGORIES = [
   { name: "Chikki", slug: "chikki" },

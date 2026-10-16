@@ -12,6 +12,7 @@ import {
   isShiprocketConfigured,
   packToKg,
   SHIPROCKET_PICKUP_POSTCODE,
+  ShiprocketError,
 } from "@/lib/shiprocket";
 
 export const dynamic = "force-dynamic";
@@ -84,6 +85,15 @@ export async function POST(req: Request) {
           100;
         shippingProvider = `Shiprocket:${match.courierName}`;
       } catch (err) {
+        if (err instanceof ShiprocketError) {
+          return NextResponse.json(
+            {
+              error: "Live courier rates are unavailable right now. Please choose standard delivery.",
+              code: err.code,
+            },
+            { status: err.code === "TIMEOUT" ? 504 : 502 }
+          );
+        }
         console.error("courier verification error", err);
         return NextResponse.json(
           { error: "Live courier rates are unavailable right now. Please choose standard delivery." },
