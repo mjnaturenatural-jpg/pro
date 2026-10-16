@@ -86,6 +86,11 @@ if ($Phase -eq "A") {
 if ($Phase -eq "B") {
   "--- Phase B: rates configured against mock Shiprocket ---"
 
+  # NOTE: the app server for this phase must be started with the login-breaker
+  # test overrides, otherwise the last 3 assertions cannot exercise the breaker:
+  #   SHIPROCKET_TOKEN_TTL_MS=0        (force a fresh login on every request)
+  #   SHIPROCKET_LOGIN_COOLDOWN_MS=3000 (short breaker cooldown so we can recover)
+
   try {
     $g = Get-Json "$base/api/shipping/rates"
     Status "GET availability 200 available:true" ($g.status -eq 200 -and $g.data.available -eq $true)
@@ -148,6 +153,28 @@ if ($Phase -eq "B") {
   $body = $checkoutPrefix + ',"shippingOption":{"courierId":999999,"rate":55}}'
   $r = Post-Checkout $body
   Status "checkout rejects unknown courier -> 409" ($r.status -eq 409)
+
+  # --- Login hardening: distinct code for the block + bounded logins (breaker) ---
+  # Reset first (reset also clears config), then force /auth/login to fail.
+  try { Invoke-WebRequest -Uri "$mock/__reset" -Method POST -UseBasicParsing -TimeoutSec 10 | Out-Null } catch { }
+  try { Invoke-WebRequest -Uri "$mock/__config" -Method POST -ContentType "application/json" -Body '{"failLogin":true}' -UseBasicParsing -TimeoutSec 10 | Out-Null } catch { }
+
+  $r = Post-Rates "500001" $oneItem
+  Status "blocked login surfaces distinct code LOGIN_RATE_LIMITED" (
+    $r.status -eq 502 -and $r.data.code -eq "LOGIN_RATE_LIMITED"
+  )
+
+  # Keep firing; the circuit breaker must stop logins instead of stampeding.
+  for ($i = 0; $i -lt 5; $i++) { Post-Rates "500001" $oneItem | Out-Null }
+  $st = $null
+  try { $st = (Invoke-WebRequest -Uri "$mock/__stats" -UseBasicParsing -TimeoutSec 10).Content | ConvertFrom-Json } catch { }
+  Status "logins bounded by circuit breaker (<= 4 of 6 requests)" ($st -and $st.logins -le 4)
+
+  # Once login recovers, a fresh request works again.
+  try { Invoke-WebRequest -Uri "$mock/__config" -Method POST -ContentType "application/json" -Body '{"failLogin":false}' -UseBasicParsing -TimeoutSec 10 | Out-Null } catch { }
+  Start-Sleep -Seconds 4
+  $r = Post-Rates "500001" $oneItem
+  Status "login recovers after cooldown -> 200" ($r.status -eq 200 -and @($r.data.options).Count -ge 1)
 }
 
 if ($Phase -eq "C") {

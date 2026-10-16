@@ -40,7 +40,7 @@ const healthy = {
   },
 };
 
-const config = { createAwb: true, failCreate: false };
+const config = { createAwb: true, failCreate: false, failLogin: false };
 const counts = { logins: 0, serviceability: {}, ops: {} };
 const seen = {};
 
@@ -91,6 +91,7 @@ const server = http.createServer(async (req, res) => {
       counts.ops = {};
       config.createAwb = true;
       config.failCreate = false;
+      config.failLogin = false;
       for (const k of Object.keys(seen)) delete seen[k];
       return json(res, 200, { ok: true });
     }
@@ -98,10 +99,14 @@ const server = http.createServer(async (req, res) => {
       const body = await readBody(req);
       if (typeof body.createAwb === "boolean") config.createAwb = body.createAwb;
       if (typeof body.failCreate === "boolean") config.failCreate = body.failCreate;
+      if (typeof body.failLogin === "boolean") config.failLogin = body.failLogin;
       return json(res, 200, { ok: true, config });
     }
     if (req.method === "POST" && url.pathname === "/v1/external/auth/login") {
       counts.logins += 1;
+      if (config.failLogin) {
+        return json(res, 403, { message: "User blocked due to too many failed login attempts." });
+      }
       return json(res, 200, { token: "mock-token", expires_at: "2099-01-01 00:00:00" });
     }
     if (req.method === "GET" && url.pathname === "/v1/external/courier/serviceability/") {

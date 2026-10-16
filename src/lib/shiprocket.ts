@@ -24,9 +24,22 @@ function requestTimeoutMs(): number {
   return Number.isFinite(n) && n >= 100 && n <= 60000 ? Math.round(n) : 8000;
 }
 
+function loginCooldownMs(): number {
+  const n = Number(process.env.SHIPROCKET_LOGIN_COOLDOWN_MS);
+  return Number.isFinite(n) && n >= 0 && n <= 600000 ? Math.round(n) : 5 * 60 * 1000;
+}
+
+// Test-only: lets scripts/shipping-tests.ps1 force a fresh login per request so
+// it can exercise the login circuit breaker without waiting out the 20h TTL.
+function tokenTtlMs(): number {
+  const n = Number(process.env.SHIPROCKET_TOKEN_TTL_MS);
+  return Number.isFinite(n) && n >= 0 && n <= 20 * 60 * 60 * 1000 ? Math.round(n) : 20 * 60 * 60 * 1000;
+}
+
 export type ShiprocketErrorCode =
   | "NOT_CONFIGURED"
   | "LOGIN_FAILED"
+  | "LOGIN_RATE_LIMITED"
   | "TIMEOUT"
   | "NETWORK"
   | "RATE_LIMITED"
@@ -84,9 +97,28 @@ interface TokenCache {
 
 const cache: TokenCache = { token: "", expiresAt: 0 };
 
-async function login(): Promise<string> {
+// Single-flight: concurrent callers share one in-flight login instead of
+// stampeding /auth/login. Shiprocket throttles and then blocks the account for
+// too many failed attempts, so we must never let requests race into login.
+let inflightLogin: Promise<string> | null = null;
+
+// Circuit breaker: after repeated login failures, pause logins for a short
+// cooldown instead of hammering the endpoint and keeping the account locked.
+const LOGIN_FAILURE_THRESHOLD = 3;
+let loginFailures = 0;
+let loginBlockedUntil = 0;
+
+async function performLogin(): Promise<string> {
   if (!isShiprocketConfigured()) {
     throw new ShiprocketError("Shiprocket is not configured", "NOT_CONFIGURED", false);
+  }
+  if (Date.now() < loginBlockedUntil) {
+    const secs = Math.ceil((loginBlockedUntil - Date.now()) / 1000);
+    throw new ShiprocketError(
+      `Too many Shiprocket login failures — pausing for ~${secs}s. Check the account in the Shiprocket dashboard (it may be temporarily blocked).`,
+      "LOGIN_RATE_LIMITED",
+      false
+    );
   }
   const res = await fetchJson(`${BASE}/auth/login`, {
     method: "POST",
@@ -95,15 +127,35 @@ async function login(): Promise<string> {
   });
   const data = (await res.json().catch(() => ({}))) as { token?: string; message?: string };
   if (!res.ok || !data.token) {
+    loginFailures += 1;
+    if (loginFailures >= LOGIN_FAILURE_THRESHOLD) {
+      loginBlockedUntil = Date.now() + loginCooldownMs();
+      loginFailures = 0;
+    }
+    // Surface Shiprocket's own reason (e.g. "User blocked due to too many
+    // failed login attempts.") instead of a misleading generic error.
+    const message = data.message || "Shiprocket login failed. Check email/password.";
+    const rateLimited = res.status === 429 || /blocked|too many|rate ?limit/i.test(message);
     throw new ShiprocketError(
-      data.message || "Shiprocket login failed. Check email/password.",
-      "LOGIN_FAILED",
+      message,
+      rateLimited ? "LOGIN_RATE_LIMITED" : "LOGIN_FAILED",
       false
     );
   }
+  loginFailures = 0;
+  loginBlockedUntil = 0;
   cache.token = data.token;
-  cache.expiresAt = Date.now() + 20 * 60 * 60 * 1000;
-  return data.token;
+  cache.expiresAt = Date.now() + tokenTtlMs();
+  return cache.token;
+}
+
+function login(): Promise<string> {
+  if (!inflightLogin) {
+    inflightLogin = performLogin().finally(() => {
+      inflightLogin = null;
+    });
+  }
+  return inflightLogin;
 }
 
 async function authHeaders(): Promise<Record<string, string>> {
