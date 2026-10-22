@@ -2,6 +2,7 @@ import { NextResponse } from "next/server";
 import { connectDB } from "@/lib/db";
 import { Order } from "@/models";
 import {
+  captureRazorpayPayment,
   fetchRazorpayPayment,
   isRazorpayConfigured,
   verifyRazorpaySignature,
@@ -139,9 +140,35 @@ export async function POST(req: Request) {
       );
     }
     if (payment.status !== "captured") {
-      // Authorized but not captured (auto-capture off) — not a failure. The
-      // status endpoint, the payment.authorized webhook or a later reconcile
-      // captures and finalizes it; the customer is sent to the pending page.
+      // Authorized but not captured (auto-capture off). Do not just defer to the
+      // webhook — if the webhook is delayed or misconfigured the money would sit
+      // authorized forever. The customer is right here, so attempt capture now,
+      // reusing the same helper the status reconciliation path uses.
+      if (payment.status === "authorized") {
+        try {
+          const cap = await captureRazorpayPayment(razorpay_payment_id, expectedPaise);
+          if (cap.status === "captured") {
+            const paid = await finalizePaidOrder(existing._id, {
+              paymentId: razorpay_payment_id,
+              method: cap.method || payment.method || "razorpay",
+            });
+            const doc = paid || (await Order.findById(existing._id).lean());
+            const d = doc as { orderNumber?: string; accessToken?: string } | null;
+            return NextResponse.json({
+              ok: true,
+              orderId: String((existing as { _id: unknown })._id),
+              orderNumber: d?.orderNumber || (existing as { orderNumber: string }).orderNumber,
+              accessToken: d?.accessToken || (existing as { accessToken?: string }).accessToken || "",
+            });
+          }
+        } catch (err) {
+          // Capture can race with the webhook; fall through to the pending path
+          // rather than failing a payment that may already be captured.
+          console.error("capture on verify failed", err);
+        }
+      }
+      // Still not captured — not a failure. The status endpoint, the
+      // payment.authorized webhook or a later reconcile finishes it.
       return NextResponse.json(
         {
           ok: false,
