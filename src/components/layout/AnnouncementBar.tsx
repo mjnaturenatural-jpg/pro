@@ -1,5 +1,5 @@
 const MESSAGES = [
-  "Free shipping on all orders",
+  "Free shipping on orders above ₹999",
   "100% Eggless • No Maida • No Refined Sugar",
   "Made fresh in small batches",
   "Festive gifting hampers available",

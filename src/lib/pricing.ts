@@ -105,7 +105,8 @@ export async function computeTotals(
   }
 
   const netBeforeShipping = subtotal - couponDiscount;
-  const shipping = netBeforeShipping >= FREE_SHIPPING_THRESHOLD ? 0 : FLAT_SHIPPING;
+  const shipping =
+    netBeforeShipping >= FREE_SHIPPING_THRESHOLD || netBeforeShipping === 0 ? 0 : FLAT_SHIPPING;
   const tax = 0;
   const total = Math.max(0, netBeforeShipping + shipping + tax);
 

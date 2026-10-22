@@ -27,6 +27,9 @@ export function CartDrawer({ open, onClose }: CartDrawerProps) {
   const [upsells, setUpsells] = useState<ProductCardData[]>([]);
 
   const subtotal = items.reduce((n, i) => n + i.price * i.quantity, 0);
+  const threshold = siteConfig.freeShippingThreshold;
+  const gap = Math.max(0, threshold - subtotal);
+  const progress = Math.min(100, Math.round((subtotal / threshold) * 100));
 
   useEffect(() => {
     if (!open) return;
@@ -80,7 +83,21 @@ export function CartDrawer({ open, onClose }: CartDrawerProps) {
       ) : (
         <div className="flex h-full flex-col">
           <div className="border-b border-bark-800/10 px-5 py-4">
-            <p className="text-xs font-semibold text-leaf-700">Free shipping on all orders</p>
+            {gap > 0 ? (
+              <p className="text-xs font-semibold text-bark-700">
+                Add {formatPrice(gap)} more for <span className="text-leaf-700">free shipping</span>
+              </p>
+            ) : (
+              <p className="text-xs font-semibold text-leaf-700">
+                You have unlocked free shipping
+              </p>
+            )}
+            <div className="mt-2 h-2 overflow-hidden rounded-full bg-bark-800/10" role="progressbar" aria-valuenow={progress} aria-valuemin={0} aria-valuemax={100} aria-label="Free shipping progress">
+              <div
+                className="h-full rounded-full bg-gradient-to-r from-leaf-600 to-leaf-500 transition-all duration-500"
+                style={{ width: `${progress}%` }}
+              />
+            </div>
           </div>
 
           <ul className="flex-1 space-y-4 overflow-y-auto px-5 py-4">

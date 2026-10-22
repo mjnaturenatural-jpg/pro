@@ -8,6 +8,8 @@ export const metadata: Metadata = { title: "Shipping Policy" };
 export default async function ShippingPolicyPage() {
   const settings = await getSettings();
   const brand = (settings.brandName as string) || "MJ Nature Natural";
+  const freeThreshold = (settings.freeShippingThreshold as number) || 999;
+  const flat = (settings.flatShipping as number) || 79;
   const email = (settings.contactEmail as string) || "";
   return (
     <PolicyLayout title="Shipping Policy">
@@ -26,10 +28,11 @@ export default async function ShippingPolicyPage() {
           3–7 business days depending on your location. Remote areas may take slightly longer.
         </p>
         <h2 className="pt-2 font-serif text-lg text-bark-900">Shipping Charges</h2>
-        <p>
-          We offer <span className="font-semibold text-leaf-700">free delivery on all orders</span>{" "}
-          across India — no minimum order value required.
-        </p>
+        <ul className="list-disc space-y-1.5 pl-5">
+          <li>Free shipping on orders above ₹{freeThreshold}</li>
+          <li>Flat shipping fee of ₹{flat} on orders below ₹{freeThreshold}</li>
+        </ul>
+        <p>Exact shipping charges are shown at checkout before you pay.</p>
         <h2 className="pt-2 font-serif text-lg text-bark-900">Tracking</h2>
         <p>
           Once your order ships, an AWB (tracking) number is generated and made available on your

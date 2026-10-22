@@ -28,7 +28,7 @@ export function SettingsManager({
     announcementText: (initial.announcementText as string) || "",
     announcementEnabled: Boolean(initial.announcementEnabled),
     freeShippingThreshold: Number(initial.freeShippingThreshold ?? 999),
-    flatShipping: Number(initial.flatShipping ?? 0),
+    flatShipping: Number(initial.flatShipping ?? 79),
     taxRate: Number(initial.taxRate ?? 0),
     gstNumber: (initial.gstNumber as string) || "",
     foodLicence: (initial.foodLicence as string) || "",

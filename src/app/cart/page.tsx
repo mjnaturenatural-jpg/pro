@@ -6,7 +6,7 @@ import { useState } from "react";
 import { Trash2, ShoppingBag, Lock, Leaf } from "lucide-react";
 import { useCart } from "@/store/cart";
 import { formatPrice } from "@/lib/format";
-import { FLAT_SHIPPING } from "@/lib/constants";
+import { FREE_SHIPPING_THRESHOLD } from "@/lib/constants";
 import { CouponBox } from "@/components/cart/CouponBox";
 
 export default function CartPage() {
@@ -18,9 +18,9 @@ export default function CartPage() {
   const itemDiscount = mrpTotal - subtotal;
   const couponDiscount = coupon?.discount ?? 0;
   const net = subtotal - couponDiscount;
-  const shipping = FLAT_SHIPPING;
+  const shipping = net >= FREE_SHIPPING_THRESHOLD || net === 0 ? 0 : 79;
   const total = Math.max(0, net + shipping);
-  const freeShippingGap = 0;
+  const freeShippingGap = Math.max(0, FREE_SHIPPING_THRESHOLD - net);
 
   if (items.length === 0) {
     return (
@@ -43,20 +43,27 @@ export default function CartPage() {
     <div className="container-site py-10 sm:py-14">
       <h1 className="section-title mb-6">Your Cart</h1>
       <div className="mb-8 rounded-2xl border border-bark-800/10 bg-ivory-100 p-4 sm:p-5">
-          <p className="text-sm font-semibold text-leaf-700">
-            Free shipping on all orders
+        {freeShippingGap > 0 ? (
+          <p className="text-sm font-semibold text-bark-700">
+            Add {formatPrice(freeShippingGap)} more for{" "}
+            <span className="text-leaf-700">free shipping</span>
           </p>
+        ) : (
+          <p className="text-sm font-semibold text-leaf-700">
+            You have unlocked free shipping
+          </p>
+        )}
         <div
           className="mt-2.5 h-2.5 overflow-hidden rounded-full bg-bark-800/10"
           role="progressbar"
-          aria-valuenow={100}
+          aria-valuenow={Math.min(100, Math.round((net / FREE_SHIPPING_THRESHOLD) * 100))}
           aria-valuemin={0}
           aria-valuemax={100}
-          aria-label="Free shipping"
+          aria-label="Free shipping progress"
         >
           <div
             className="h-full rounded-full bg-gradient-to-r from-leaf-600 to-leaf-500 transition-all duration-500"
-            style={{ width: "100%" }}
+            style={{ width: `${Math.min(100, Math.round((net / FREE_SHIPPING_THRESHOLD) * 100))}%` }}
           />
         </div>
       </div>

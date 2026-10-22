@@ -161,7 +161,7 @@ export function DeliveryOptions({ pincode, lines, standardRate, freeShipping, va
   if (!ready) return null;
   if (!error && !loading && !unserviceable && (!options || options.length === 0)) return null;
 
-  const standardLabel = freeShipping || standardRate === 0 ? "Free" : formatPrice(standardRate);
+  const standardLabel = freeShipping ? "Free" : formatPrice(standardRate);
   const standardRow = (
     <label
       className={cn(

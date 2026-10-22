@@ -9,7 +9,7 @@ import { useCart } from "@/store/cart";
 import { useToast } from "@/components/ui/Toast";
 import { isValidIndianPhone, isValidPincode } from "@/lib/utils";
 import { formatPrice } from "@/lib/format";
-import { FLAT_SHIPPING, FREE_SHIPPING_THRESHOLD, INDIAN_STATES } from "@/lib/constants";
+import { FREE_SHIPPING_THRESHOLD, INDIAN_STATES } from "@/lib/constants";
 import { siteConfig } from "@config/site";
 import { CouponBox } from "@/components/cart/CouponBox";
 import { FssaiLine } from "@/components/checkout/FssaiLine";
@@ -85,7 +85,7 @@ export default function CheckoutPage() {
   const mrpTotal = items.reduce((s, i) => s + i.mrp * i.quantity, 0);
   const couponDiscount = coupon?.discount ?? 0;
   const net = subtotal - couponDiscount;
-  const flatShipping = FLAT_SHIPPING;
+  const flatShipping = net >= FREE_SHIPPING_THRESHOLD || net === 0 ? 0 : 79;
   const shipping = courier ? courier.rate : flatShipping;
   const total = Math.max(0, net + shipping);
 
