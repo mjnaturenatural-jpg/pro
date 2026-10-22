@@ -3,7 +3,12 @@ import { connectDB } from "@/lib/db";
 import { Product } from "@/models";
 import { resolveCart, computeTotals } from "@/lib/pricing";
 import { checkoutSchema } from "@/lib/validation";
-import { createRazorpayOrder, describeRazorpayError, isRazorpayConfigured } from "@/lib/razorpay";
+import {
+  createRazorpayOrder,
+  describeRazorpayError,
+  isRazorpayConfigured,
+  razorpayErrorDescription,
+} from "@/lib/razorpay";
 import { newOrderAccessToken, reconcileOrderPayment } from "@/lib/payments";
 import { Order } from "@/models";
 import crypto from "crypto";
@@ -261,11 +266,9 @@ export async function POST(req: Request) {
     }
   } catch (err) {
     console.error("checkout error", err);
-    // Razorpay SDK rejections carry a description; anything else is internal —
+    // Razorpay rejections carry a description; anything else is internal —
     // return a generic message so DB/driver details never reach the client.
-    const razorpayDescription =
-      !(err instanceof Error) &&
-      ((err as { error?: { description?: string } } | null)?.error?.description || null);
+    const razorpayDescription = razorpayErrorDescription(err);
     return NextResponse.json(
       {
         error: razorpayDescription

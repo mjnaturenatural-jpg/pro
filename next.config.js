@@ -8,7 +8,7 @@ const nextConfig = {
     formats: ["image/webp"],
   },
   experimental: {
-    serverComponentsExternalPackages: ["mongoose", "cloudinary", "razorpay"],
+    serverComponentsExternalPackages: ["mongoose", "cloudinary"],
   },
   async headers() {
     return [
