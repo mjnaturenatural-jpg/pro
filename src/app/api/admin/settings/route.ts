@@ -1,4 +1,5 @@
 import { NextResponse } from "next/server";
+import { isRazorpayConfigured } from "@/lib/razorpay";
 import { connectDB } from "@/lib/db";
 import { SiteSettings } from "@/models";
 import { requireAdmin } from "@/lib/auth";
@@ -63,7 +64,7 @@ export async function GET() {
         brandVideoPoster: st.brandVideoPoster,
       },
       integrations: {
-        razorpay: Boolean(process.env.RAZORPAY_KEY_ID && process.env.RAZORPAY_KEY_SECRET),
+        razorpay: isRazorpayConfigured(),
         shiprocket: Boolean(
           process.env.SHIPROCKET_EMAIL && process.env.SHIPROCKET_PASSWORD && process.env.SHIPROCKET_PICKUP_LOCATION
         ),

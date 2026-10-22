@@ -8,6 +8,7 @@ import {
   describeRazorpayError,
   isRazorpayConfigured,
   razorpayErrorDescription,
+  razorpayKeyId,
 } from "@/lib/razorpay";
 import { newOrderAccessToken, reconcileOrderPayment } from "@/lib/payments";
 import { Order } from "@/models";
@@ -35,7 +36,9 @@ export async function POST(req: Request) {
     const { items, address, couponCode, shippingOption } = parsed.data;
 
     if (!isRazorpayConfigured()) {
-      const missing = ["RAZORPAY_KEY_ID", "RAZORPAY_KEY_SECRET"].filter((k) => !process.env[k]);
+      const missing: string[] = [];
+      if (!razorpayKeyId()) missing.push("RAZORPAY_KEY_ID");
+      if (!process.env.RAZORPAY_KEY_SECRET) missing.push("RAZORPAY_KEY_SECRET");
       console.error(`checkout rejected: Razorpay not configured (missing ${missing.join(", ")})`);
       return NextResponse.json(
         {
@@ -200,7 +203,7 @@ export async function POST(req: Request) {
         razorpayOrderId: reused.razorpayOrderId,
         amount: Math.round(totals.total * 100),
         currency: "INR",
-        keyId: process.env.RAZORPAY_KEY_ID,
+        keyId: razorpayKeyId(),
         accessToken: reused.accessToken,
         totals: totalsOut,
       });
@@ -247,7 +250,7 @@ export async function POST(req: Request) {
         razorpayOrderId: rzpOrder.id,
         amount: rzpOrder.amount,
         currency: rzpOrder.currency,
-        keyId: process.env.RAZORPAY_KEY_ID,
+        keyId: razorpayKeyId(),
         accessToken,
         totals: totalsOut,
       });

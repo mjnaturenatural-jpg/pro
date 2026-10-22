@@ -14,8 +14,23 @@ interface Credentials {
   keySecret: string;
 }
 
+/**
+ * The Razorpay key id is public — it is shipped to the browser in the checkout
+ * widget — so the live id lives in source as a fallback. The key secret and the
+ * webhook secret must come from the server environment only.
+ */
+const PUBLIC_KEY_ID_FALLBACK = "rzp_live_TqxeSeTgg3fPbx";
+
+export function razorpayKeyId(): string {
+  return (
+    process.env.RAZORPAY_KEY_ID ||
+    process.env.NEXT_PUBLIC_RAZORPAY_KEY_ID ||
+    PUBLIC_KEY_ID_FALLBACK
+  );
+}
+
 function getCredentials(): Credentials | null {
-  const keyId = process.env.RAZORPAY_KEY_ID || "";
+  const keyId = razorpayKeyId();
   const keySecret = process.env.RAZORPAY_KEY_SECRET || "";
   if (!keyId || !keySecret) return null;
   return { keyId, keySecret };
