@@ -11,6 +11,7 @@ function AdminLoginForm() {
   const [password, setPassword] = useState("");
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState("");
+  const configError = searchParams.get("error") === "server-config";
 
   const submit = async (e: React.FormEvent) => {
     e.preventDefault();
@@ -36,6 +37,12 @@ function AdminLoginForm() {
         <h1 className="font-serif text-xl text-bark-900">Admin Sign In</h1>
         <p className="mt-1 text-xs text-bark-500">MJ Nature Natural · Admin Panel</p>
       </div>
+      {configError && (
+        <p className="mb-4 rounded-lg bg-amber-50 px-4 py-3 text-xs leading-relaxed text-amber-700">
+          Admin sign-in is unavailable because the server has no <code>NEXTAUTH_SECRET</code>{" "}
+          configured. Add it to the deployment environment variables and redeploy.
+        </p>
+      )}
       {error && (
         <p className="mb-4 rounded-lg bg-red-50 px-4 py-3 text-xs text-red-600">{error}</p>
       )}
