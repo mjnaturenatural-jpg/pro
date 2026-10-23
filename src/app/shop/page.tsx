@@ -1,5 +1,4 @@
 import { Suspense } from "react";
-import Image from "next/image";
 import { ShopPageClient } from "@/components/shop/ShopPageClient";
 import { Breadcrumbs } from "@/components/ui/Breadcrumbs";
 import { getPublishedCategories } from "@/lib/queries";
@@ -19,16 +18,14 @@ export default async function ShopPage({
   searchParams: { category?: string };
 }) {
   const categories = await getPublishedCategories();
-  let active: { name: string; description: string; image: string } | null = null;
+  let active: { name: string } | null = null;
   if (searchParams.category) {
     try {
       await connectDB();
       const cat = (await Category.findOne({ slug: searchParams.category }).lean()) as unknown as {
         name: string;
-        description: string;
-        image: string;
       } | null;
-      if (cat) active = { name: cat.name, description: cat.description || "", image: cat.image || "" };
+      if (cat) active = { name: cat.name };
     } catch {
       active = null;
     }
@@ -39,33 +36,7 @@ export default async function ShopPage({
       <Breadcrumbs
         items={[{ label: "Home", href: "/" }, { label: active ? active.name : "Shop" }]}
       />
-      {active?.image ? (
-        <div className="relative mb-8 overflow-hidden rounded-[28px] shadow-soft">
-          <div className="relative h-44 sm:h-56">
-            <Image
-              src={active.image}
-              alt={active.name}
-              fill
-              sizes="100vw"
-              className="object-cover"
-            />
-            <div className="absolute inset-0 bg-gradient-to-r from-brown-900/80 via-brown-900/45 to-transparent" />
-            <div className="absolute inset-0 flex flex-col justify-center p-6 sm:p-10">
-              <p className="text-[11px] font-bold uppercase tracking-[0.18em] text-turmeric-300">
-                Shop · {active.name}
-              </p>
-              <h1 className="mt-1 font-serif text-3xl font-bold text-white sm:text-4xl">
-                {active.name}
-              </h1>
-              {active.description && (
-                <p className="mt-2 line-clamp-2 max-w-md text-sm leading-relaxed text-white/85">
-                  {active.description}
-                </p>
-              )}
-            </div>
-          </div>
-        </div>
-      ) : (
+      {!searchParams.category && (
         <div className="mb-8">
           <p className="eyebrow mb-2">Shop</p>
           <h1 className="section-title">Explore our collection</h1>
