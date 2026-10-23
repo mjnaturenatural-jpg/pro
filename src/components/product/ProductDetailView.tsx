@@ -156,7 +156,8 @@ export function ProductDetailView({
                       alt={i === 0 ? product.name : `${product.name} — view ${i + 1}`}
                       fill
                       priority={i === 0}
-                      sizes="(max-width: 1024px) 100vw, 50vw"
+                      sizes="(max-width: 1024px) 100vw, 600px"
+                      quality={92}
                       className="object-contain p-3"
                     />
                   </div>
@@ -223,7 +224,14 @@ export function ProductDetailView({
                     )}
                     aria-label={`View image ${i + 1}`}
                   >
-                    <Image src={img} alt="" fill sizes="64px" className="object-contain p-1" />
+                    <Image
+                      src={img}
+                      alt=""
+                      fill
+                      sizes="64px"
+                      quality={90}
+                      className="object-contain p-1"
+                    />
                   </button>
                 ))}
               </div>
@@ -419,13 +427,14 @@ export function ProductDetailView({
       <Modal open={lightbox !== null} onClose={() => setLightbox(null)} title={product.name}>
         {lightbox !== null && images[lightbox] && (
           <div className="relative aspect-square w-full overflow-hidden rounded-2xl bg-sand-50">
-            <Image
-              src={images[lightbox]}
-              alt={product.name}
-              fill
-              sizes="(max-width: 640px) 100vw, 512px"
-              className="object-contain"
-            />
+              <Image
+                src={images[lightbox]}
+                alt={product.name}
+                fill
+                sizes="(max-width: 640px) 100vw, 640px"
+                quality={95}
+                className="object-contain"
+              />
           </div>
         )}
       </Modal>

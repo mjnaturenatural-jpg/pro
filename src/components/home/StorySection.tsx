@@ -23,6 +23,7 @@ export function StorySection({ story, stats }: StorySectionProps) {
                 alt={story.title || "Our story"}
                 fill
                 sizes="(max-width: 1024px) 100vw, 50vw"
+                quality={90}
                 className="object-cover"
               />
             ) : (

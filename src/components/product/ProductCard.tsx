@@ -109,7 +109,8 @@ export function ProductCard({ product, priority = false }: { product: ProductCar
             alt={product.name}
             fill
             priority={priority}
-            sizes="(max-width: 640px) 50vw, (max-width: 1024px) 33vw, 25vw"
+            sizes="(max-width: 640px) 50vw, (max-width: 1024px) 33vw, (max-width: 1280px) 25vw, 320px"
+            quality={90}
             className={cn(
               "object-contain p-2 transition duration-500 group-hover:scale-105",
               product.images[1] && "group-hover:opacity-0"
@@ -122,7 +123,8 @@ export function ProductCard({ product, priority = false }: { product: ProductCar
             alt=""
             aria-hidden="true"
             fill
-            sizes="(max-width: 640px) 50vw, (max-width: 1024px) 33vw, 25vw"
+            sizes="(max-width: 640px) 50vw, (max-width: 1024px) 33vw, (max-width: 1280px) 25vw, 320px"
+            quality={90}
             className="object-contain p-2 opacity-0 transition duration-500 group-hover:scale-105 group-hover:opacity-100"
           />
         )}
