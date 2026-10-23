@@ -1,18 +1,23 @@
-const ENV_WHATSAPP = process.env.NEXT_PUBLIC_WHATSAPP_NUMBER || "";
+// Verified business WhatsApp number (international format, no +).
+export const VERIFIED_WHATSAPP_NUMBER = "919493435877";
 
 export const DEFAULT_WHATSAPP_MESSAGE =
   "Hello MJ Nature Natural, I would like to know more about your products.";
 
-/** Digits-only WhatsApp number. Empty string = not configured (hide CTAs). */
+/**
+ * Digits-only WhatsApp number.
+ *
+ * An admin override from Site Settings wins when present; otherwise the site
+ * always falls back to the verified business number above.
+ */
 export function getWhatsAppNumber(explicit?: string): string {
-  return (explicit ?? ENV_WHATSAPP).replace(/\D/g, "");
+  const configured = (explicit ?? "").replace(/\D/g, "");
+  return configured || VERIFIED_WHATSAPP_NUMBER;
 }
 
-/** Click-to-chat link with a prefilled message. Returns "" when no number is configured. */
+/** Click-to-chat link with a prefilled message. */
 export function getWhatsAppLink(message: string, explicitNumber?: string): string {
-  const number = getWhatsAppNumber(explicitNumber);
-  if (!number) return "";
-  return `https://wa.me/${number}?text=${encodeURIComponent(message)}`;
+  return `https://wa.me/${getWhatsAppNumber(explicitNumber)}?text=${encodeURIComponent(message)}`;
 }
 
 /** Product enquiry message including product name and selected pack size. */

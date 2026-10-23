@@ -12,7 +12,7 @@ export const siteConfig = {
   brandName: "MJ Nature Natural",
   tagline: "Homemade Goodness, Delivered to Your Door.",
 
-  phone: "+91 94934 35877",
+  phone: "+919493435877",
   phoneHref: "919493435877",
   // TODO(client): official support email.
   email: "",

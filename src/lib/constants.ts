@@ -52,10 +52,9 @@ export const SORT_OPTIONS = [
 export const FREE_SHIPPING_THRESHOLD = 999;
 export const FLAT_SHIPPING = 79;
 
-// Verified business WhatsApp number (international format, no +). Configure via
-// Site Settings → WhatsApp in the admin, or the NEXT_PUBLIC_WHATSAPP_NUMBER env var.
-// When empty the WhatsApp actions are hidden entirely — never invent a number.
-export const WHATSAPP_NUMBER = process.env.NEXT_PUBLIC_WHATSAPP_NUMBER || "";
+// Verified business WhatsApp number (international format, no +). Admin override
+// lives in Site Settings → WhatsApp; empty falls back to the verified number.
+export const WHATSAPP_NUMBER = "919493435877";
 export { DEFAULT_WHATSAPP_MESSAGE as WHATSAPP_MESSAGE } from "./whatsapp";
 
 export const INDIAN_STATES = [

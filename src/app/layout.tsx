@@ -95,6 +95,14 @@ export default async function RootLayout({ children }: { children: React.ReactNo
                 name: brandName,
                 url: APP_URL,
                 logo: logo || `${APP_URL}/images/logo.png`,
+                telephone: "+919493435877",
+                contactPoint: {
+                  "@type": "ContactPoint",
+                  telephone: "+919493435877",
+                  contactType: "customer service",
+                  areaServed: "IN",
+                  availableLanguage: ["en", "te", "hi"],
+                },
               },
               {
                 "@context": "https://schema.org",
