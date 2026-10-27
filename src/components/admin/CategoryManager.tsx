@@ -179,6 +179,17 @@ export function CategoryManager({ categories }: { categories: Category[] }) {
                 />
               </div>
               <div>
+                <label className="label">Display Order</label>
+                <input
+                  type="number"
+                  min="0"
+                  max="999"
+                  className="input"
+                  value={editing.order ?? 0}
+                  onChange={(e) => setEditing((ed) => ({ ...ed!, order: Math.max(0, Number(e.target.value) || 0) }))}
+                />
+              </div>
+              <div>
                 <label className="label">Description</label>
                 <textarea
                   className="input min-h-[70px]"

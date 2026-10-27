@@ -99,6 +99,7 @@ export function ProductDetailView({
         packSize: pack.label,
         price: pack.price,
         mrp: pack.mrp,
+        stock: pack.stock,
       },
       quantity
     );
@@ -117,6 +118,7 @@ export function ProductDetailView({
         packSize: pack.label,
         price: pack.price,
         mrp: pack.mrp,
+        stock: pack.stock,
       },
       quantity
     );
@@ -167,11 +169,6 @@ export function ProductDetailView({
               )}
             </div>
 
-            {pct > 0 && (
-              <span className="absolute left-3 top-3 rounded-full bg-chilli-600 px-2.5 py-1 text-[10px] font-bold text-white">
-                {pct}% OFF
-              </span>
-            )}
             {images.length > 0 && (
               <button
                 type="button"
@@ -306,7 +303,10 @@ export function ProductDetailView({
               {product.packSizes.map((p) => (
                 <button
                   key={p.label}
-                  onClick={() => setPackLabel(p.label)}
+                  onClick={() => {
+                    setPackLabel(p.label);
+                    setQuantity((current) => Math.min(current, Math.max(1, p.stock)));
+                  }}
                   className={cn(
                     "rounded-lg border px-4 py-2.5 text-sm font-medium transition",
                     p.label === packLabel

@@ -67,6 +67,8 @@ export default function CheckoutPage() {
         const p = JSON.parse(raw) as Partial<AddressForm>;
         setAddress((a) => ({ ...a, ...p }));
       }
+      const savedCoupon = sessionStorage.getItem("mj-coupon");
+      if (savedCoupon) setCoupon(JSON.parse(savedCoupon) as { code: string; discount: number });
     } catch {
       // ignore
     }

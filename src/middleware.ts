@@ -31,7 +31,7 @@ export default function middleware(req: NextRequest, event: NextFetchEvent) {
   // when the signing secret is missing. Catch it first and show the sign-in
   // page with an actionable message instead — auth still fails closed.
   const secret = process.env.NEXTAUTH_SECRET || process.env.AUTH_SECRET;
-  if (!secret) {
+  if (!secret && req.nextUrl.pathname !== "/admin/login") {
     const url = new URL("/admin/login", req.url);
     url.searchParams.set("error", "server-config");
     return NextResponse.redirect(url);

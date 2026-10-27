@@ -1,8 +1,9 @@
 import { guardAdmin } from "@/lib/admin-guard";
 import { SettingsManager } from "@/components/admin/SettingsManager";
-import { APP_URL } from "@/lib/constants";
 import { isRazorpayConfigured } from "@/lib/razorpay";
 import { isDeliveryShipReady } from "@/lib/delhivery";
+import { connectDB } from "@/lib/db";
+import { SiteSettings } from "@/models";
 
 export const metadata = { title: "Settings" };
 export const dynamic = "force-dynamic";
@@ -21,18 +22,10 @@ export default async function AdminSettingsPage() {
 
   let settings: Record<string, unknown> = {};
   try {
-    const res = await fetch(`${APP_URL}/api/admin/settings`, {
-      cache: "no-store",
-    });
-    const data = await res.json();
-    settings = data.settings || {};
-  } catch {
-    // fallback: fetch directly via DB
-    const { connectDB } = await import("@/lib/db");
-    const { SiteSettings } = await import("@/models");
     await connectDB();
-    const s = (await SiteSettings.findOne({ key: "site" }).lean()) || {};
-    settings = s as Record<string, unknown>;
+    settings = ((await SiteSettings.findOne({ key: "site" }).lean()) || {}) as Record<string, unknown>;
+  } catch {
+    // The manager remains usable with defaults when settings are not available.
   }
 
   return <SettingsManager initial={settings} integrations={integrations} />;

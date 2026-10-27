@@ -1,6 +1,7 @@
 import { NextResponse } from "next/server";
 import { connectDB } from "@/lib/db";
-import { Product } from "@/models";
+import { Category, Product } from "@/models";
+import { isValidObjectId } from "mongoose";
 import { requireAdmin } from "@/lib/auth";
 import { productInputSchema } from "@/lib/validation";
 
@@ -39,6 +40,12 @@ export async function PATCH(req: Request, { params }: { params: { id: string } }
       );
     }
     await connectDB();
+    if (
+      parsed.data.category !== undefined &&
+      (!isValidObjectId(parsed.data.category) || !(await Category.exists({ _id: parsed.data.category })))
+    ) {
+      return NextResponse.json({ error: "Select an existing category" }, { status: 400 });
+    }
     const product = await Product.findByIdAndUpdate(params.id, parsed.data, { new: true }).lean();
     if (!product) return NextResponse.json({ error: "Product not found" }, { status: 404 });
     return NextResponse.json({ ok: true, product: JSON.parse(JSON.stringify(product)) });

@@ -180,8 +180,14 @@ export default function CartPage() {
             <CouponBox
               subtotal={subtotal}
               applied={coupon}
-              onApply={(c) => setCoupon(c)}
-              onRemove={() => setCoupon(null)}
+              onApply={(c) => {
+                setCoupon(c);
+                sessionStorage.setItem("mj-coupon", JSON.stringify(c));
+              }}
+              onRemove={() => {
+                setCoupon(null);
+                sessionStorage.removeItem("mj-coupon");
+              }}
             />
 
             <Link href="/checkout" className="btn-primary mt-5 w-full">

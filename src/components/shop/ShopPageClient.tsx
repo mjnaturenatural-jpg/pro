@@ -11,6 +11,7 @@ interface Category {
   _id: string;
   name: string;
   slug: string;
+  productCount?: number;
 }
 
 const PACK_OPTIONS = ["250g", "500g", "750g", "1kg"];
@@ -89,6 +90,20 @@ export function ShopPageClient({ categories }: { categories: Category[] }) {
   }, [maxPrice]);
 
   useEffect(() => {
+    if (!filtersOpen) return;
+    const previousOverflow = document.body.style.overflow;
+    const closeOnEscape = (event: KeyboardEvent) => {
+      if (event.key === "Escape") setFiltersOpen(false);
+    };
+    document.body.style.overflow = "hidden";
+    window.addEventListener("keydown", closeOnEscape);
+    return () => {
+      document.body.style.overflow = previousOverflow;
+      window.removeEventListener("keydown", closeOnEscape);
+    };
+  }, [filtersOpen]);
+
+  useEffect(() => {
     const t = setTimeout(() => {
       const v = priceDraft === "2000" ? "" : priceDraft;
       if (v !== maxPrice) setParam("maxPrice", v);
@@ -102,11 +117,11 @@ export function ShopPageClient({ categories }: { categories: Category[] }) {
       <div>
         <h3 className="mb-3 text-xs font-semibold uppercase tracking-wide text-bark-700">Category</h3>
         <div className="space-y-1.5">
-          <FilterChip label="All Categories" active={!category} onClick={() => setParam("category", "")} />
+          <FilterChip label="All Products" active={!category} onClick={() => setParam("category", "")} />
           {categories.map((c) => (
             <FilterChip
               key={c.slug}
-              label={c.name}
+              label={`${c.name}${c.productCount !== undefined ? ` (${c.productCount})` : ""}`}
               active={category === c.slug}
               onClick={() => setParam("category", c.slug)}
             />
@@ -284,7 +299,7 @@ export function ShopPageClient({ categories }: { categories: Category[] }) {
         )}
 
         {loading ? (
-          <div className="grid grid-cols-2 gap-2.5 sm:gap-5 lg:grid-cols-3 xl:grid-cols-4">
+          <div className="grid grid-cols-1 gap-3 min-[420px]:grid-cols-2 sm:gap-5 lg:grid-cols-3 xl:grid-cols-4">
             {Array.from({ length: 8 }).map((_, i) => (
               <div key={i} className="skeleton aspect-[3/4] rounded-2xl sm:rounded-[32px]" />
             ))}
@@ -301,7 +316,7 @@ export function ShopPageClient({ categories }: { categories: Category[] }) {
             </button>
           </div>
         ) : (
-          <div className="grid grid-cols-2 gap-2.5 sm:gap-5 lg:grid-cols-3 xl:grid-cols-4">
+          <div className="grid grid-cols-1 gap-3 min-[420px]:grid-cols-2 sm:gap-5 lg:grid-cols-3 xl:grid-cols-4">
             {products.map((p, i) => (
               <ProductCard key={p._id} product={p} priority={i < 4} />
             ))}
@@ -335,7 +350,7 @@ export function ShopPageClient({ categories }: { categories: Category[] }) {
       {filtersOpen && (
         <div className="fixed inset-0 z-[80] lg:hidden">
           <div className="absolute inset-0 bg-brown-900/50" onClick={() => setFiltersOpen(false)} />
-          <div className="absolute bottom-0 left-0 right-0 max-h-[80vh] overflow-y-auto rounded-t-2xl bg-ivory-50 p-6 animate-fadeUp">
+          <div role="dialog" aria-modal="true" aria-label="Product filters" className="absolute bottom-0 left-0 right-0 max-h-[80vh] overflow-y-auto rounded-t-2xl bg-ivory-50 p-6 animate-fadeUp">
             <div className="mb-5 flex items-center justify-between">
               <h2 className="font-serif text-lg text-bark-900">Filters</h2>
               <button onClick={() => setFiltersOpen(false)} aria-label="Close filters">

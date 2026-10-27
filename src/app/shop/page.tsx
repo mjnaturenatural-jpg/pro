@@ -1,7 +1,7 @@
 import { Suspense } from "react";
 import { ShopPageClient } from "@/components/shop/ShopPageClient";
 import { Breadcrumbs } from "@/components/ui/Breadcrumbs";
-import { getPublishedCategories } from "@/lib/queries";
+import { getCategoryCounts, getPublishedCategories } from "@/lib/queries";
 import { connectDB } from "@/lib/db";
 import { Category } from "@/models";
 export const dynamic = "force-dynamic";
@@ -17,12 +17,12 @@ export default async function ShopPage({
 }: {
   searchParams: { category?: string };
 }) {
-  const categories = await getPublishedCategories();
+  const [categories, counts] = await Promise.all([getPublishedCategories(), getCategoryCounts()]);
   let active: { name: string } | null = null;
   if (searchParams.category) {
     try {
       await connectDB();
-      const cat = (await Category.findOne({ slug: searchParams.category }).lean()) as unknown as {
+      const cat = (await Category.findOne({ slug: searchParams.category, published: true }).lean()) as unknown as {
         name: string;
       } | null;
       if (cat) active = { name: cat.name };
@@ -46,7 +46,7 @@ export default async function ShopPage({
         </div>
       )}
       <Suspense>
-        <ShopPageClient categories={categories} />
+        <ShopPageClient categories={categories.map((category) => ({ ...category, productCount: counts[category.slug] || 0 }))} />
       </Suspense>
     </div>
   );

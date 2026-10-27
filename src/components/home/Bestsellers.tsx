@@ -9,10 +9,10 @@ import { Tabs } from "@/components/ui/Tabs";
 
 const TABS = [
   { value: "all", label: "All" },
-  { value: "chikki", label: "Chikki" },
+  { value: "chikkis", label: "Chikkis" },
   { value: "cookies", label: "Cookies" },
   { value: "brownies", label: "Brownies" },
-  { value: "laddus", label: "Laddus" },
+  { value: "others", label: "Others" },
 ];
 
 function categorySlug(p: ProductCardData): string {
@@ -37,7 +37,7 @@ export function Bestsellers({ products }: { products: ProductCardData[] }) {
         align="center"
       />
       <Tabs options={TABS} value={tab} onChange={setTab} ariaLabel="Filter bestsellers by category" />
-      <div className="mt-8 grid grid-cols-2 gap-2.5 sm:gap-5 lg:grid-cols-4">
+      <div className="mt-8 grid grid-cols-1 gap-3 min-[420px]:grid-cols-2 sm:gap-5 lg:grid-cols-4">
         {filtered.map((p, i) => (
           <div key={p._id} className="min-w-0">
             <ProductCard product={p} priority={i < 4} />

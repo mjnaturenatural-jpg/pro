@@ -11,7 +11,6 @@ import { useWishlist } from "@/store/wishlist";
 import { useToast } from "@/components/ui/Toast";
 import { Rating } from "@/components/ui/Rating";
 import { analytics } from "@/lib/analytics";
-import { BADGES, BADGE_STYLES } from "@/lib/constants";
 import { PRODUCT_CARD_SIZES, resolveProductImages } from "@/lib/product-images";
 import { ProductImage } from "@/components/product/ProductImage";
 
@@ -41,22 +40,16 @@ export function ProductCard({ product, priority = false }: { product: ProductCar
     product.packSizes.find((p) => p.stock > 0) ?? product.packSizes[0];
   const [selectedPack, setSelectedPack] = useState(defaultPack.label);
   const activePack = product.packSizes.find((p) => p.label === selectedPack) ?? defaultPack;
-  const fromPack = product.packSizes.reduce((a, b) => (b.price < a.price ? b : a), product.packSizes[0]);
-  const fromPct = discountPercent(fromPack.mrp, fromPack.price);
+  const discount = discountPercent(activePack.mrp, activePack.price);
 
   const categoryName =
     typeof product.category === "object" ? product.category?.name || "" : "";
   const tags = [
     product.featured ? "Bestseller" : "",
-    product.badges?.eggless ? "Eggless" : "",
     product.badges?.pureGhee ? "Pure Ghee" : "",
     /millet/i.test(categoryName) || /millet/i.test(product.name) ? "Millet" : "",
   ].filter(Boolean).slice(0, 2);
-  const activeBadge = BADGES.find((b) => product.badges?.[b.key as keyof typeof product.badges]);
-
-  const handleAdd = (e: React.MouseEvent) => {
-    e.preventDefault();
-    e.stopPropagation();
+  const handleAdd = () => {
     if (activePack.stock <= 0) return;
     addItem({
       productId: product._id,
@@ -64,8 +57,9 @@ export function ProductCard({ product, priority = false }: { product: ProductCar
       name: product.name,
       image: product.images[0] || "",
       packSize: activePack.label,
-      price: activePack.price,
-      mrp: activePack.mrp,
+        price: activePack.price,
+        mrp: activePack.mrp,
+        stock: activePack.stock,
     });
     analytics.addToCart(product._id, product.name, activePack.price, 1);
     toast({
@@ -75,9 +69,7 @@ export function ProductCard({ product, priority = false }: { product: ProductCar
     });
   };
 
-  const handleBuyNow = (e: React.MouseEvent) => {
-    e.preventDefault();
-    e.stopPropagation();
+  const handleBuyNow = () => {
     if (activePack.stock <= 0) return;
     addItem({
       productId: product._id,
@@ -85,27 +77,25 @@ export function ProductCard({ product, priority = false }: { product: ProductCar
       name: product.name,
       image: product.images[0] || "",
       packSize: activePack.label,
-      price: activePack.price,
-      mrp: activePack.mrp,
+        price: activePack.price,
+        mrp: activePack.mrp,
+        stock: activePack.stock,
     });
     analytics.addToCart(product._id, product.name, activePack.price, 1);
     router.push("/checkout");
   };
 
-  const toggleHeart = (e: React.MouseEvent) => {
-    e.preventDefault();
-    e.stopPropagation();
+  const toggleHeart = () => {
     toggleWishlist(product._id);
   };
 
   const images = resolveProductImages(product.images, product.slug).slice(0, 2);
 
   return (
-    <Link
-      href={`/product/${product.slug}`}
+    <article
       className="group relative flex h-full min-w-0 flex-col overflow-hidden rounded-2xl border border-bark-800/10 bg-ivory-100 shadow-soft transition duration-300 hover:-translate-y-1 hover:shadow-lift hover:ring-2 hover:ring-honey-300/70 sm:rounded-[32px]"
     >
-      <div className="relative aspect-square overflow-hidden bg-white p-1">
+      <Link href={`/product/${product.slug}`} className="relative aspect-square overflow-hidden bg-white p-1" aria-label={product.name}>
         {images[0] && (
           <ProductImage
             src={images[0]}
@@ -125,41 +115,7 @@ export function ProductCard({ product, priority = false }: { product: ProductCar
             className="pointer-events-none opacity-0 transition-opacity duration-300 [@media(hover:hover)_and_(pointer:fine)]:group-hover:opacity-100"
           />
         )}
-        <div className="absolute left-2.5 top-2.5 flex flex-col items-start gap-1">
-          {fromPct > 0 && (
-            <span className="rounded-full bg-chilli-600 px-2 py-0.5 text-[9px] font-bold tracking-wide text-white">
-              {fromPct}% OFF
-            </span>
-          )}
-          {activeBadge && (
-            <span
-              className={cn(
-                "rounded-full px-2 py-0.5 text-[9px] font-semibold",
-                BADGE_STYLES[activeBadge.key] ?? "bg-leaf-100 text-leaf-700"
-              )}
-            >
-              {activeBadge.label}
-            </span>
-          )}
-          {!inStock && (
-            <span className="rounded-full bg-red-50 px-2 py-0.5 text-[9px] font-semibold text-red-600">
-              Out of Stock
-            </span>
-          )}
-        </div>
-        <button
-          type="button"
-          onClick={toggleHeart}
-          aria-label={wished ? `Remove ${product.name} from wishlist` : `Save ${product.name} to wishlist`}
-          aria-pressed={wished}
-          className={cn(
-            "absolute right-2.5 top-2.5 flex h-8 w-8 items-center justify-center rounded-full shadow-sm ring-1 ring-bark-800/10 transition",
-            wished ? "bg-chilli-600 text-white" : "bg-ivory-100/95 text-bark-500 hover:text-chilli-600"
-          )}
-        >
-          <Heart size={15} fill={wished ? "currentColor" : "none"} />
-        </button>
-      </div>
+      </Link>
 
       <div className="flex flex-1 flex-col gap-2 p-3 sm:gap-2.5 sm:p-5">
         {tags.length > 0 && (
@@ -171,10 +127,11 @@ export function ProductCard({ product, priority = false }: { product: ProductCar
             ))}
           </div>
         )}
-        <div>
-          <h3 className="line-clamp-2 text-sm font-medium leading-snug text-bark-900 group-hover:text-bark-700">
-            {product.name}
-          </h3>
+        <div className="flex items-start gap-2">
+          <div className="min-w-0 flex-1">
+            <Link href={`/product/${product.slug}`} className="line-clamp-2 text-sm font-medium leading-snug text-bark-900 hover:text-bark-700">
+              {product.name}
+            </Link>
           {product.shortDescription && (
             <p className="mt-1 line-clamp-1 text-xs text-bark-500">{product.shortDescription}</p>
           )}
@@ -183,6 +140,16 @@ export function ProductCard({ product, priority = false }: { product: ProductCar
               <Rating value={product.averageRating || 0} count={product.reviewCount} size={12} />
             </div>
           )}
+          </div>
+          <button
+            type="button"
+            onClick={toggleHeart}
+            aria-label={wished ? `Remove ${product.name} from wishlist` : `Save ${product.name} to wishlist`}
+            aria-pressed={wished}
+            className={cn("flex h-8 w-8 shrink-0 items-center justify-center rounded-full border transition", wished ? "border-chilli-600 bg-chilli-600 text-white" : "border-bark-800/10 text-bark-500 hover:text-chilli-600")}
+          >
+            <Heart size={15} fill={wished ? "currentColor" : "none"} />
+          </button>
         </div>
 
         {product.packSizes.length > 1 && (
@@ -190,11 +157,7 @@ export function ProductCard({ product, priority = false }: { product: ProductCar
             {product.packSizes.map((p) => (
               <button
                 key={p.label}
-                onClick={(e) => {
-                  e.preventDefault();
-                  e.stopPropagation();
-                  setSelectedPack(p.label);
-                }}
+                onClick={() => setSelectedPack(p.label)}
                 aria-pressed={p.label === selectedPack}
                 className={cn(
                   "min-h-[32px] rounded-full border px-2.5 py-1 text-[11px] font-semibold transition",
@@ -211,20 +174,21 @@ export function ProductCard({ product, priority = false }: { product: ProductCar
         )}
 
         <div className="mt-auto flex flex-wrap items-baseline gap-x-2 gap-y-1 pt-1">
-          <span className="text-base font-bold text-caramel-700">
-            from {formatPrice(fromPack.price)}
-          </span>
-          <span className="text-xs text-bark-500">/ {fromPack.label}</span>
-          {fromPack.mrp > 0 && (
+          <span className="text-base font-bold text-caramel-700">{formatPrice(activePack.price)}</span>
+          <span className="text-xs text-bark-500">/ {activePack.label}</span>
+          {activePack.mrp > activePack.price && (
             <span
-              className={cn(
-                "text-xs text-bark-400",
-                fromPack.mrp > fromPack.price && "line-through"
-              )}
+              className="text-xs text-bark-400 line-through"
             >
-              MRP {formatPrice(fromPack.mrp)}
+              MRP {formatPrice(activePack.mrp)}
             </span>
           )}
+        </div>
+        <div className="flex items-center justify-between gap-2 text-xs">
+          {discount > 0 ? <span className="font-bold text-chilli-600">Save {discount}%</span> : <span />}
+          <span className={activePack.stock > 0 ? "text-leaf-700" : "font-medium text-red-600"}>
+            {activePack.stock > 0 ? "In stock" : "Out of stock"}
+          </span>
         </div>
 
         <div className="flex w-full flex-col gap-2">
@@ -244,6 +208,6 @@ export function ProductCard({ product, priority = false }: { product: ProductCar
           </button>
         </div>
       </div>
-    </Link>
+    </article>
   );
 }

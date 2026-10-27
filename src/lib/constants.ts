@@ -4,14 +4,10 @@ export const APP_NAME = process.env.NEXT_PUBLIC_APP_NAME || "MJ Nature Natural";
 export const APP_URL = resolveSiteUrl(process.env.NEXT_PUBLIC_SITE_URL, process.env.NEXT_PUBLIC_APP_URL);
 
 export const CATEGORIES = [
-  { name: "Chikki", slug: "chikki" },
-  { name: "Cookies", slug: "cookies" },
-  { name: "Brownie", slug: "brownies" },
-  { name: "Raw Materials", slug: "raw-materials" },
-  { name: "Laddus", slug: "laddus" },
-  { name: "Millet Cookies", slug: "millet-cookies" },
-  { name: "Jaggery Products", slug: "jaggery-products" },
-  { name: "Mixtures", slug: "mixtures" },
+  { name: "CHIKKIS", slug: "chikkis" },
+  { name: "COOKIES", slug: "cookies" },
+  { name: "BROWNIES", slug: "brownies" },
+  { name: "OTHERS", slug: "others" },
 ] as const;
 
 export const BADGES = [
@@ -47,6 +43,7 @@ export const SORT_OPTIONS = [
   { value: "price_desc", label: "Price: High to Low" },
   { value: "newest", label: "Newest" },
   { value: "best_selling", label: "Best Selling" },
+  { value: "name_asc", label: "Alphabetical" },
 ] as const;
 
 export const FREE_SHIPPING_THRESHOLD = 999;

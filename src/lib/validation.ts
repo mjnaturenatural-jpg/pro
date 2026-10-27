@@ -44,6 +44,7 @@ export const categoryInputSchema = z.object({
   description: z.string().max(500).optional().default(""),
   image: z.string().optional().default(""),
   published: z.boolean().default(true),
+  order: z.number().int().min(0).max(999).default(0),
 });
 
 export const addressSchema = z.object({

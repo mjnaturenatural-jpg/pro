@@ -12,7 +12,7 @@ export default async function AdminProductEditPage({ params }: { params: { id: s
 
   const isNew = params.id === "new";
   const [categories, product] = await Promise.all([
-    Category.find().sort({ name: 1 }).lean(),
+    Category.find().sort({ order: 1, name: 1 }).lean(),
     isNew ? Promise.resolve(null) : Product.findById(params.id).populate("category", "name slug").lean(),
   ]);
 

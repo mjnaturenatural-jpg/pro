@@ -11,6 +11,7 @@ export interface CartItem {
   packSize: string;
   price: number;
   mrp: number;
+  stock?: number;
   quantity: number;
 }
 
@@ -35,12 +36,12 @@ export const useCart = create<CartState>()(
             return {
               items: state.items.map((i) =>
                 i.productId === item.productId && i.packSize === item.packSize
-                  ? { ...i, quantity: Math.min(50, i.quantity + quantity) }
+                   ? { ...i, quantity: Math.min(50, i.stock ?? 50, i.quantity + quantity) }
                   : i
               ),
             };
           }
-          return { items: [...state.items, { ...item, quantity }] };
+          return { items: [...state.items, { ...item, quantity: Math.min(50, item.stock ?? 50, quantity) }] };
         }),
       removeItem: (productId, packSize) =>
         set((state) => ({
@@ -52,7 +53,7 @@ export const useCart = create<CartState>()(
         set((state) => ({
           items: state.items.map((i) =>
             i.productId === productId && i.packSize === packSize
-              ? { ...i, quantity: Math.max(1, Math.min(50, quantity)) }
+              ? { ...i, quantity: Math.max(1, Math.min(50, i.stock ?? 50, quantity)) }
               : i
           ),
         })),

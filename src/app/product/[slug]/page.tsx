@@ -27,11 +27,12 @@ async function getRelated(productId: string, categoryId: string): Promise<Produc
   const base = { _id: { $ne: productId }, published: true };
   let related =
     categoryId !== ""
-      ? await Product.find({ ...base, category: categoryId }).limit(4).lean()
+      ? await Product.find({ ...base, category: categoryId }).sort({ featured: -1, totalSold: -1, createdAt: -1 }).limit(4).lean()
       : [];
   if (related.length < 4) {
     const exclude = [productId, ...related.map((r: { _id: unknown }) => r._id)];
     const more = await Product.find({ _id: { $nin: exclude }, published: true })
+      .sort({ featured: -1, totalSold: -1, createdAt: -1 })
       .limit(4 - related.length)
       .lean();
     related = [...related, ...more];

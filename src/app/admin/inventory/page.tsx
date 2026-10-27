@@ -11,7 +11,7 @@ export default async function AdminInventoryPage({ searchParams }: { searchParam
   await connectDB();
 
   const [categories, products] = await Promise.all([
-    Category.find().sort({ name: 1 }).lean(),
+    Category.find().sort({ order: 1, name: 1 }).lean(),
     Product.find()
       .populate("category", "name slug")
       .sort({ name: 1 })

@@ -1,6 +1,7 @@
 import { NextResponse } from "next/server";
 import { connectDB } from "@/lib/db";
-import { Product } from "@/models";
+import { Category, Product } from "@/models";
+import { isValidObjectId } from "mongoose";
 import { requireAdmin } from "@/lib/auth";
 import { productInputSchema } from "@/lib/validation";
 
@@ -15,8 +16,12 @@ export async function GET(req: Request) {
   try {
     const { searchParams } = new URL(req.url);
     const q = searchParams.get("q") || "";
-    const page = Math.max(1, Number(searchParams.get("page") || 1));
-    const limit = Math.min(50, Number(searchParams.get("limit") || 20));
+    const number = (value: string | null, fallback: number, min: number, max: number) => {
+      const parsed = Number.parseInt(value || "", 10);
+      return Number.isFinite(parsed) ? Math.min(max, Math.max(min, parsed)) : fallback;
+    };
+    const page = number(searchParams.get("page"), 1, 1, 100000);
+    const limit = number(searchParams.get("limit"), 20, 1, 50);
     await connectDB();
     const filter: Record<string, unknown> = {};
     if (q) {
@@ -59,12 +64,14 @@ export async function POST(req: Request) {
       );
     }
     await connectDB();
-    const { Product: P } = await import("@/models");
-    const existing = await P.findOne({ slug: parsed.data.slug });
+    const existing = await Product.findOne({ slug: parsed.data.slug });
     if (existing) {
       return NextResponse.json({ error: "A product with this slug already exists" }, { status: 409 });
     }
-    const product = await P.create(parsed.data);
+    if (!isValidObjectId(parsed.data.category) || !(await Category.exists({ _id: parsed.data.category }))) {
+      return NextResponse.json({ error: "Select an existing category" }, { status: 400 });
+    }
+    const product = await Product.create(parsed.data);
     return NextResponse.json({ ok: true, product: JSON.parse(JSON.stringify(product)) });
   } catch (err) {
     console.error("create product error", err);

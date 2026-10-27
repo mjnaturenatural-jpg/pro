@@ -1,14 +1,18 @@
 import { NextResponse } from "next/server";
 import { connectDB } from "@/lib/db";
-import { Product } from "@/models";
+import { Category, Product } from "@/models";
 
 export const dynamic = "force-dynamic";
 
 export async function GET(req: Request) {
   try {
     const { searchParams } = new URL(req.url);
-    const page = Math.max(1, Number(searchParams.get("page") || 1));
-    const limit = Math.min(48, Number(searchParams.get("limit") || 24));
+    const integer = (value: string | null, fallback: number, min: number, max: number) => {
+      const parsed = Number.parseInt(value || "", 10);
+      return Number.isFinite(parsed) ? Math.min(max, Math.max(min, parsed)) : fallback;
+    };
+    const page = integer(searchParams.get("page"), 1, 1, 100000);
+    const limit = integer(searchParams.get("limit"), 24, 1, 48);
     const category = searchParams.get("category") || "";
     const sort = searchParams.get("sort") || "featured";
     const q = searchParams.get("q") || "";
@@ -20,55 +24,73 @@ export async function GET(req: Request) {
     const tag = searchParams.get("tag") || "";
 
     await connectDB();
-    const filter: Record<string, unknown> = { published: true };
+    const clauses: Record<string, unknown>[] = [{ published: true }];
 
     if (category) {
-      const { Category } = await import("@/models");
-      const cat = await Category.findOne({ slug: category }).lean();
-      if (cat) filter.category = (cat as { _id: unknown })._id;
+      const cat = await Category.findOne({ slug: category, published: true }).lean();
+      if (!cat) {
+        return NextResponse.json({ products: [], total: 0, page, pages: 0 });
+      }
+      clauses.push({ category: (cat as { _id: unknown })._id });
     }
     if (q) {
       const rx = { $regex: q.replace(/[.*+?^${}()|[\]\\]/g, "\\$&"), $options: "i" };
-      filter.$or = [{ name: rx }, { keywords: rx }, { shortDescription: rx }];
+      clauses.push({ $or: [{ name: rx }, { keywords: rx }, { shortDescription: rx }] });
     }
-    if (pack) filter["packSizes.label"] = pack;
-    if (inStock) filter["packSizes.stock"] = { $gt: 0 };
-    if (maxPrice > 0) filter["packSizes.price"] = { ...(filter["packSizes.price"] as object), $lte: maxPrice };
+    const packFilter: Record<string, unknown> = {};
+    if (pack) packFilter.label = pack;
+    if (inStock) packFilter.stock = { $gt: 0 };
+    if (Number.isFinite(maxPrice) && maxPrice > 0) packFilter.price = { $lte: maxPrice };
+    if (Object.keys(packFilter).length) clauses.push({ packSizes: { $elemMatch: packFilter } });
     if (minDiscount > 0) {
-      // approximate: selling price <= mrp * (1 - minDiscount/100)
-      filter.$expr = {
-        $gte: [
-          { $multiply: [100, { $divide: [{ $subtract: ["$packSizes.mrp", "$packSizes.price"] }, "$packSizes.mrp"] }] },
-          minDiscount,
-        ],
-      };
+      clauses.push({
+        $expr: {
+          $anyElementTrue: {
+            $map: {
+              input: "$packSizes",
+              as: "pack",
+              in: {
+                $and: [
+                  { $gt: ["$$pack.mrp", 0] },
+                  {
+                    $gte: [
+                      { $multiply: [100, { $divide: [{ $subtract: ["$$pack.mrp", "$$pack.price"] }, "$$pack.mrp"] }] },
+                      minDiscount,
+                    ],
+                  },
+                ],
+              },
+            },
+          },
+        },
+      });
     }
-    if (featured) filter.featured = true;
+    if (featured) clauses.push({ featured: true });
     if (tag === "millet") {
-      const { Category } = await import("@/models");
       const milletCats = await Category.find({
         $or: [{ slug: "millet-cookies" }, { name: /millet/i }],
       }).lean();
       const ids = milletCats.map((c) => (c as { _id: unknown })._id);
-      filter.$or = [
+      clauses.push({ $or: [
         { category: { $in: ids } },
         { name: /millet/i },
         { keywords: /millet/i },
-      ];
+      ] });
     } else if (tag === "pure-ghee") {
-      filter["badges.pureGhee"] = true;
+      clauses.push({ "badges.pureGhee": true });
     } else if (tag === "eggless") {
-      filter["badges.eggless"] = true;
+      clauses.push({ "badges.eggless": true });
     } else if (tag === "gifting") {
       // Festive-ready sweets: laddus, chikkis and cookies.
-      const { Category } = await import("@/models");
       const giftCats = await Category.find({
-        slug: { $in: ["laddus", "chikki", "cookies", "millet-cookies"] },
+        slug: { $in: ["others", "chikkis", "cookies"] },
       }).lean();
-      filter.category = {
+      clauses.push({ category: {
         $in: giftCats.map((c) => (c as { _id: unknown })._id),
-      };
+      } });
     }
+
+    const filter = clauses.length === 1 ? clauses[0] : { $and: clauses };
 
     const sortMap: Record<string, Record<string, 1 | -1>> = {
       featured: { featured: -1, totalSold: -1, createdAt: -1 },
@@ -76,6 +98,7 @@ export async function GET(req: Request) {
       price_desc: { "packSizes.price": -1 },
       newest: { createdAt: -1 },
       best_selling: { totalSold: -1 },
+      name_asc: { name: 1 },
     };
 
     const [products, total] = await Promise.all([

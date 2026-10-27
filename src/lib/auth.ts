@@ -6,6 +6,7 @@ import { connectDB } from "@/lib/db";
 import { User } from "@/models";
 
 export const authOptions: NextAuthOptions = {
+  secret: process.env.NEXTAUTH_SECRET || process.env.AUTH_SECRET,
   session: { strategy: "jwt" },
   pages: { signIn: "/admin/login" },
   providers: [
@@ -55,6 +56,7 @@ export async function getSession() {
   try {
     return await getServerSession(authOptions);
   } catch (err) {
+    if (err instanceof Error && err.message.includes("Dynamic server usage")) return null;
     // Misconfigured NEXTAUTH_SECRET must fail closed as "not signed in"
     // instead of crashing customer-facing routes.
     console.error("getSession failed", err);

@@ -9,7 +9,7 @@ export const dynamic = "force-dynamic";
 export default async function AdminNewProductPage() {
   await guardAdmin("/admin/products/new");
   await connectDB();
-  const categories = await Category.find().sort({ name: 1 }).lean();
+  const categories = await Category.find().sort({ order: 1, name: 1 }).lean();
 
   return <ProductEditor categories={JSON.parse(JSON.stringify(categories))} product={null} />;
 }
