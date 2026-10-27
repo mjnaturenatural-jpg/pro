@@ -2,7 +2,7 @@
 
 import { useRouter } from "next/navigation";
 import { useState } from "react";
-import { Truck, RefreshCw, PackageCheck, ShieldCheck, FileText, ClipboardList, CalendarClock, Link2 } from "lucide-react";
+import { Truck, RefreshCw, PackageCheck, ShieldCheck, Link2 } from "lucide-react";
 import { useToast } from "@/components/ui/Toast";
 
 const PAYMENT_TONE: Record<string, string> = {
@@ -20,12 +20,10 @@ export function AdminOrderActions({
   razorpayPaymentId,
   awb,
   trackingUrl,
-  shiprocketShipmentId,
+  delhiveryShipmentId,
   shipmentStatus,
   shipmentError,
-  labelUrl,
-  manifestUrl,
-  shiprocketReady,
+  delhiveryReady,
   statuses,
 }: {
   orderId: string;
@@ -35,12 +33,10 @@ export function AdminOrderActions({
   razorpayPaymentId: string;
   awb: string;
   trackingUrl: string;
-  shiprocketShipmentId: string;
+  delhiveryShipmentId: string;
   shipmentStatus: string;
   shipmentError: string;
-  labelUrl: string;
-  manifestUrl: string;
-  shiprocketReady: boolean;
+  delhiveryReady: boolean;
   statuses: string[];
 }) {
   const router = useRouter();
@@ -80,13 +76,6 @@ export function AdminOrderActions({
     } finally {
       setLoading("");
     }
-  };
-
-  // For label/manifest the API returns a signed URL; open it in a new tab.
-  const generateAndOpen = async (action: string, label: string, urlKey: string) => {
-    const data = await patch({ action }, label);
-    const url = data && typeof data[urlKey] === "string" ? (data[urlKey] as string) : "";
-    if (url) window.open(url, "_blank", "noopener,noreferrer");
   };
 
   return (
@@ -140,12 +129,12 @@ export function AdminOrderActions({
         </div>
       </div>
 
-      {(shiprocketShipmentId || awb || shipmentStatus) && (
+      {(delhiveryShipmentId || awb || shipmentStatus) && (
         <div className="rounded-xl bg-ivory-100 px-3.5 py-3 text-xs text-bark-600">
           <p className="flex flex-wrap items-center gap-x-3 gap-y-1">
-            {shiprocketShipmentId && (
+            {delhiveryShipmentId && (
               <span>
-                Shipment ID <span className="font-mono text-bark-900">{shiprocketShipmentId}</span>
+                Shipment ID <span className="font-mono text-bark-900">{delhiveryShipmentId}</span>
               </span>
             )}
             {awb && (
@@ -160,59 +149,23 @@ export function AdminOrderActions({
       )}
 
       <div className="flex flex-wrap gap-2">
-        {!awb && !shiprocketShipmentId && (
+        {!awb && !delhiveryShipmentId && (
           <button
-            onClick={() => patch({ action: "create_shiprocket_shipment" }, "sr-ship")}
-            disabled={loading === "sr-ship" || !shiprocketReady}
-            title={shiprocketReady ? undefined : "Shiprocket login + pickup location required"}
+            onClick={() => patch({ action: "create_delhivery_shipment" }, "delhivery-ship")}
+            disabled={loading === "delhivery-ship" || !delhiveryReady}
+            title={delhiveryReady ? undefined : "Delhivery token, pickup, and return details are required"}
             className="btn-primary btn-sm"
           >
-            <Truck size={14} /> {loading === "sr-ship" ? "Creating…" : "Create Shiprocket Shipment"}
-          </button>
-        )}
-        {!awb && shiprocketShipmentId && (
-          <button
-            onClick={() => patch({ action: "assign_shiprocket_awb" }, "sr-awb")}
-            disabled={loading === "sr-awb"}
-            className="btn-primary btn-sm"
-          >
-            <Truck size={14} /> {loading === "sr-awb" ? "Assigning…" : "Assign AWB"}
+            <Truck size={14} /> {loading === "delhivery-ship" ? "Creating…" : "Create Delhivery Shipment"}
           </button>
         )}
         {awb && (
           <button
-            onClick={() => patch({ action: "refresh_shiprocket_tracking" }, "track")}
+            onClick={() => patch({ action: "refresh_delhivery_tracking" }, "track")}
             disabled={loading === "track"}
             className="btn-secondary btn-sm"
           >
             <RefreshCw size={14} /> {loading === "track" ? "Refreshing…" : "Refresh Tracking"}
-          </button>
-        )}
-        {shiprocketShipmentId && (
-          <button
-            onClick={() => generateAndOpen("generate_shiprocket_label", "label", "labelUrl")}
-            disabled={loading === "label"}
-            className="btn-secondary btn-sm"
-          >
-            <FileText size={14} /> {loading === "label" ? "Generating…" : "Label"}
-          </button>
-        )}
-        {shiprocketShipmentId && (
-          <button
-            onClick={() => generateAndOpen("generate_shiprocket_manifest", "manifest", "manifestUrl")}
-            disabled={loading === "manifest"}
-            className="btn-secondary btn-sm"
-          >
-            <ClipboardList size={14} /> {loading === "manifest" ? "Generating…" : "Manifest"}
-          </button>
-        )}
-        {awb && (
-          <button
-            onClick={() => patch({ action: "request_shiprocket_pickup" }, "pickup")}
-            disabled={loading === "pickup"}
-            className="btn-secondary btn-sm"
-          >
-            <CalendarClock size={14} /> {loading === "pickup" ? "Requesting…" : "Request Pickup"}
           </button>
         )}
         {status !== "DELIVERED" && status !== "CANCELLED" && (
@@ -235,9 +188,9 @@ export function AdminOrderActions({
           </a>
         )}
       </div>
-      {!awb && !shiprocketShipmentId && (
+      {!awb && !delhiveryShipmentId && (
         <p className="text-xs text-bark-400">
-          Shipment creation uses Shiprocket and needs its login plus a configured pickup location. An order is
+          Shipment creation uses Delhivery and needs its API token plus configured pickup and return details. An order is
           shipped only after its payment is verified.
         </p>
       )}

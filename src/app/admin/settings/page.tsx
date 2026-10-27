@@ -2,6 +2,7 @@ import { guardAdmin } from "@/lib/admin-guard";
 import { SettingsManager } from "@/components/admin/SettingsManager";
 import { APP_URL } from "@/lib/constants";
 import { isRazorpayConfigured } from "@/lib/razorpay";
+import { isDeliveryShipReady } from "@/lib/delhivery";
 
 export const metadata = { title: "Settings" };
 export const dynamic = "force-dynamic";
@@ -12,9 +13,7 @@ export default async function AdminSettingsPage() {
   // Read integration status without exposing secrets
   const integrations = {
     razorpay: isRazorpayConfigured(),
-    shiprocket: Boolean(
-      process.env.SHIPROCKET_EMAIL && process.env.SHIPROCKET_PASSWORD && process.env.SHIPROCKET_PICKUP_LOCATION
-    ),
+    delhivery: isDeliveryShipReady(),
     cloudinary: Boolean(
       process.env.CLOUDINARY_CLOUD_NAME && process.env.CLOUDINARY_API_KEY && process.env.CLOUDINARY_API_SECRET
     ),

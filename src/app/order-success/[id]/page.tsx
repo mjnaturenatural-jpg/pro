@@ -275,7 +275,7 @@ export default async function OrderSuccessPage({
           <div className="mt-5 rounded-2xl bg-leaf-50 px-5 py-4 text-center">
             <p className="flex items-center justify-center gap-1.5 text-xs font-bold uppercase tracking-wider text-leaf-700">
               <Truck size={13} />
-              Shipment {order.shippingProvider ? `via ${order.shippingProvider.replace("Shiprocket:", "")}` : "created"} · AWB {order.awb}
+              Shipment {order.shippingProvider ? `via ${order.shippingProvider.replace(/^(Shiprocket|Delhivery):/, "")}` : "created"} · AWB {order.awb}
             </p>
             {order.trackingUrl && (
               <a

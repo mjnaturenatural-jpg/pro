@@ -2,10 +2,10 @@ import { NextResponse } from "next/server";
 import { z } from "zod";
 import {
   getCourierRates,
-  isShiprocketRatesReady,
+  isDeliveryRatesReady,
   packToKg,
-  ShiprocketError,
-} from "@/lib/shiprocket";
+  DeliveryError,
+} from "@/lib/delhivery";
 import { isValidPincode } from "@/lib/utils";
 
 export const dynamic = "force-dynamic";
@@ -33,7 +33,7 @@ const ratesSchema = z.object({
  */
 export async function GET() {
   return NextResponse.json(
-    { available: isShiprocketRatesReady() },
+    { available: isDeliveryRatesReady() },
     { headers: { "cache-control": "no-store" } }
   );
 }
@@ -49,7 +49,7 @@ export async function POST(req: Request) {
         { status: 400 }
       );
     }
-    if (!isShiprocketRatesReady()) {
+    if (!isDeliveryRatesReady()) {
       return NextResponse.json(
         { error: "Live rates are not configured yet", code: "NOT_CONFIGURED", fallback: true },
         { status: 503 }
@@ -69,7 +69,7 @@ export async function POST(req: Request) {
     const options = await getCourierRates(parsed.data.pincode, weight);
     return NextResponse.json({ options, weightKg: Math.round(weight * 100) / 100 });
   } catch (err) {
-    if (err instanceof ShiprocketError) {
+    if (err instanceof DeliveryError) {
       if (err.code === "NOT_CONFIGURED") {
         return NextResponse.json(
           { error: "Live rates are not configured yet", code: "NOT_CONFIGURED", fallback: true },

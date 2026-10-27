@@ -15,11 +15,11 @@ import { Order } from "@/models";
 import crypto from "crypto";
 import {
   getCourierRates,
-  isShiprocketConfigured,
+  isDeliveryConfigured,
   packToKg,
-  SHIPROCKET_PICKUP_POSTCODE,
-  ShiprocketError,
-} from "@/lib/shiprocket";
+  DELIVERY_PICKUP_POSTCODE,
+  DeliveryError,
+} from "@/lib/delhivery";
 
 export const dynamic = "force-dynamic";
 
@@ -73,11 +73,11 @@ export async function POST(req: Request) {
       // coupon invalid — proceed without discount but inform
     }
 
-    // Verify an optional live Shiprocket courier selection server-side so the
+    // Verify an optional live courier selection server-side so the
     // charged amount can never be tampered with from the client.
     let shippingProvider = "";
     if (shippingOption) {
-      if (!isShiprocketConfigured() || !SHIPROCKET_PICKUP_POSTCODE) {
+      if (!isDeliveryConfigured() || !DELIVERY_PICKUP_POSTCODE) {
         return NextResponse.json(
           { error: "Live delivery options are unavailable. Please choose standard delivery." },
           { status: 502 }
@@ -97,9 +97,9 @@ export async function POST(req: Request) {
         totals.total =
           Math.round((totals.subtotal - totals.couponDiscount + match.rate + totals.tax) * 100) /
           100;
-        shippingProvider = `Shiprocket:${match.courierName}`;
+        shippingProvider = `Delhivery:${match.courierName}`;
       } catch (err) {
-        if (err instanceof ShiprocketError) {
+        if (err instanceof DeliveryError) {
           return NextResponse.json(
             {
               error: "Live courier rates are unavailable right now. Please choose standard delivery.",

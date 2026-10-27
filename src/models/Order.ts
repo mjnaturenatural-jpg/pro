@@ -74,7 +74,10 @@ const OrderSchema = new Schema(
       index: true,
     },
     shippingProvider: { type: String, default: "" },
-    // Shiprocket identifiers (server-generated; never trusted from the client).
+    // Delhivery identifiers (server-generated; never trusted from the client).
+    delhiveryOrderId: { type: String, default: "" },
+    delhiveryShipmentId: { type: String, default: "" },
+    // Retained for previously shipped orders after the Delhivery migration.
     shiprocketOrderId: { type: String, default: "" },
     shiprocketShipmentId: { type: String, default: "" },
     awb: { type: String, default: "" },
@@ -111,11 +114,11 @@ OrderSchema.index(
   { razorpayPaymentId: 1 },
   { unique: true, partialFilterExpression: { razorpayPaymentId: { $gt: "" } } }
 );
-// A Shiprocket shipment/AWB belongs to exactly one order. Partial filters keep
+// A Delhivery shipment/AWB belongs to exactly one order. Partial filters keep
 // unpaid/legacy orders (empty strings) out of the unique constraint.
 OrderSchema.index(
-  { shiprocketShipmentId: 1 },
-  { unique: true, partialFilterExpression: { shiprocketShipmentId: { $gt: "" } } }
+  { delhiveryShipmentId: 1 },
+  { unique: true, partialFilterExpression: { delhiveryShipmentId: { $gt: "" } } }
 );
 OrderSchema.index({ awb: 1 }, { unique: true, partialFilterExpression: { awb: { $gt: "" } } });
 

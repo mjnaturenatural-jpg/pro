@@ -5,7 +5,7 @@ import { formatINR, formatDate, orderNumber } from "@/lib/utils";
 import { StatusBadge } from "@/components/admin/StatusBadge";
 import { AdminOrderActions } from "@/components/admin/AdminOrderActions";
 import { ORDER_STATUSES } from "@/lib/constants";
-import { isShiprocketShipReady } from "@/lib/shiprocket";
+import { isDeliveryShipReady } from "@/lib/delhivery";
 
 export const metadata = { title: "Order Detail" };
 export const dynamic = "force-dynamic";
@@ -44,8 +44,8 @@ export default async function AdminOrderDetailPage({ params }: { params: { id: s
         awb: string;
         trackingUrl: string;
         shippingProvider: string;
-        shiprocketOrderId: string;
-        shiprocketShipmentId: string;
+        delhiveryOrderId: string;
+        delhiveryShipmentId: string;
         labelUrl: string;
         manifestUrl: string;
         shipmentStatus: string;
@@ -87,12 +87,10 @@ export default async function AdminOrderDetailPage({ params }: { params: { id: s
         razorpayPaymentId={order.razorpayPaymentId}
         awb={order.awb}
         trackingUrl={order.trackingUrl}
-        shiprocketShipmentId={order.shiprocketShipmentId}
+        delhiveryShipmentId={order.delhiveryShipmentId}
         shipmentStatus={order.shipmentStatus}
         shipmentError={order.shipmentError}
-        labelUrl={order.labelUrl}
-        manifestUrl={order.manifestUrl}
-        shiprocketReady={isShiprocketShipReady()}
+        delhiveryReady={isDeliveryShipReady()}
         statuses={[...ORDER_STATUSES]}
       />
 
@@ -157,7 +155,7 @@ export default async function AdminOrderDetailPage({ params }: { params: { id: s
             </dl>
           </div>
 
-          {(order.awb || order.shiprocketShipmentId) && (
+          {(order.awb || order.delhiveryShipmentId) && (
             <div className="card p-5">
               <h2 className="mb-4 text-sm font-semibold uppercase tracking-wide text-bark-700">
                 Shipment
@@ -172,12 +170,12 @@ export default async function AdminOrderDetailPage({ params }: { params: { id: s
                   <dd className="font-mono text-xs">{order.awb || "—"}</dd>
                 </div>
                 <div>
-                  <dt className="text-xs uppercase tracking-wide text-bark-400">Shiprocket Order ID</dt>
-                  <dd className="font-mono text-xs">{order.shiprocketOrderId || "—"}</dd>
+                  <dt className="text-xs uppercase tracking-wide text-bark-400">Delhivery Order ID</dt>
+                  <dd className="font-mono text-xs">{order.delhiveryOrderId || "—"}</dd>
                 </div>
                 <div>
-                  <dt className="text-xs uppercase tracking-wide text-bark-400">Shiprocket Shipment ID</dt>
-                  <dd className="font-mono text-xs">{order.shiprocketShipmentId || "—"}</dd>
+                  <dt className="text-xs uppercase tracking-wide text-bark-400">Delhivery Shipment ID</dt>
+                  <dd className="font-mono text-xs">{order.delhiveryShipmentId || "—"}</dd>
                 </div>
                 <div>
                   <dt className="text-xs uppercase tracking-wide text-bark-400">Status</dt>

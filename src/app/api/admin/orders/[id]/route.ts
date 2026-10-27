@@ -4,16 +4,12 @@ import { Order } from "@/models";
 import { requireAdmin } from "@/lib/auth";
 import { z } from "zod";
 import {
-  assignShiprocketAwb,
-  createShiprocketOrder,
-  generateShiprocketLabel,
-  generateShiprocketManifest,
-  isShiprocketShipReady,
+  createDeliveryOrder,
+  isDeliveryShipReady,
   packToKg,
-  requestShiprocketPickup,
-  shiprocketTrackingUrl,
-  trackShiprocketAwb,
-} from "@/lib/shiprocket";
+  deliveryTrackingUrl,
+  trackDeliveryAwb,
+} from "@/lib/delhivery";
 import { isRazorpayConfigured } from "@/lib/razorpay";
 import { reconcileOrderPayment } from "@/lib/payments";
 import crypto from "crypto";
@@ -39,12 +35,8 @@ const updateSchema = z.object({
   notes: z.string().optional(),
   action: z
     .enum([
-      "create_shiprocket_shipment",
-      "assign_shiprocket_awb",
-      "refresh_shiprocket_tracking",
-      "generate_shiprocket_label",
-      "generate_shiprocket_manifest",
-      "request_shiprocket_pickup",
+      "create_delhivery_shipment",
+      "refresh_delhivery_tracking",
       "reconcile_payment",
     ])
     .optional(),
@@ -83,8 +75,8 @@ export async function PATCH(req: Request, { params }: { params: { id: string } }
     const order = await Order.findById(params.id);
     if (!order) return NextResponse.json({ error: "Order not found" }, { status: 404 });
 
-    if (parsed.data.action === "create_shiprocket_shipment") {
-      if (order.awb || order.shiprocketShipmentId) {
+    if (parsed.data.action === "create_delhivery_shipment") {
+      if (order.awb || order.delhiveryShipmentId) {
         return NextResponse.json({ error: "A shipment already exists for this order" }, { status: 400 });
       }
       // A prepaid order may only be fulfilled after a verified payment. Nothing
@@ -95,9 +87,9 @@ export async function PATCH(req: Request, { params }: { params: { id: string } }
           { status: 409 }
         );
       }
-      if (!isShiprocketShipReady()) {
+      if (!isDeliveryShipReady()) {
         return NextResponse.json(
-          { error: "Shiprocket pickup location is not configured. Set SHIPROCKET_EMAIL, SHIPROCKET_PASSWORD and SHIPROCKET_PICKUP_LOCATION." },
+          { error: "Delhivery pickup location is not configured. Set DELIVERY_API_TOKEN and DELIVERY_PICKUP_LOCATION." },
           { status: 503 }
         );
       }
@@ -124,7 +116,7 @@ export async function PATCH(req: Request, { params }: { params: { id: string } }
         order.items as unknown as { packSize: string; quantity: number }[]
       ).reduce((n, i) => n + packToKg(i.packSize) * i.quantity, 0);
       try {
-        const result = await createShiprocketOrder({
+        const result = await createDeliveryOrder({
           orderId: order.orderNumber,
           customerName: addr.fullName,
           customerEmail: cust.email,
@@ -138,132 +130,38 @@ export async function PATCH(req: Request, { params }: { params: { id: string } }
           weightKg,
           prepaid: order.paymentStatus === "PAID",
         });
-        // Persist the Shiprocket identifiers even when no AWB came back, so a
-        // retry never creates a second shipment for the same order.
-        if (result.orderId) order.shiprocketOrderId = String(result.orderId);
-        if (result.shipmentId) order.shiprocketShipmentId = String(result.shipmentId);
-        if (!result.ok) {
-          order.shipmentError = "Shiprocket did not return a shipment for this order.";
-          await order.save();
-          return NextResponse.json({ error: order.shipmentError }, { status: 502 });
-        }
+        // Delhivery's legacy create endpoint returns the waybill immediately.
+        // Persist it before changing order state so retries never duplicate it.
+        if (result.orderId) order.delhiveryOrderId = String(result.orderId);
+        if (result.shipmentId) order.delhiveryShipmentId = String(result.shipmentId);
         order.shipmentCreatedAt = order.shipmentCreatedAt || new Date();
         order.shipmentUpdatedAt = new Date();
         order.shipmentError = "";
-        if (result.awb) {
-          order.awb = result.awb;
-          order.shippingProvider = result.courier ? `Shiprocket:${result.courier}` : "Shiprocket";
-          order.trackingUrl = shiprocketTrackingUrl(result.awb);
-          order.shipmentStatus = "Shipment created";
-          if (["PENDING", "CONFIRMED", "PROCESSING"].includes(order.status)) order.status = "SHIPPED";
-          await order.save();
-          return NextResponse.json({ ok: true, order: JSON.parse(JSON.stringify(order)) });
-        }
-        // Shipment exists but no courier/AWB was auto-assigned — the admin can
-        // assign one explicitly via "Assign AWB".
-        order.shipmentStatus = "Shipment created (AWB pending)";
-        await order.save();
-        return NextResponse.json({
-          ok: true,
-          message: "Shipment created. No AWB was auto-assigned — use Assign AWB.",
-          order: JSON.parse(JSON.stringify(order)),
-        });
-      } catch (err) {
-        console.error("shiprocket create error", err);
-        const message = err instanceof Error ? err.message : "Failed to create shipment with Shiprocket";
-        order.shipmentError = message;
-        await order.save().catch(() => {});
-        return NextResponse.json({ error: message }, { status: 502 });
-      }
-    }
-
-    if (
-      parsed.data.action === "assign_shiprocket_awb" ||
-      parsed.data.action === "generate_shiprocket_label" ||
-      parsed.data.action === "generate_shiprocket_manifest" ||
-      parsed.data.action === "request_shiprocket_pickup"
-    ) {
-      if (!order.shiprocketShipmentId) {
-        return NextResponse.json(
-          { error: "No Shiprocket shipment exists for this order yet" },
-          { status: 400 }
-        );
-      }
-      if (!isShiprocketShipReady()) {
-        return NextResponse.json(
-          { error: "Shiprocket is not configured. Set SHIPROCKET_EMAIL, SHIPROCKET_PASSWORD and SHIPROCKET_PICKUP_LOCATION." },
-          { status: 503 }
-        );
-      }
-      try {
-        if (parsed.data.action === "assign_shiprocket_awb") {
-          if (order.awb) {
-            return NextResponse.json(
-              { error: "An AWB is already assigned to this order" },
-              { status: 400 }
-            );
-          }
-          const res = await assignShiprocketAwb(order.shiprocketShipmentId);
-          order.awb = res.awb;
-          order.shippingProvider = res.courier ? `Shiprocket:${res.courier}` : "Shiprocket";
-          order.trackingUrl = shiprocketTrackingUrl(res.awb);
-          order.shipmentStatus = "Shipment created";
-          if (["PENDING", "CONFIRMED", "PROCESSING"].includes(order.status)) order.status = "SHIPPED";
-          order.shipmentUpdatedAt = new Date();
-          order.shipmentError = "";
-          await order.save();
-          return NextResponse.json({ ok: true, order: JSON.parse(JSON.stringify(order)) });
-        }
-        if (parsed.data.action === "generate_shiprocket_label") {
-          const res = await generateShiprocketLabel(order.shiprocketShipmentId);
-          order.labelUrl = res.labelUrl;
-          order.shipmentUpdatedAt = new Date();
-          order.shipmentError = "";
-          await order.save();
-          return NextResponse.json({
-            ok: true,
-            labelUrl: res.labelUrl,
-            order: JSON.parse(JSON.stringify(order)),
-          });
-        }
-        if (parsed.data.action === "generate_shiprocket_manifest") {
-          const res = await generateShiprocketManifest(order.shiprocketShipmentId);
-          order.manifestUrl = res.manifestUrl;
-          order.shipmentUpdatedAt = new Date();
-          order.shipmentError = "";
-          await order.save();
-          return NextResponse.json({
-            ok: true,
-            manifestUrl: res.manifestUrl,
-            order: JSON.parse(JSON.stringify(order)),
-          });
-        }
-        const res = await requestShiprocketPickup(order.shiprocketShipmentId);
-        order.shipmentStatus = res.scheduledDate
-          ? `Pickup scheduled (${res.scheduledDate})`
-          : "Pickup requested";
-        order.shipmentUpdatedAt = new Date();
-        order.shipmentError = "";
+        order.awb = result.awb;
+        order.shippingProvider = result.courier ? `Delhivery:${result.courier}` : "Delhivery";
+        order.trackingUrl = deliveryTrackingUrl(result.awb);
+        order.shipmentStatus = "Shipment created";
+        if (["PENDING", "CONFIRMED", "PROCESSING"].includes(order.status)) order.status = "SHIPPED";
         await order.save();
         return NextResponse.json({ ok: true, order: JSON.parse(JSON.stringify(order)) });
       } catch (err) {
-        console.error("shiprocket operation error", parsed.data.action, err);
-        const message = err instanceof Error ? err.message : "Shiprocket operation failed";
+        console.error("delhivery create error", err);
+        const message = err instanceof Error ? err.message : "Failed to create shipment with Delhivery";
         order.shipmentError = message;
         await order.save().catch(() => {});
         return NextResponse.json({ error: message }, { status: 502 });
       }
     }
 
-    if (parsed.data.action === "refresh_shiprocket_tracking") {
+    if (parsed.data.action === "refresh_delhivery_tracking") {
       if (!order.awb) {
         return NextResponse.json({ error: "No AWB generated for this order yet" }, { status: 400 });
       }
-      if (!order.shippingProvider?.startsWith("Shiprocket")) {
-        return NextResponse.json({ error: "This is not a Shiprocket shipment" }, { status: 400 });
+      if (!order.shippingProvider?.startsWith("Delhivery")) {
+        return NextResponse.json({ error: "This is not a Delhivery shipment" }, { status: 400 });
       }
       try {
-        const t = await trackShiprocketAwb(order.awb);
+        const t = await trackDeliveryAwb(order.awb);
         if (t.scans.length) {
           const latest = t.scans[t.scans.length - 1];
           order.shipmentStatus = latest.status || t.status || order.shipmentStatus;
@@ -280,7 +178,7 @@ export async function PATCH(req: Request, { params }: { params: { id: string } }
         await order.save();
         return NextResponse.json({ ok: true, order: JSON.parse(JSON.stringify(order)) });
       } catch (err) {
-        console.error("shiprocket tracking error", err);
+        console.error("delhivery tracking error", err);
         const message = err instanceof Error ? err.message : "Failed to refresh tracking";
         order.shipmentError = message;
         await order.save().catch(() => {});

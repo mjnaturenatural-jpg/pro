@@ -50,7 +50,7 @@ function sanitizeOptions(raw: unknown): CourierOption[] {
   return out;
 }
 
-/** Live Shiprocket courier options for the entered pincode. Hidden when unavailable. */
+/** Live courier options for the entered pincode. Hidden when unavailable. */
 export function DeliveryOptions({ pincode, lines, standardRate, freeShipping, value, onChange }: DeliveryOptionsProps) {
   const [options, setOptions] = useState<CourierOption[] | null>(null);
   const [loading, setLoading] = useState(false);

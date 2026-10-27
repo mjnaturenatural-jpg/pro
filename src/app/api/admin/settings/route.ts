@@ -1,5 +1,6 @@
 import { NextResponse } from "next/server";
 import { isRazorpayConfigured } from "@/lib/razorpay";
+import { isDeliveryShipReady } from "@/lib/delhivery";
 import { connectDB } from "@/lib/db";
 import { SiteSettings } from "@/models";
 import { requireAdmin } from "@/lib/auth";
@@ -65,9 +66,7 @@ export async function GET() {
       },
       integrations: {
         razorpay: isRazorpayConfigured(),
-        shiprocket: Boolean(
-          process.env.SHIPROCKET_EMAIL && process.env.SHIPROCKET_PASSWORD && process.env.SHIPROCKET_PICKUP_LOCATION
-        ),
+        delhivery: isDeliveryShipReady(),
         cloudinary: Boolean(
           process.env.CLOUDINARY_CLOUD_NAME && process.env.CLOUDINARY_API_KEY && process.env.CLOUDINARY_API_SECRET
         ),
