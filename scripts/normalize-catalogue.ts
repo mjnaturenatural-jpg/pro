@@ -15,7 +15,7 @@ const targets = [
   { name: "CHIKKIS", slug: "chikkis", aliases: ["chikki", "chikkis"] },
   { name: "COOKIES", slug: "cookies", aliases: ["cookies", "millet-cookies"] },
   { name: "BROWNIES", slug: "brownies", aliases: ["brownies", "brownie"] },
-  { name: "OTHERS", slug: "others", aliases: [] },
+  { name: "OTHERS", slug: "others", aliases: [], description: "Oils, powders, and other natural pantry essentials." },
 ];
 
 async function main() {
@@ -71,7 +71,7 @@ async function main() {
     if (existing) {
       await Category.updateOne({ _id: existing._id }, { $set: { name: target.name, slug: target.slug, order, published: true } });
     } else {
-      const created = await Category.create({ name: target.name, slug: target.slug, description: `${target.name} catalogue`, published: true, order });
+      const created = await Category.create({ name: target.name, slug: target.slug, description: target.description || "", published: true, order });
       canonical.set(target.slug, created.toObject() as CategoryRecord);
     }
   }
