@@ -1,6 +1,5 @@
 "use client";
 
-import Image from "next/image";
 import Link from "next/link";
 import { useRouter } from "next/navigation";
 import { useState } from "react";
@@ -13,6 +12,8 @@ import { useToast } from "@/components/ui/Toast";
 import { Rating } from "@/components/ui/Rating";
 import { analytics } from "@/lib/analytics";
 import { BADGES, BADGE_STYLES } from "@/lib/constants";
+import { PRODUCT_CARD_SIZES, resolveProductImages } from "@/lib/product-images";
+import { ProductImage } from "@/components/product/ProductImage";
 
 export interface ProductCardData {
   _id: string;
@@ -97,35 +98,31 @@ export function ProductCard({ product, priority = false }: { product: ProductCar
     toggleWishlist(product._id);
   };
 
+  const images = resolveProductImages(product.images, product.slug).slice(0, 2);
+
   return (
     <Link
       href={`/product/${product.slug}`}
-      className="group relative flex flex-col overflow-hidden rounded-[32px] border border-bark-800/10 bg-ivory-100 shadow-soft transition duration-300 hover:-translate-y-1 hover:shadow-lift hover:ring-2 hover:ring-honey-300/70"
+      className="group relative flex h-full min-w-0 flex-col overflow-hidden rounded-2xl border border-bark-800/10 bg-ivory-100 shadow-soft transition duration-300 hover:-translate-y-1 hover:shadow-lift hover:ring-2 hover:ring-honey-300/70 sm:rounded-[32px]"
     >
-      <div className="relative aspect-[4/5] overflow-hidden bg-gradient-to-br from-sand-50 to-leaf-50">
-        {product.images[0] && (
-          <Image
-            src={product.images[0]}
+      <div className="relative aspect-square overflow-hidden bg-white p-1">
+        {images[0] && (
+          <ProductImage
+            src={images[0]}
+            slug={product.slug}
             alt={product.name}
-            fill
             priority={priority}
-            sizes="(max-width: 640px) 50vw, (max-width: 1024px) 33vw, (max-width: 1280px) 25vw, 320px"
-            quality={90}
-            className={cn(
-              "object-contain p-2 transition duration-500 group-hover:scale-105",
-              product.images[1] && "group-hover:opacity-0"
-            )}
+            sizes={PRODUCT_CARD_SIZES}
+            className={images[1] ? "transition-opacity duration-300 [@media(hover:hover)_and_(pointer:fine)]:group-hover:opacity-0" : undefined}
           />
         )}
-        {product.images[1] && (
-          <Image
-            src={product.images[1]}
+        {images[1] && (
+          <ProductImage
+            src={images[1]}
+            slug={product.slug}
             alt=""
-            aria-hidden="true"
-            fill
-            sizes="(max-width: 640px) 50vw, (max-width: 1024px) 33vw, (max-width: 1280px) 25vw, 320px"
-            quality={90}
-            className="object-contain p-2 opacity-0 transition duration-500 group-hover:scale-105 group-hover:opacity-100"
+            sizes={PRODUCT_CARD_SIZES}
+            className="pointer-events-none opacity-0 transition-opacity duration-300 [@media(hover:hover)_and_(pointer:fine)]:group-hover:opacity-100"
           />
         )}
         <div className="absolute left-2.5 top-2.5 flex flex-col items-start gap-1">
@@ -164,7 +161,7 @@ export function ProductCard({ product, priority = false }: { product: ProductCar
         </button>
       </div>
 
-      <div className="flex flex-1 flex-col gap-2.5 p-5">
+      <div className="flex flex-1 flex-col gap-2 p-3 sm:gap-2.5 sm:p-5">
         {tags.length > 0 && (
           <div className="flex flex-wrap gap-1.5">
             {tags.map((t) => (
@@ -234,14 +231,14 @@ export function ProductCard({ product, priority = false }: { product: ProductCar
           <button
             onClick={handleAdd}
             disabled={activePack.stock <= 0}
-            className="btn-primary btn-sm w-full"
+            className="btn-primary btn-sm w-full !px-2.5 !py-2 !text-[11px] sm:!px-4 sm:!text-xs"
           >
             <ShoppingBag size={13} /> Add to Cart
           </button>
           <button
             onClick={handleBuyNow}
             disabled={activePack.stock <= 0}
-            className="btn-secondary btn-sm w-full"
+            className="btn-secondary btn-sm w-full !px-2.5 !py-2 !text-[11px] sm:!px-4 sm:!text-xs"
           >
             <Zap size={13} /> Buy Now
           </button>

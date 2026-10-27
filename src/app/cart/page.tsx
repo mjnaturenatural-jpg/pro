@@ -1,6 +1,6 @@
 "use client";
 
-import Image from "next/image";
+import { ProductImage } from "@/components/product/ProductImage";
 import Link from "next/link";
 import { useState } from "react";
 import { Trash2, ShoppingBag, Lock, Leaf } from "lucide-react";
@@ -76,10 +76,10 @@ export default function CartPage() {
             >
               <Link
                 href={`/product/${item.slug}`}
-                className="relative h-20 w-20 shrink-0 overflow-hidden rounded-lg bg-sand-50 sm:h-24 sm:w-24"
+                className="relative h-20 w-20 shrink-0 overflow-hidden rounded-lg bg-white sm:h-24 sm:w-24"
               >
                 {item.image && (
-                  <Image src={item.image} alt={item.name} fill sizes="96px" className="object-contain p-1" />
+                  <ProductImage src={item.image} slug={item.slug} alt={item.name} sizes="96px" />
                 )}
               </Link>
               <div className="flex flex-1 flex-col">

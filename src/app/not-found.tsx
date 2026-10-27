@@ -36,7 +36,7 @@ export default async function NotFound() {
           <h2 className="mb-6 text-center font-serif text-2xl font-bold text-bark-900">
             You may like these instead
           </h2>
-          <div className="grid grid-cols-2 gap-3 sm:gap-5 lg:grid-cols-4">
+          <div className="grid grid-cols-2 gap-2.5 sm:gap-5 lg:grid-cols-4">
             {suggestions.map((p) => (
               <ProductCard key={p._id} product={JSON.parse(JSON.stringify(p))} />
             ))}

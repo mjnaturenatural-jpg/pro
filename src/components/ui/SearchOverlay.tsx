@@ -3,8 +3,8 @@
 import { useEffect, useState, useCallback } from "react";
 import { useRouter } from "next/navigation";
 import { Search, X } from "lucide-react";
-import Image from "next/image";
 import { formatPrice } from "@/lib/format";
+import { ProductImage } from "@/components/product/ProductImage";
 
 interface SearchProduct {
   _id: string;
@@ -101,9 +101,9 @@ export function SearchOverlay({ open, onClose }: { open: boolean; onClose: () =>
                   }}
                   className="flex w-full items-center gap-3 px-5 py-3 text-left transition hover:bg-bark-800/10"
                 >
-                  <div className="relative h-12 w-12 shrink-0 overflow-hidden rounded-lg bg-sand-50">
+                  <div className="relative h-12 w-12 shrink-0 overflow-hidden rounded-lg bg-white">
                     {p.images[0] && (
-                      <Image src={p.images[0]} alt={p.name} fill className="object-contain p-0.5" sizes="48px" />
+                      <ProductImage src={p.images[0]} slug={p.slug} alt={p.name} sizes="48px" />
                     )}
                   </div>
                   <div className="flex-1 min-w-0">

@@ -352,7 +352,7 @@ export function ProductEditor({
           {form.images.map((img, i) => (
             <div key={i} className="relative h-24 w-24 overflow-hidden rounded-lg border border-bark-800/10 bg-sand-50">
               {/* eslint-disable-next-line @next/next/no-img-element */}
-              <img src={img} alt="" className="h-full w-full object-cover" />
+              <img src={img} alt="" className="h-full w-full object-contain object-center" />
               <button
                 type="button"
                 onClick={() => set("images", form.images.filter((_, idx) => idx !== i))}

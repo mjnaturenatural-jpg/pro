@@ -501,7 +501,10 @@ async function seed() {
   for (const p of products) {
     const categoryId = catMap.get(p.category);
     if (!categoryId) continue;
-    const staticImg = staticFile(`/images/products/${p.slug}.jpg`);
+    const gallery = [1, 2]
+      .map((n) => staticFile(`/images/products/${p.slug}-${n}.webp`))
+      .filter((src): src is string => Boolean(src));
+    const staticImg = gallery[0] ?? staticFile(`/images/products/${p.slug}.jpg`);
     await Product.findOneAndUpdate(
       { slug: p.slug },
       {
@@ -524,7 +527,7 @@ async function seed() {
           keywords: [p.category, ...p.name.toLowerCase().split(" ")],
         },
         $setOnInsert: {
-          images: [staticImg ?? placeholderImage(p.name)],
+          images: gallery.length ? gallery : [staticImg ?? placeholderImage(p.name)],
         },
       },
       { upsert: true, new: true, setDefaultsOnInsert: true }

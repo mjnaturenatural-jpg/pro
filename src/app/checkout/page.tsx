@@ -1,7 +1,7 @@
 "use client";
 
-import Image from "next/image";
 import Link from "next/link";
+import { ProductImage } from "@/components/product/ProductImage";
 import { useRouter } from "next/navigation";
 import { useEffect, useState } from "react";
 import { Leaf, Lock, Truck } from "lucide-react";
@@ -407,9 +407,9 @@ export default function CheckoutPage() {
             <ul className="mb-4 space-y-3">
               {items.map((item) => (
                 <li key={`${item.productId}-${item.packSize}`} className="flex gap-3">
-                  <div className="relative h-12 w-12 shrink-0 overflow-hidden rounded-lg bg-sand-50">
+                  <div className="relative h-12 w-12 shrink-0 overflow-hidden rounded-lg bg-white">
                     {item.image && (
-                      <Image src={item.image} alt="" fill sizes="48px" className="object-contain p-0.5" />
+                      <ProductImage src={item.image} slug={item.slug} alt="" sizes="48px" />
                     )}
                   </div>
                   <div className="flex-1 min-w-0">

@@ -1,8 +1,8 @@
 "use client";
 
 import { useState } from "react";
-import Image from "next/image";
 import { Plus } from "lucide-react";
+import { ProductImage } from "@/components/product/ProductImage";
 import { useCart } from "@/store/cart";
 import { useToast } from "@/components/ui/Toast";
 import { formatPrice } from "@/lib/format";
@@ -75,9 +75,9 @@ export function FrequentlyBought({ products }: { products: FbtProduct[] }) {
                 className="h-5 w-5 shrink-0 rounded accent-caramel-600"
                 aria-label={`Include ${p.name}`}
               />
-              <span className="relative h-14 w-14 shrink-0 overflow-hidden rounded-xl bg-sand-50">
+              <span className="relative h-14 w-14 shrink-0 overflow-hidden rounded-xl bg-white">
                 {p.images[0] && (
-                  <Image src={p.images[0]} alt="" fill sizes="56px" className="object-contain p-1" />
+                  <ProductImage src={p.images[0]} slug={p.slug} alt="" sizes="56px" />
                 )}
               </span>
               <span className="min-w-0 flex-1">

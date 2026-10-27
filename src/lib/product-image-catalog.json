@@ -1,0 +1,476 @@
+{
+  "images": {
+    "/images/products/bajra-jaggery-cookies-1.webp": {
+      "width": 670,
+      "height": 457
+    },
+    "/images/products/bajra-jaggery-cookies-2.webp": {
+      "width": 682,
+      "height": 457
+    },
+    "/images/products/black-sesame-almond-chikki-1.webp": {
+      "width": 411,
+      "height": 386
+    },
+    "/images/products/black-sesame-almond-chikki-2.webp": {
+      "width": 413,
+      "height": 370
+    },
+    "/images/products/black-sesame-almond-chikki-3.webp": {
+      "width": 413,
+      "height": 416
+    },
+    "/images/products/black-sesame-almond-chikki-4.webp": {
+      "width": 407,
+      "height": 406
+    },
+    "/images/products/black-sesame-kaju-chikki-1.webp": {
+      "width": 411,
+      "height": 386
+    },
+    "/images/products/black-sesame-kaju-chikki-2.webp": {
+      "width": 413,
+      "height": 370
+    },
+    "/images/products/black-sesame-kaju-chikki-3.webp": {
+      "width": 413,
+      "height": 416
+    },
+    "/images/products/black-sesame-kaju-chikki-4.webp": {
+      "width": 407,
+      "height": 406
+    },
+    "/images/products/coconut-oil-1.webp": {
+      "width": 683,
+      "height": 487
+    },
+    "/images/products/coconut-oil-2.webp": {
+      "width": 662,
+      "height": 466
+    },
+    "/images/products/coconut-powder-1.webp": {
+      "width": 680,
+      "height": 475
+    },
+    "/images/products/coconut-powder-2.webp": {
+      "width": 677,
+      "height": 487
+    },
+    "/images/products/double-choco-chip-brownie-3.webp": {
+      "width": 662,
+      "height": 417
+    },
+    "/images/products/double-choco-chip-brownie-4.webp": {
+      "width": 683,
+      "height": 438
+    },
+    "/images/products/dry-amla-1.webp": {
+      "width": 676,
+      "height": 395
+    },
+    "/images/products/dry-amla-2.webp": {
+      "width": 668,
+      "height": 397
+    },
+    "/images/products/dry-fruit-mixture-spicy-1.webp": {
+      "width": 682,
+      "height": 411
+    },
+    "/images/products/dry-fruit-mixture-spicy-2.webp": {
+      "width": 671,
+      "height": 402
+    },
+    "/images/products/dry-fruit-pumpkin-seeds-badam-kaju-1.webp": {
+      "width": 432,
+      "height": 397
+    },
+    "/images/products/dry-fruit-pumpkin-seeds-badam-kaju-2.webp": {
+      "width": 430,
+      "height": 422
+    },
+    "/images/products/dry-fruits-mix-jaggery-cookies-1.webp": {
+      "width": 410,
+      "height": 465
+    },
+    "/images/products/dry-fruits-mix-jaggery-cookies-2.webp": {
+      "width": 408,
+      "height": 463
+    },
+    "/images/products/dry-fruits-mix-jaggery-cookies-3.webp": {
+      "width": 412,
+      "height": 487
+    },
+    "/images/products/dry-fruits-mix-jaggery-cookies-4.webp": {
+      "width": 412,
+      "height": 377
+    },
+    "/images/products/dry-fruits-mix-jaggery-cookies-5.webp": {
+      "width": 410,
+      "height": 417
+    },
+    "/images/products/dry-fruits-mix-jaggery-cookies-6.webp": {
+      "width": 408,
+      "height": 423
+    },
+    "/images/products/elaichi-black-pepper-dry-ginger-jaggery-1.webp": {
+      "width": 672,
+      "height": 362
+    },
+    "/images/products/elaichi-black-pepper-dry-ginger-jaggery-2.webp": {
+      "width": 666,
+      "height": 367
+    },
+    "/images/products/flax-seeds-jaggery-almond-chikki-1.webp": {
+      "width": 410,
+      "height": 407
+    },
+    "/images/products/flax-seeds-jaggery-almond-chikki-2.webp": {
+      "width": 412,
+      "height": 390
+    },
+    "/images/products/jowar-chocolate-almond-cookies-1.webp": {
+      "width": 412,
+      "height": 500
+    },
+    "/images/products/jowar-chocolate-almond-cookies-2.webp": {
+      "width": 412,
+      "height": 446
+    },
+    "/images/products/jowar-chocolate-dry-fruits-brownie-1.webp": {
+      "width": 685,
+      "height": 426
+    },
+    "/images/products/jowar-chocolate-dry-fruits-brownie-2.webp": {
+      "width": 687,
+      "height": 441
+    },
+    "/images/products/jowar-jaggery-cookies-1.webp": {
+      "width": 380,
+      "height": 377
+    },
+    "/images/products/jowar-jaggery-cookies-2.webp": {
+      "width": 382,
+      "height": 372
+    },
+    "/images/products/kaju-jaggery-chikki-1.webp": {
+      "width": 432,
+      "height": 397
+    },
+    "/images/products/kaju-jaggery-chikki-2.webp": {
+      "width": 430,
+      "height": 422
+    },
+    "/images/products/millet-jaggery-cookies-1.webp": {
+      "width": 390,
+      "height": 398
+    },
+    "/images/products/millet-jaggery-cookies-2.webp": {
+      "width": 385,
+      "height": 373
+    },
+    "/images/products/oats-jaggery-dry-fruit-cookies-1.webp": {
+      "width": 412,
+      "height": 422
+    },
+    "/images/products/oats-jaggery-dry-fruit-cookies-2.webp": {
+      "width": 410,
+      "height": 442
+    },
+    "/images/products/oats-jaggery-dry-fruit-cookies-3.webp": {
+      "width": 412,
+      "height": 428
+    },
+    "/images/products/oats-jaggery-dry-fruit-cookies-4.webp": {
+      "width": 412,
+      "height": 423
+    },
+    "/images/products/original-jaggery-1.webp": {
+      "width": 683,
+      "height": 487
+    },
+    "/images/products/peanuts-pistachio-jaggery-chikki-1.webp": {
+      "width": 402,
+      "height": 360
+    },
+    "/images/products/peanuts-pistachio-jaggery-chikki-2.webp": {
+      "width": 407,
+      "height": 357
+    },
+    "/images/products/poha-coconut-dry-fruit-mixture-spicy-1.webp": {
+      "width": 373,
+      "height": 427
+    },
+    "/images/products/poha-coconut-dry-fruit-mixture-spicy-2.webp": {
+      "width": 375,
+      "height": 437
+    },
+    "/images/products/poha-dry-fruit-chikki-1.webp": {
+      "width": 380,
+      "height": 417
+    },
+    "/images/products/poha-dry-fruit-chikki-2.webp": {
+      "width": 390,
+      "height": 431
+    },
+    "/images/products/ragi-elaichi-dry-fruit-jaggery-cookies-1.webp": {
+      "width": 377,
+      "height": 422
+    },
+    "/images/products/ragi-elaichi-dry-fruit-jaggery-cookies-2.webp": {
+      "width": 377,
+      "height": 436
+    },
+    "/images/products/ragi-jaggery-dry-fruits-brownie-1.webp": {
+      "width": 410,
+      "height": 435
+    },
+    "/images/products/ragi-jaggery-dry-fruits-brownie-2.webp": {
+      "width": 417,
+      "height": 427
+    },
+    "/images/products/ragi-millet-jaggery-chocolate-cookies-1.webp": {
+      "width": 410,
+      "height": 505
+    },
+    "/images/products/ragi-millet-jaggery-chocolate-cookies-2.webp": {
+      "width": 412,
+      "height": 415
+    },
+    "/images/products/ragi-millet-jaggery-chocolate-cookies-3.webp": {
+      "width": 417,
+      "height": 477
+    },
+    "/images/products/ragi-millet-jaggery-chocolate-cookies-4.webp": {
+      "width": 413,
+      "height": 495
+    },
+    "/images/products/ragi-millet-jaggery-chocolate-cookies-5.webp": {
+      "width": 407,
+      "height": 427
+    },
+    "/images/products/ragi-millet-jaggery-chocolate-cookies-6.webp": {
+      "width": 405,
+      "height": 450
+    },
+    "/images/products/ragi-millet-jaggery-chocolate-cookies-7.webp": {
+      "width": 412,
+      "height": 437
+    },
+    "/images/products/ragi-millet-jaggery-chocolate-cookies-8.webp": {
+      "width": 415,
+      "height": 442
+    },
+    "/images/products/ragi-millet-jaggery-mini-chocolate-cookies-1.webp": {
+      "width": 686,
+      "height": 502
+    },
+    "/images/products/ragi-millet-jaggery-mini-chocolate-cookies-2.webp": {
+      "width": 681,
+      "height": 497
+    },
+    "/images/products/red-chilli-powder-with-masala-1.webp": {
+      "width": 690,
+      "height": 470
+    },
+    "/images/products/red-chilli-powder-with-masala-2.webp": {
+      "width": 687,
+      "height": 461
+    },
+    "/images/products/red-velvet-chocolate-cookies-1.webp": {
+      "width": 405,
+      "height": 437
+    },
+    "/images/products/red-velvet-chocolate-cookies-2.webp": {
+      "width": 417,
+      "height": 406
+    },
+    "/images/products/red-velvet-chocolate-cookies-3.webp": {
+      "width": 407,
+      "height": 457
+    },
+    "/images/products/red-velvet-chocolate-cookies-4.webp": {
+      "width": 411,
+      "height": 397
+    },
+    "/images/products/roasted-coconut-dry-fruit-jaggery-laddu-1.webp": {
+      "width": 407,
+      "height": 407
+    },
+    "/images/products/roasted-coconut-dry-fruit-jaggery-laddu-2.webp": {
+      "width": 407,
+      "height": 395
+    },
+    "/images/products/roasted-coconut-jaggery-laddu-1.webp": {
+      "width": 407,
+      "height": 407
+    },
+    "/images/products/roasted-coconut-jaggery-laddu-2.webp": {
+      "width": 407,
+      "height": 395
+    },
+    "/images/products/white-chocolate-black-chocolate-brownie-1.webp": {
+      "width": 673,
+      "height": 488
+    },
+    "/images/products/white-chocolate-black-chocolate-brownie-2.webp": {
+      "width": 677,
+      "height": 495
+    },
+    "/images/products/white-sesame-pistachio-almond-chikki-1.webp": {
+      "width": 410,
+      "height": 440
+    },
+    "/images/products/white-sesame-pistachio-almond-chikki-2.webp": {
+      "width": 408,
+      "height": 413
+    }
+  },
+  "galleries": {
+    "bajra-jaggery-cookies": [
+      "/images/products/bajra-jaggery-cookies-1.webp",
+      "/images/products/bajra-jaggery-cookies-2.webp"
+    ],
+    "black-sesame-almond-chikki": [
+      "/images/products/black-sesame-almond-chikki-1.webp",
+      "/images/products/black-sesame-almond-chikki-2.webp",
+      "/images/products/black-sesame-almond-chikki-3.webp",
+      "/images/products/black-sesame-almond-chikki-4.webp"
+    ],
+    "black-sesame-kaju-chikki": [
+      "/images/products/black-sesame-kaju-chikki-1.webp",
+      "/images/products/black-sesame-kaju-chikki-2.webp",
+      "/images/products/black-sesame-kaju-chikki-3.webp",
+      "/images/products/black-sesame-kaju-chikki-4.webp"
+    ],
+    "coconut-oil": [
+      "/images/products/coconut-oil-1.webp",
+      "/images/products/coconut-oil-2.webp"
+    ],
+    "coconut-powder": [
+      "/images/products/coconut-powder-1.webp",
+      "/images/products/coconut-powder-2.webp"
+    ],
+    "double-choco-chip-brownie": [
+      "/images/products/double-choco-chip-brownie-3.webp",
+      "/images/products/double-choco-chip-brownie-4.webp"
+    ],
+    "dry-amla": [
+      "/images/products/dry-amla-1.webp",
+      "/images/products/dry-amla-2.webp"
+    ],
+    "dry-fruit-mixture-spicy": [
+      "/images/products/dry-fruit-mixture-spicy-1.webp",
+      "/images/products/dry-fruit-mixture-spicy-2.webp"
+    ],
+    "dry-fruit-pumpkin-seeds-badam-kaju": [
+      "/images/products/dry-fruit-pumpkin-seeds-badam-kaju-1.webp",
+      "/images/products/dry-fruit-pumpkin-seeds-badam-kaju-2.webp"
+    ],
+    "dry-fruits-mix-jaggery-cookies": [
+      "/images/products/dry-fruits-mix-jaggery-cookies-1.webp",
+      "/images/products/dry-fruits-mix-jaggery-cookies-2.webp",
+      "/images/products/dry-fruits-mix-jaggery-cookies-3.webp",
+      "/images/products/dry-fruits-mix-jaggery-cookies-4.webp",
+      "/images/products/dry-fruits-mix-jaggery-cookies-5.webp",
+      "/images/products/dry-fruits-mix-jaggery-cookies-6.webp"
+    ],
+    "elaichi-black-pepper-dry-ginger-jaggery": [
+      "/images/products/elaichi-black-pepper-dry-ginger-jaggery-1.webp",
+      "/images/products/elaichi-black-pepper-dry-ginger-jaggery-2.webp"
+    ],
+    "flax-seeds-jaggery-almond-chikki": [
+      "/images/products/flax-seeds-jaggery-almond-chikki-1.webp",
+      "/images/products/flax-seeds-jaggery-almond-chikki-2.webp"
+    ],
+    "jowar-chocolate-almond-cookies": [
+      "/images/products/jowar-chocolate-almond-cookies-1.webp",
+      "/images/products/jowar-chocolate-almond-cookies-2.webp"
+    ],
+    "jowar-chocolate-dry-fruits-brownie": [
+      "/images/products/jowar-chocolate-dry-fruits-brownie-1.webp",
+      "/images/products/jowar-chocolate-dry-fruits-brownie-2.webp"
+    ],
+    "jowar-jaggery-cookies": [
+      "/images/products/jowar-jaggery-cookies-1.webp",
+      "/images/products/jowar-jaggery-cookies-2.webp"
+    ],
+    "kaju-jaggery-chikki": [
+      "/images/products/kaju-jaggery-chikki-1.webp",
+      "/images/products/kaju-jaggery-chikki-2.webp"
+    ],
+    "millet-jaggery-cookies": [
+      "/images/products/millet-jaggery-cookies-1.webp",
+      "/images/products/millet-jaggery-cookies-2.webp"
+    ],
+    "oats-jaggery-dry-fruit-cookies": [
+      "/images/products/oats-jaggery-dry-fruit-cookies-1.webp",
+      "/images/products/oats-jaggery-dry-fruit-cookies-2.webp",
+      "/images/products/oats-jaggery-dry-fruit-cookies-3.webp",
+      "/images/products/oats-jaggery-dry-fruit-cookies-4.webp"
+    ],
+    "original-jaggery": [
+      "/images/products/original-jaggery-1.webp"
+    ],
+    "peanuts-pistachio-jaggery-chikki": [
+      "/images/products/peanuts-pistachio-jaggery-chikki-1.webp",
+      "/images/products/peanuts-pistachio-jaggery-chikki-2.webp"
+    ],
+    "poha-coconut-dry-fruit-mixture-spicy": [
+      "/images/products/poha-coconut-dry-fruit-mixture-spicy-1.webp",
+      "/images/products/poha-coconut-dry-fruit-mixture-spicy-2.webp"
+    ],
+    "poha-dry-fruit-chikki": [
+      "/images/products/poha-dry-fruit-chikki-1.webp",
+      "/images/products/poha-dry-fruit-chikki-2.webp"
+    ],
+    "ragi-elaichi-dry-fruit-jaggery-cookies": [
+      "/images/products/ragi-elaichi-dry-fruit-jaggery-cookies-1.webp",
+      "/images/products/ragi-elaichi-dry-fruit-jaggery-cookies-2.webp"
+    ],
+    "ragi-jaggery-dry-fruits-brownie": [
+      "/images/products/ragi-jaggery-dry-fruits-brownie-1.webp",
+      "/images/products/ragi-jaggery-dry-fruits-brownie-2.webp"
+    ],
+    "ragi-millet-jaggery-chocolate-cookies": [
+      "/images/products/ragi-millet-jaggery-chocolate-cookies-1.webp",
+      "/images/products/ragi-millet-jaggery-chocolate-cookies-2.webp",
+      "/images/products/ragi-millet-jaggery-chocolate-cookies-3.webp",
+      "/images/products/ragi-millet-jaggery-chocolate-cookies-4.webp",
+      "/images/products/ragi-millet-jaggery-chocolate-cookies-5.webp",
+      "/images/products/ragi-millet-jaggery-chocolate-cookies-6.webp",
+      "/images/products/ragi-millet-jaggery-chocolate-cookies-7.webp",
+      "/images/products/ragi-millet-jaggery-chocolate-cookies-8.webp"
+    ],
+    "ragi-millet-jaggery-mini-chocolate-cookies": [
+      "/images/products/ragi-millet-jaggery-mini-chocolate-cookies-1.webp",
+      "/images/products/ragi-millet-jaggery-mini-chocolate-cookies-2.webp"
+    ],
+    "red-chilli-powder-with-masala": [
+      "/images/products/red-chilli-powder-with-masala-1.webp",
+      "/images/products/red-chilli-powder-with-masala-2.webp"
+    ],
+    "red-velvet-chocolate-cookies": [
+      "/images/products/red-velvet-chocolate-cookies-1.webp",
+      "/images/products/red-velvet-chocolate-cookies-2.webp",
+      "/images/products/red-velvet-chocolate-cookies-3.webp",
+      "/images/products/red-velvet-chocolate-cookies-4.webp"
+    ],
+    "roasted-coconut-dry-fruit-jaggery-laddu": [
+      "/images/products/roasted-coconut-dry-fruit-jaggery-laddu-1.webp",
+      "/images/products/roasted-coconut-dry-fruit-jaggery-laddu-2.webp"
+    ],
+    "roasted-coconut-jaggery-laddu": [
+      "/images/products/roasted-coconut-jaggery-laddu-1.webp",
+      "/images/products/roasted-coconut-jaggery-laddu-2.webp"
+    ],
+    "white-chocolate-black-chocolate-brownie": [
+      "/images/products/white-chocolate-black-chocolate-brownie-1.webp",
+      "/images/products/white-chocolate-black-chocolate-brownie-2.webp"
+    ],
+    "white-sesame-pistachio-almond-chikki": [
+      "/images/products/white-sesame-pistachio-almond-chikki-1.webp",
+      "/images/products/white-sesame-pistachio-almond-chikki-2.webp"
+    ]
+  },
+  "count": 81
+}

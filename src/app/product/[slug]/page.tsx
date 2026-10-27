@@ -147,7 +147,7 @@ export default async function ProductPage({ params }: Props) {
             <p className="eyebrow mb-2">Pairs well with</p>
             <h2 className="section-title">You May Also Like</h2>
           </div>
-          <div className="grid grid-cols-2 gap-3 sm:gap-5 lg:grid-cols-4">
+          <div className="grid grid-cols-2 gap-2.5 sm:gap-5 lg:grid-cols-4">
             {related.map((p) => (
               <ProductCard key={p._id} product={p} />
             ))}

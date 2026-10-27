@@ -1,6 +1,5 @@
 "use client";
 
-import Image from "next/image";
 import Link from "next/link";
 import { useRouter } from "next/navigation";
 import { useEffect, useRef, useState } from "react";
@@ -15,6 +14,8 @@ import { Breadcrumbs } from "@/components/ui/Breadcrumbs";
 import { analytics } from "@/lib/analytics";
 import { getWhatsAppLink, productEnquiryMessage } from "@/lib/whatsapp";
 import { BADGES, BADGE_STYLES } from "@/lib/constants";
+import { PRODUCT_DETAIL_SIZES, resolveProductImages } from "@/lib/product-images";
+import { ProductImage } from "@/components/product/ProductImage";
 
 export interface ProductDetailViewData {
   _id: string;
@@ -53,8 +54,7 @@ export function ProductDetailView({
   const [quantity, setQuantity] = useState(1);
   const [activeImage, setActiveImage] = useState(0);
   const [lightbox, setLightbox] = useState<number | null>(null);
-  // Each product shows exactly two designated gallery images (its own photos only).
-  const images = (product.images || []).filter(Boolean).slice(0, 2);
+  const images = resolveProductImages(product.images, product.slug).slice(0, 2);
   const galleryRef = useRef<HTMLDivElement>(null);
 
   const goToImage = (i: number) => {
@@ -146,19 +146,17 @@ export function ProductDetailView({
             <div
               ref={galleryRef}
               onScroll={onGalleryScroll}
-              className="flex aspect-[4/5] snap-x snap-mandatory overflow-x-auto scroll-smooth rounded-2xl border border-bark-800/10 bg-sand-50 [scrollbar-width:none] [&::-webkit-scrollbar]:hidden"
+              className="flex aspect-square snap-x snap-mandatory overflow-x-auto scroll-smooth rounded-2xl border border-bark-800/10 bg-white [scrollbar-width:none] [&::-webkit-scrollbar]:hidden"
             >
               {images.length > 0 ? (
                 images.map((img, i) => (
-                  <div key={i} className="relative h-full w-full shrink-0 snap-start">
-                    <Image
+                  <div key={i} className="relative h-full w-full shrink-0 snap-start p-1.5 sm:p-2">
+                    <ProductImage
                       src={img}
+                      slug={product.slug}
                       alt={i === 0 ? product.name : `${product.name} — view ${i + 1}`}
-                      fill
                       priority={i === 0}
-                      sizes="(max-width: 1024px) 100vw, 600px"
-                      quality={92}
-                      className="object-contain p-3"
+                      sizes={PRODUCT_DETAIL_SIZES}
                     />
                   </div>
                 ))
@@ -217,21 +215,14 @@ export function ProductDetailView({
                     key={i}
                     onClick={() => goToImage(i)}
                     className={cn(
-                      "relative h-16 w-16 shrink-0 overflow-hidden rounded-lg border-2 transition",
+                      "relative h-16 w-16 shrink-0 overflow-hidden rounded-lg border-2 bg-white transition",
                       i === activeImage
                         ? "border-caramel-500"
                         : "border-transparent opacity-70 hover:opacity-100"
                     )}
                     aria-label={`View image ${i + 1}`}
                   >
-                    <Image
-                      src={img}
-                      alt=""
-                      fill
-                      sizes="64px"
-                      quality={90}
-                      className="object-contain p-1"
-                    />
+                    <ProductImage src={img} slug={product.slug} alt="" sizes="64px" />
                   </button>
                 ))}
               </div>
@@ -426,15 +417,14 @@ export function ProductDetailView({
 
       <Modal open={lightbox !== null} onClose={() => setLightbox(null)} title={product.name}>
         {lightbox !== null && images[lightbox] && (
-          <div className="relative aspect-square w-full overflow-hidden rounded-2xl bg-sand-50">
-              <Image
-                src={images[lightbox]}
-                alt={product.name}
-                fill
-                sizes="(max-width: 640px) 100vw, 640px"
-                quality={95}
-                className="object-contain"
-              />
+          <div className="relative aspect-square w-full overflow-hidden rounded-2xl bg-white">
+            <ProductImage
+              src={images[lightbox]}
+              slug={product.slug}
+              alt={product.name}
+              sizes="(max-width: 640px) 92vw, 640px"
+              priority
+            />
           </div>
         )}
       </Modal>

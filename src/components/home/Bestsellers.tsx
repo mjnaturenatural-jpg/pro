@@ -37,10 +37,10 @@ export function Bestsellers({ products }: { products: ProductCardData[] }) {
         align="center"
       />
       <Tabs options={TABS} value={tab} onChange={setTab} ariaLabel="Filter bestsellers by category" />
-      <div className="mt-8 grid auto-cols-[70%] grid-flow-col gap-3 overflow-x-auto pb-2 sm:auto-cols-auto sm:grid-flow-row sm:grid-cols-2 sm:gap-5 sm:overflow-visible lg:grid-cols-4">
-        {filtered.map((p) => (
-          <div key={p._id} className="snap-start">
-            <ProductCard product={p} />
+      <div className="mt-8 grid grid-cols-2 gap-2.5 sm:gap-5 lg:grid-cols-4">
+        {filtered.map((p, i) => (
+          <div key={p._id} className="min-w-0">
+            <ProductCard product={p} priority={i < 4} />
           </div>
         ))}
       </div>

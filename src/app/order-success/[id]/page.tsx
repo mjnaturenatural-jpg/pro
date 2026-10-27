@@ -1,5 +1,5 @@
-import Image from "next/image";
 import Link from "next/link";
+import { ProductImage } from "@/components/product/ProductImage";
 import { CheckCircle2, Package, MapPin, CreditCard, Clock, Truck, LifeBuoy } from "lucide-react";
 import { connectDB } from "@/lib/db";
 import { Order } from "@/models";
@@ -202,10 +202,8 @@ export default async function OrderSuccessPage({
           <ul className="space-y-3">
             {order.items.map((item, i) => (
               <li key={i} className="flex items-center gap-3">
-                <div className="relative h-14 w-14 shrink-0 overflow-hidden rounded-xl bg-sand-50">
-                  {item.image && (
-                    <Image src={item.image} alt="" fill sizes="56px" className="object-contain p-1" />
-                  )}
+                <div className="relative h-14 w-14 shrink-0 overflow-hidden rounded-xl bg-white">
+                  {item.image && <ProductImage src={item.image} alt="" sizes="56px" />}
                 </div>
                 <div className="min-w-0 flex-1">
                   <p className="truncate text-sm font-medium text-bark-900">{item.name}</p>

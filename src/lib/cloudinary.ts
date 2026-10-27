@@ -40,5 +40,5 @@ export async function deleteImage(publicId: string) {
 
 export function cldUrl(url: string, width: number): string {
   if (!url.includes("res.cloudinary.com")) return url;
-  return url.replace("/upload/", `/upload/w_${width},q_auto,f_auto/`);
+  return url.replace("/upload/", `/upload/c_limit,w_${width},q_90,f_auto/`);
 }

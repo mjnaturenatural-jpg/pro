@@ -1,4 +1,3 @@
-import Image from "next/image";
 import Link from "next/link";
 import dynamic from "next/dynamic";
 import { ArrowRight, Gift, Heart, Leaf, Sparkles, Truck } from "lucide-react";
@@ -17,6 +16,7 @@ import { formatPrice } from "@/lib/format";
 import { getWhatsAppLink, hamperEnquiryMessage } from "@/lib/whatsapp";
 import { reviewSummary, REVIEWS } from "@data/reviews";
 import { APP_URL } from "@/lib/constants";
+import { ProductImage } from "@/components/product/ProductImage";
 import type { Metadata } from "next";
 export const revalidate = 60;
 
@@ -176,22 +176,22 @@ export default async function HomePage() {
             )}
           </Reveal>
           <Reveal delay={0.12}>
-            <div className="relative mx-auto aspect-[4/3] w-full max-w-md overflow-hidden rounded-[32px] shadow-lift ring-1 ring-white/20">
+            <div className="relative mx-auto aspect-square w-full max-w-md overflow-hidden rounded-[32px] bg-white shadow-lift ring-1 ring-white/20">
               {highlight.image ? (
-                <Image
+                <ProductImage
                   src={highlight.image}
+                  slug={highlightProduct?.slug}
                   alt={highlight.title || "Product spotlight"}
-                  fill
-                  sizes="(max-width: 1024px) 100vw, 50vw"
-                  className="object-cover"
+                  sizes="(max-width: 1024px) 92vw, 448px"
+                  priority
                 />
               ) : highlightProduct?.images[0] ? (
-                <Image
+                <ProductImage
                   src={highlightProduct.images[0]}
+                  slug={highlightProduct.slug}
                   alt={highlightProduct.name}
-                  fill
-                  sizes="(max-width: 1024px) 100vw, 50vw"
-                  className="object-cover"
+                  sizes="(max-width: 1024px) 92vw, 448px"
+                  priority
                 />
               ) : (
                 <div className="flex h-full w-full items-center justify-center bg-sand-100">
@@ -287,14 +287,13 @@ export default async function HomePage() {
                 target="_blank"
                 rel="noopener noreferrer"
                 aria-label={`See ${p.name} on Instagram`}
-                className="group relative aspect-square overflow-hidden rounded-2xl bg-sand-100"
+                className="group relative aspect-square overflow-hidden rounded-2xl bg-white"
               >
-                <Image
+                <ProductImage
                   src={p.images[0]}
+                  slug={p.slug}
                   alt={p.name}
-                  fill
-                  sizes="(max-width: 640px) 33vw, 16vw"
-                  className="object-cover transition duration-500 group-hover:scale-105"
+                  sizes="(max-width: 640px) 30vw, 180px"
                 />
               </a>
             ))}

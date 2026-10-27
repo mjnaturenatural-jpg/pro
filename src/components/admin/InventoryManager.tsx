@@ -2,8 +2,8 @@
 
 import { useRouter } from "next/navigation";
 import { useMemo, useState } from "react";
-import Image from "next/image";
 import { Search } from "lucide-react";
+import { ProductImage } from "@/components/product/ProductImage";
 import { useToast } from "@/components/ui/Toast";
 import { cn, formatINR } from "@/lib/utils";
 
@@ -105,9 +105,9 @@ export function InventoryManager({
         {filtered.map((p) => (
           <div key={p._id} className="card p-5">
             <div className="flex items-start gap-4">
-              <div className="relative h-14 w-14 shrink-0 overflow-hidden rounded-lg bg-sand-50">
+              <div className="relative h-14 w-14 shrink-0 overflow-hidden rounded-lg bg-white">
                 {p.images[0] && (
-                  <Image src={p.images[0]} alt="" fill sizes="56px" className="object-cover" />
+                  <ProductImage src={p.images[0]} slug={p.slug} alt="" sizes="56px" />
                 )}
               </div>
               <div className="flex-1 min-w-0">

@@ -1,7 +1,7 @@
 "use client";
 
 import { useEffect, useState } from "react";
-import Image from "next/image";
+import { ProductImage } from "@/components/product/ProductImage";
 import Link from "next/link";
 import { ArrowRight, Plus, ShoppingBag, Trash2 } from "lucide-react";
 import { useCart } from "@/store/cart";
@@ -103,9 +103,9 @@ export function CartDrawer({ open, onClose }: CartDrawerProps) {
           <ul className="flex-1 space-y-4 overflow-y-auto px-5 py-4">
             {items.map((item) => (
               <li key={`${item.productId}-${item.packSize}`} className="flex gap-3">
-                <div className="relative h-16 w-16 shrink-0 overflow-hidden rounded-xl bg-sand-50">
+                <div className="relative h-16 w-16 shrink-0 overflow-hidden rounded-xl bg-white">
                   {item.image && (
-                    <Image src={item.image} alt="" fill sizes="64px" className="object-contain p-1" />
+                    <ProductImage src={item.image} slug={item.slug} alt="" sizes="64px" />
                   )}
                 </div>
                 <div className="min-w-0 flex-1">
@@ -143,9 +143,9 @@ export function CartDrawer({ open, onClose }: CartDrawerProps) {
                   const pack = p.packSizes.find((s) => s.stock > 0) ?? p.packSizes[0];
                   return (
                     <div key={p._id} className="flex items-center gap-2.5">
-                      <div className="relative h-11 w-11 shrink-0 overflow-hidden rounded-lg bg-sand-50">
+                      <div className="relative h-11 w-11 shrink-0 overflow-hidden rounded-lg bg-white">
                         {p.images[0] && (
-                          <Image src={p.images[0]} alt="" fill sizes="44px" className="object-contain p-1" />
+                          <ProductImage src={p.images[0]} slug={p.slug} alt="" sizes="44px" />
                         )}
                       </div>
                       <div className="min-w-0 flex-1">
