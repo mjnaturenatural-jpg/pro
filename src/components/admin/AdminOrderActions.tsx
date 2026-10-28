@@ -152,8 +152,14 @@ export function AdminOrderActions({
         {!awb && !delhiveryShipmentId && (
           <button
             onClick={() => patch({ action: "create_delhivery_shipment" }, "delhivery-ship")}
-            disabled={loading === "delhivery-ship" || !delhiveryReady}
-            title={delhiveryReady ? undefined : "Delhivery token, pickup, and return details are required"}
+            disabled={loading === "delhivery-ship" || !delhiveryReady || paymentStatus !== "PAID"}
+            title={
+              paymentStatus !== "PAID"
+                ? "Order must be paid (use Check Payment) before creating shipment"
+                : delhiveryReady
+                  ? undefined
+                  : "Delhivery token, pickup, and return details are required"
+            }
             className="btn-primary btn-sm"
           >
             <Truck size={14} /> {loading === "delhivery-ship" ? "Creating…" : "Create Delhivery Shipment"}

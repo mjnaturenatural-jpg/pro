@@ -79,17 +79,16 @@ export async function PATCH(req: Request, { params }: { params: { id: string } }
       if (order.awb || order.delhiveryShipmentId) {
         return NextResponse.json({ error: "A shipment already exists for this order" }, { status: 400 });
       }
-      // A prepaid order may only be fulfilled after a verified payment. Nothing
-      // here touches payment state — shipping and payment stay independent.
+      // A prepaid order may only be fulfilled after a verified payment.
       if (order.paymentStatus !== "PAID") {
         return NextResponse.json(
-          { error: "This order is not paid yet. A shipment is created only after a verified payment." },
+          { error: "This order is not paid yet. A shipment is created only after a verified payment. Use 'Check Payment' to verify with Razorpay." },
           { status: 409 }
         );
       }
       if (!isDeliveryShipReady()) {
         return NextResponse.json(
-          { error: "Delhivery pickup location is not configured. Set DELIVERY_API_TOKEN and DELIVERY_PICKUP_LOCATION." },
+          { error: "Delhivery pickup location is not configured. Set DELIVERY_API_TOKEN, DELIVERY_PICKUP_LOCATION, DELIVERY_PICKUP_POSTCODE and return details." },
           { status: 503 }
         );
       }
