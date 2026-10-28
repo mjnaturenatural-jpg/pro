@@ -55,6 +55,7 @@ export function ProductImage({
     return <span className="absolute inset-0 bg-white" aria-hidden="true" />;
   }
 
+  const meta = imageMeta(current);
   let local = current.startsWith("/") && (meta || current.startsWith("/images/products/"));
   if (current.startsWith("/images/products/") && !meta) {
     local = true;
