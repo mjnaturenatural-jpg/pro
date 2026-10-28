@@ -1,7 +1,7 @@
 import Link from "next/link";
 import { guardAdmin } from "@/lib/admin-guard";
 import { connectDB } from "@/lib/db";
-import { Order, Product, User, Category, Review } from "@/models";
+import { Order, Product, User, Category } from "@/models";
 import { formatINR, formatDate, orderNumber } from "@/lib/utils";
 import { StatusBadge } from "@/components/admin/StatusBadge";
 import { RevenueChart } from "@/components/admin/RevenueChart";
@@ -13,14 +13,13 @@ export default async function AdminDashboardPage() {
   await guardAdmin("/admin");
   await connectDB();
 
-  const [totalOrders, paidOrders, pendingOrders, totalProducts, totalCustomers, pendingReviews] =
+  const [totalOrders, paidOrders, pendingOrders, totalProducts, totalCustomers] =
     await Promise.all([
       Order.countDocuments(),
       Order.countDocuments({ paymentStatus: "PAID" }),
       Order.countDocuments({ paymentStatus: "PENDING" }),
       Product.countDocuments(),
       User.countDocuments({ role: "CUSTOMER" }),
-      Review.countDocuments({ approved: false }),
     ]);
 
   const revenueAgg = await Order.aggregate([
@@ -103,7 +102,6 @@ export default async function AdminDashboardPage() {
     { label: "Products", value: totalProducts.toString(), href: "/admin/products" },
     { label: "Customers", value: totalCustomers.toString(), href: "/admin/customers" },
     { label: "Low Stock Items", value: lowStock.length.toString(), href: "/admin/inventory" },
-    { label: "Pending Reviews", value: pendingReviews.toString(), href: "/admin/reviews" },
   ];
 
   return (

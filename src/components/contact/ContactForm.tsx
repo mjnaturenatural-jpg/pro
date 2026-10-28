@@ -2,8 +2,9 @@
 
 import { useState } from "react";
 import { useToast } from "@/components/ui/Toast";
+import { getWhatsAppLink } from "@/lib/whatsapp";
 
-export function ContactForm() {
+export function ContactForm({ whatsapp }: { whatsapp?: string } = {}) {
   const { toast } = useToast();
   const [loading, setLoading] = useState(false);
   const [form, setForm] = useState({ name: "", email: "", message: "" });
@@ -12,22 +13,27 @@ export function ContactForm() {
     e.preventDefault();
     setLoading(true);
     try {
-      // Contact submissions are stored via newsletter-style endpoint fallback:
-      // For production, wire this to an email provider or CRM webhook.
       const res = await fetch("/api/contact", {
         method: "POST",
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify(form),
       });
-      const data = await res.json();
       if (res.ok) {
-        toast({ message: "Message sent! We'll get back to you soon.", type: "success" });
+        const waMessage = `Hello MJ Nature Natural,\n\nName: ${form.name}\nEmail: ${form.email}\n\nMessage:\n${form.message}`;
+        const waLink = getWhatsAppLink(waMessage, whatsapp);
+        window.open(waLink, "_blank", "noopener,noreferrer");
+        toast({ message: "Redirecting to WhatsApp...", type: "success" });
         setForm({ name: "", email: "", message: "" });
       } else {
+        const data = await res.json().catch(() => ({}));
         toast({ message: data.error || "Could not send message", type: "error" });
       }
     } catch {
-      toast({ message: "Could not send message. Please try again.", type: "error" });
+      const waMessage = `Hello MJ Nature Natural,\n\nName: ${form.name}\nEmail: ${form.email}\n\nMessage:\n${form.message}`;
+      const waLink = getWhatsAppLink(waMessage, whatsapp);
+      window.open(waLink, "_blank", "noopener,noreferrer");
+      toast({ message: "Redirecting to WhatsApp...", type: "success" });
+      setForm({ name: "", email: "", message: "" });
     } finally {
       setLoading(false);
     }
@@ -69,7 +75,7 @@ export function ContactForm() {
         />
       </div>
       <button type="submit" disabled={loading} className="btn-primary">
-        {loading ? "Sending…" : "Send Message"}
+        {loading ? "Redirecting…" : "Send Message"}
       </button>
     </form>
   );

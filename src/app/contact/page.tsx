@@ -115,7 +115,7 @@ export default async function ContactPage() {
               Fill this in and we&apos;ll get back to you shortly.
             </p>
             <div className="mt-6">
-              <ContactForm />
+              <ContactForm whatsapp={whatsapp} />
             </div>
             <div className="mt-5 flex items-center gap-3 rounded-2xl border border-leaf-200 bg-leaf-50 px-5 py-4">
               <Clock size={18} className="shrink-0 text-leaf-600" />

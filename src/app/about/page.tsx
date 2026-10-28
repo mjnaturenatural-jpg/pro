@@ -22,12 +22,6 @@ const BRAND_PILLARS = [
   "Small-batch craft",
 ];
 
-const KITCHEN_SHOTS = [
-  { src: "/images/site/story.jpg", alt: "Inside the MJ Nature Natural kitchen" },
-  { src: "/images/site/hero.jpg", alt: "Freshly packed natural treats" },
-  { src: "/images/site/highlight.jpg", alt: "Signature jaggery sweets" },
-];
-
 export default async function AboutPage() {
   const [content, settings] = await Promise.all([getHomepageContent(), getSettings()]);
   const story = (content?.story ?? {}) as Record<string, string>;
@@ -119,23 +113,6 @@ export default async function AboutPage() {
               </div>
             )}
           </div>
-        </div>
-      </section>
-
-      {/* Kitchen gallery */}
-      <section className="container-site pb-16 sm:pb-20">
-        <div className="grid grid-cols-3 gap-2.5 sm:gap-4">
-          {KITCHEN_SHOTS.map((shot) => (
-            <div key={shot.src} className="relative aspect-[4/3] overflow-hidden rounded-2xl bg-sand-100 shadow-soft sm:rounded-3xl">
-              <Image
-                src={shot.src}
-                alt={shot.alt}
-                fill
-                sizes="(max-width: 640px) 33vw, 30vw"
-                className="object-cover transition duration-500 hover:scale-105"
-              />
-            </div>
-          ))}
         </div>
       </section>
 

@@ -29,6 +29,17 @@ export async function uploadImage(fileBase64: string, folder = "mj-nature-natura
   return { url: result.secure_url, publicId: result.public_id };
 }
 
+export async function uploadVideo(fileBase64: string, folder = "mj-nature-natural") {
+  if (!isCloudinaryConfigured()) {
+    throw new Error("Cloudinary is not configured");
+  }
+  const result = await cloudinary.uploader.upload(fileBase64, {
+    folder,
+    resource_type: "video",
+  });
+  return { url: result.secure_url, publicId: result.public_id };
+}
+
 export async function deleteImage(publicId: string) {
   if (!isCloudinaryConfigured()) return;
   try {

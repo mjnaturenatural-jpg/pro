@@ -3,6 +3,7 @@
 import { useState } from "react";
 import { useRouter } from "next/navigation";
 import { useToast } from "@/components/ui/Toast";
+import { MediaField } from "@/components/admin/MediaField";
 
 interface Content {
   hero: {
@@ -104,9 +105,12 @@ export function ContentEditor({
             <input className="input" value={form.hero.secondaryCtaHref} onChange={(e) => setHero("secondaryCtaHref", e.target.value)} />
           </Field>
         </Row>
-        <Field label="Hero Image URL (Cloudinary)">
-          <input className="input" value={form.hero.image} onChange={(e) => setHero("image", e.target.value)} placeholder="https://res.cloudinary.com/…" />
-        </Field>
+        <MediaField
+          label="Hero / Banner Image"
+          value={form.hero.image}
+          onChange={(v) => setHero("image", v)}
+          hint="Upload a banner image from your device or paste a Cloudinary URL."
+        />
       </Section>
 
       <Section title="Trust Strip (3–4 points)">
@@ -189,9 +193,6 @@ export function ContentEditor({
           <textarea className="input min-h-[110px]" value={form.story.body} onChange={(e) => setStory("body", e.target.value)} />
         </Field>
         <Row>
-          <Field label="Image URL">
-            <input className="input" value={form.story.image} onChange={(e) => setStory("image", e.target.value)} />
-          </Field>
           <Field label="CTA Text">
             <input className="input" value={form.story.ctaText} onChange={(e) => setStory("ctaText", e.target.value)} />
           </Field>
@@ -199,6 +200,12 @@ export function ContentEditor({
             <input className="input" value={form.story.ctaHref} onChange={(e) => setStory("ctaHref", e.target.value)} />
           </Field>
         </Row>
+        <MediaField
+          label="Brand Story Image"
+          value={form.story.image}
+          onChange={(v) => setStory("image", v)}
+          hint="Upload from your device or paste an image URL."
+        />
       </Section>
 
       <Section title="Product Highlight">
@@ -222,13 +229,16 @@ export function ContentEditor({
               ))}
             </datalist>
           </Field>
-          <Field label="Image URL (optional)">
-            <input className="input" value={form.highlight.image} onChange={(e) => setHighlight("image", e.target.value)} />
-          </Field>
           <Field label="CTA Text">
             <input className="input" value={form.highlight.ctaText} onChange={(e) => setHighlight("ctaText", e.target.value)} />
           </Field>
         </Row>
+        <MediaField
+          label="Highlight / Banner Image (optional)"
+          value={form.highlight.image}
+          onChange={(v) => setHighlight("image", v)}
+          hint="Upload from your device or paste an image URL."
+        />
       </Section>
 
       <Section title="Why MJ Nature Natural">

@@ -83,7 +83,7 @@ export async function GET() {
       .select("name totalSold images packSizes.price")
       .lean();
 
-    const pendingReviews = await Review.countDocuments({ approved: false });
+    const pendingReviews = 0;
 
     return NextResponse.json({
       stats: {

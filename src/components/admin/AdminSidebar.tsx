@@ -27,7 +27,6 @@ const NAV = [
   { label: "Inventory", href: "/admin/inventory", icon: Warehouse },
   { label: "Customers", href: "/admin/customers", icon: Users },
   { label: "Coupons", href: "/admin/coupons", icon: Ticket },
-  { label: "Reviews", href: "/admin/reviews", icon: Star },
   { label: "Content", href: "/admin/content", icon: FileText },
   { label: "Settings", href: "/admin/settings", icon: Settings },
 ];
@@ -99,7 +98,9 @@ export function AdminSidebar() {
                 <X size={20} />
               </button>
             </div>
-            {nav}
+            <div className="flex-1 overflow-y-auto overscroll-contain">
+              {nav}
+            </div>
             <div className="border-t border-bark-800/10 p-4">
               <Link href="/" className="text-xs text-bark-500">
                 ← View storefront

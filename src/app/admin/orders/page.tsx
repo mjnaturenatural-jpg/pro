@@ -36,14 +36,22 @@ export default async function AdminOrdersPage({
     ];
   }
 
-  const [orders, total] = await Promise.all([
-    Order.find(filter)
-      .sort({ createdAt: -1 })
-      .skip((page - 1) * limit)
-      .limit(limit)
-      .lean(),
-    Order.countDocuments(filter),
-  ]);
+  let orders: any[] = [];
+  let total = 0;
+  try {
+    [orders, total] = await Promise.all([
+      Order.find(filter)
+        .sort({ createdAt: -1 })
+        .skip((page - 1) * limit)
+        .limit(limit)
+        .lean(),
+      Order.countDocuments(filter),
+    ]);
+  } catch (error) {
+    console.error("Admin orders fetch error:", error);
+    orders = [];
+    total = 0;
+  }
   const pages = Math.ceil(total / limit);
 
   const qs = (patch: Record<string, string>) => {

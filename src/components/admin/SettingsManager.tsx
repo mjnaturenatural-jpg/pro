@@ -4,6 +4,7 @@ import { useState } from "react";
 import { useRouter } from "next/navigation";
 import { CheckCircle2, XCircle } from "lucide-react";
 import { useToast } from "@/components/ui/Toast";
+import { MediaField } from "@/components/admin/MediaField";
 
 export function SettingsManager({
   initial,
@@ -116,22 +117,22 @@ export function SettingsManager({
         <p className="mb-4 text-xs text-bark-400">
           Optional. Shown on the homepage when provided. Leave blank to hide the section.
         </p>
-        <Field label="Video URL (MP4/WebM)">
-          <input
-            className="input"
-            value={form.brandVideoUrl}
-            onChange={(e) => set("brandVideoUrl", e.target.value)}
-            placeholder="https://…/brand-film.mp4"
-          />
-        </Field>
-        <Field label="Video Poster Image URL (optional)">
-          <input
-            className="input"
-            value={form.brandVideoPoster}
-            onChange={(e) => set("brandVideoPoster", e.target.value)}
-            placeholder="https://…/poster.jpg"
-          />
-        </Field>
+        <MediaField
+          label="Brand Video (MP4/WebM)"
+          kind="video"
+          value={form.brandVideoUrl}
+          onChange={(v) => set("brandVideoUrl", v)}
+          placeholder="https://…/brand-film.mp4"
+          hint="Upload an MP4/WebM from your device (max 50MB) or paste a video URL."
+        />
+        <MediaField
+          label="Video Poster Image (optional)"
+          kind="image"
+          value={form.brandVideoPoster}
+          onChange={(v) => set("brandVideoPoster", v)}
+          placeholder="https://…/poster.jpg"
+          hint="Upload a poster image from your device or paste an image URL."
+        />
       </div>
 
       <div className="card p-5 sm:p-6">
