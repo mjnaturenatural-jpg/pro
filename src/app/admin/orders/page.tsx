@@ -4,7 +4,7 @@ import { connectDB } from "@/lib/db";
 import { Order } from "@/models";
 import { formatINR, formatDate, orderNumber } from "@/lib/utils";
 import { StatusBadge } from "@/components/admin/StatusBadge";
-import { ORDER_STATUSES, PAYMENT_STATUSES } from "@/lib/constants";
+import { ORDER_STATUSES } from "@/lib/constants";
 
 export const metadata = { title: "Orders" };
 export const dynamic = "force-dynamic";
@@ -79,12 +79,6 @@ export default async function AdminOrdersPage({
             className="w-full bg-transparent text-sm focus:outline-none"
           />
         </form>
-        <select
-          defaultValue={status}
-          onChange={() => {}}
-          className="hidden"
-          aria-hidden
-        />
         <div className="flex flex-wrap gap-2">
           <Link href={qs({ status: "", payment: "", page: "" })} className={`btn-sm rounded-full border px-3 py-1.5 text-xs font-medium ${!status && !payment ? "border-caramel-500 bg-caramel-500 text-forest-900" : "border-bark-800/15 text-bark-600"}`}>
             All
