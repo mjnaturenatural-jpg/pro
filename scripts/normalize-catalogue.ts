@@ -11,7 +11,8 @@ const timestamp = new Date().toISOString().replace(/[:.]/g, "-");
 type CategoryRecord = { _id: { toString(): string }; name: string; slug: string; description?: string; image?: string };
 type ProductRecord = { _id: { toString(): string }; slug: string; name: string; category?: { toString(): string }; published: boolean };
 
-const targets = [
+type Target = { name: string; slug: string; aliases: string[]; description?: string };
+const targets: Target[] = [
   { name: "CHIKKIS", slug: "chikkis", aliases: ["chikki", "chikkis"] },
   { name: "COOKIES", slug: "cookies", aliases: ["cookies", "millet-cookies"] },
   { name: "BROWNIES", slug: "brownies", aliases: ["brownies", "brownie"] },
