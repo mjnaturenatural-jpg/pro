@@ -55,27 +55,29 @@ export function ProductImage({
     return <span className="absolute inset-0 bg-white" aria-hidden="true" />;
   }
 
-  const meta = imageMeta(current);
-  const local = current.startsWith("/") && meta;
+  let local = current.startsWith("/") && (meta || current.startsWith("/images/products/"));
+  if (current.startsWith("/images/products/") && !meta) {
+    local = true;
+  }
 
   return (
-    <span className={cn("absolute inset-0 flex items-center justify-center", className)}>
+    <span className={cn("absolute inset-0 flex items-center justify-center p-1.5 sm:p-2.5", className)}>
       {local ? (
         // eslint-disable-next-line @next/next/no-img-element
         <img
           src={current}
-          srcSet={productImageSrcSet(current)}
+          srcSet={meta ? productImageSrcSet(current) : undefined}
           sizes={sizes}
           alt={alt}
-          width={meta.width}
-          height={meta.height}
-          style={{ aspectRatio: `${meta.width} / ${meta.height}` }}
+          width={meta?.width}
+          height={meta?.height}
+          style={meta ? { aspectRatio: `${meta.width} / ${meta.height}` } : undefined}
           loading={priority ? "eager" : "lazy"}
           decoding="async"
           fetchPriority={priority ? "high" : "auto"}
           onError={() => setIndex((i) => i + 1)}
           draggable={false}
-          className="product-photo"
+          className="product-photo h-full w-full object-contain object-center"
         />
       ) : (
         <Image
@@ -87,7 +89,7 @@ export function ProductImage({
           priority={priority}
           loader={isRemoteImage(current) && current.includes("res.cloudinary.com") ? cloudinaryLoader : undefined}
           onError={() => setIndex((i) => i + 1)}
-          className="object-contain object-center"
+          className="object-contain object-center h-full w-full"
         />
       )}
     </span>

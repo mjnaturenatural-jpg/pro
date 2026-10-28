@@ -95,7 +95,7 @@ export function ProductCard({ product, priority = false }: { product: ProductCar
     <article
       className="group relative flex h-full min-w-0 flex-col overflow-hidden rounded-2xl border border-bark-800/10 bg-ivory-100 shadow-soft transition duration-300 hover:-translate-y-1 hover:shadow-lift hover:ring-2 hover:ring-honey-300/70 sm:rounded-[32px]"
     >
-      <Link href={`/product/${product.slug}`} className="relative aspect-square overflow-hidden bg-white p-1" aria-label={product.name}>
+      <Link href={`/product/${product.slug}`} className="relative aspect-[4/3] overflow-hidden bg-white sm:aspect-square" aria-label={product.name}>
         {images[0] && (
           <ProductImage
             src={images[0]}
