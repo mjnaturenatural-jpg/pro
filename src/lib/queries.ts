@@ -79,6 +79,17 @@ export async function getFeaturedProducts(limit = 8): Promise<ProductCardData[]>
   return products.map(serializeProduct);
 }
 
+export async function getProductsByCategory(slug: string, limit = 8): Promise<ProductCardData[]> {
+  await connectDB();
+  const category = await Category.findOne({ slug, published: true }).select("_id").lean();
+  if (!category) return [];
+  const products = await Product.find({ category: category._id, published: true })
+    .populate("category", "name slug")
+    .sort({ featured: -1, totalSold: -1, createdAt: -1 })
+    .limit(limit).lean();
+  return products.map(serializeProduct);
+}
+
 export async function getCategoryCounts(): Promise<Record<string, number>> {
   await connectDB();
   const rows = (await Product.aggregate([

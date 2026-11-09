@@ -1,7 +1,7 @@
 import Link from "next/link";
 import dynamic from "next/dynamic";
 import { ArrowRight, Gift, Heart, Leaf, Sparkles, Truck } from "lucide-react";
-import { getFeaturedProducts, getHomepageContent, getPublishedCategories, getProductsBySlugs, getSettings, getCategoryCounts } from "@/lib/queries";
+import { getFeaturedProducts, getHomepageContent, getPublishedCategories, getProductsBySlugs, getProductsByCategory, getSettings, getCategoryCounts } from "@/lib/queries";
 import { Hero } from "@/components/home/Hero";
 import { TrustMarquee } from "@/components/home/TrustMarquee";
 import { Bestsellers } from "@/components/home/Bestsellers";
@@ -17,6 +17,7 @@ import { getWhatsAppLink, hamperEnquiryMessage } from "@/lib/whatsapp";
 import { reviewSummary, REVIEWS } from "@data/reviews";
 import { APP_URL } from "@/lib/constants";
 import { ProductImage } from "@/components/product/ProductImage";
+import { ProductCard } from "@/components/product/ProductCard";
 import type { Metadata } from "next";
 export const revalidate = 60;
 
@@ -59,12 +60,13 @@ const ICON_COLORS = [
 ];
 
 export default async function HomePage() {
-  const [content, categories, pool, settings, counts] = await Promise.all([
+  const [content, categories, pool, settings, counts, chikkis] = await Promise.all([
     getHomepageContent(),
     getPublishedCategories(),
     getFeaturedProducts(24),
     getSettings(),
     getCategoryCounts(),
+    getProductsByCategory("chikkis", 8),
   ]);
 
   const hero = (content?.hero ?? {}) as Record<string, string>;
@@ -118,6 +120,14 @@ export default async function HomePage() {
       <TrustMarquee />
 
       <Bestsellers products={JSON.parse(JSON.stringify(pool.slice(0, 24)))} />
+
+      {chikkis.length > 0 && <section className="container-site py-16 sm:py-20">
+        <SectionHeader eyebrow="Discover Chikkis" title="Shop Our Chikkis" subtitle="Explore our chikki collection." align="center" />
+        <div className="mt-8 grid grid-cols-1 gap-3 min-[420px]:grid-cols-2 sm:gap-5 lg:grid-cols-4">
+          {chikkis.map((product) => <ProductCard key={product._id} product={product} />)}
+        </div>
+        <div className="mt-10 flex justify-center"><Link href="/shop?category=chikkis" className="btn-secondary">View Chikkis <ArrowRight size={15} /></Link></div>
+      </section>}
 
       <CategoryTiles categories={tiles} />
 

@@ -51,14 +51,9 @@ export function slugFromImageSrc(src: string): string | undefined {
 
 export function resolveProductImages(input: string[] | undefined, slug?: string): string[] {
   const list = (input || []).map((src) => src.trim()).filter(Boolean);
-  const remote = list.filter(isRemoteImage);
-  if (remote.length) return remote;
-  const known = list.map(normalizeImageSrc).filter(isKnownLocalImage);
-  if (known.length) return known;
-  const otherLocal = list.filter(
-    (src) => src.startsWith("/") && !src.startsWith("/images/products/")
-  );
-  if (otherLocal.length) return otherLocal;
+  const usable = list.filter((src) => isRemoteImage(src) || isKnownLocalImage(src) ||
+    (src.startsWith("/") && !src.startsWith("/images/products/")));
+  if (usable.length) return usable.map((src) => isRemoteImage(src) ? src : normalizeImageSrc(src));
   const gallery = galleryForSlug(slug);
   if (gallery.length) return gallery.slice(0, 2);
   return list.filter((src) => src.startsWith("/"));

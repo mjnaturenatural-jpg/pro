@@ -2,7 +2,6 @@
 
 import { useState } from "react";
 import { useRouter } from "next/navigation";
-import Image from "next/image";
 import { Plus, Trash2, Upload } from "lucide-react";
 import { useToast } from "@/components/ui/Toast";
 import { slugify, cn, formatINR } from "@/lib/utils";
@@ -157,7 +156,7 @@ export function ProductEditor({
     }
     setSaving(true);
     try {
-      const payload = {
+      const fullPayload = {
         ...form,
         slug: form.slug || slugify(form.name),
         keywords: form.keywords
@@ -173,6 +172,17 @@ export function ProductEditor({
           weight: p.weight || "",
         })),
       };
+      // Only submit changed fields when editing, so unrelated legacy data is preserved.
+      const original = product && {
+        ...product,
+        category: typeof product.category === "object" ? product.category?._id : product.category,
+        keywords: product.keywords || [],
+      };
+      const payload = original
+        ? Object.fromEntries(Object.entries(fullPayload).filter(([key, value]) =>
+            JSON.stringify(value) !== JSON.stringify(original[key as keyof typeof original])
+          ))
+        : fullPayload;
       const res = await fetch(
         isNew ? "/api/admin/products" : `/api/admin/products/${product!._id}`,
         {
@@ -183,14 +193,14 @@ export function ProductEditor({
       );
       const data = await res.json();
       if (!res.ok) {
-        toast({ message: data.error || "Failed to save", type: "error" });
+        toast({ message: res.status === 401 ? "Your admin session has expired. Please log in again." : data.error || "Unable to save changes. Please try again.", type: "error" });
         return;
       }
-      toast({ message: isNew ? "Product created" : "Product updated", type: "success" });
+      toast({ message: isNew ? "Product created successfully." : "Product updated successfully.", type: "success" });
       router.push("/admin/products");
       router.refresh();
     } catch {
-      toast({ message: "Failed to save", type: "error" });
+      toast({ message: "Unable to save changes. Please try again.", type: "error" });
     } finally {
       setSaving(false);
     }
@@ -198,7 +208,7 @@ export function ProductEditor({
 
   return (
     <div className="max-w-4xl space-y-6">
-      <div className="flex items-center justify-between">
+        <div className="flex flex-wrap items-center justify-between gap-3">
         <div>
           <h1 className="font-serif text-2xl text-bark-900">
             {isNew ? "New Product" : "Edit Product"}
@@ -371,6 +381,7 @@ export function ProductEditor({
                   SECONDARY
                 </span>
               )}
+              {i > 0 && <button type="button" onClick={() => set("images", [img, ...form.images.filter((_, idx) => idx !== i)])} className="absolute bottom-1 right-1 rounded bg-white px-1 text-[10px] font-bold" aria-label="Set as primary image">Set primary</button>}
             </div>
           ))}
           <label className={cn(
@@ -381,7 +392,7 @@ export function ProductEditor({
             <span className="mt-1 text-[10px]">{uploading ? "…" : "Upload"}</span>
             <input
               type="file"
-              accept="image/*"
+              accept="image/jpeg,image/png,image/webp,image/avif"
               className="hidden"
               onChange={(e) => {
                 const file = e.target.files?.[0];

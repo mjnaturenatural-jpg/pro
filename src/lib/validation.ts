@@ -21,7 +21,15 @@ export const productInputSchema = z.object({
   shippingInfo: z.string().optional().default(""),
   returnInfo: z.string().optional().default(""),
   category: z.string().min(1),
-  images: z.array(z.string().url()).min(1),
+  images: z.array(z.string().trim().refine((value) => {
+    if (/^\/images\/(?!\/)[^?#]*$/i.test(value) && !value.split("/").includes("..")) return true;
+    try {
+      const url = new URL(value);
+      return url.protocol === "https:" || url.protocol === "http:";
+    } catch {
+      return false;
+    }
+  }, "Use a valid image URL or an existing /images/ path.")).min(1, "Add at least one product image."),
   packSizes: z.array(packSizeSchema).min(1),
   badges: z
     .object({

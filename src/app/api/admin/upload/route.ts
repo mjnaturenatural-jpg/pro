@@ -31,6 +31,9 @@ export async function POST(req: Request) {
     }
 
     const isVideo = file.type.startsWith("video/");
+    if (!isVideo && !["image/jpeg", "image/png", "image/webp", "image/avif"].includes(file.type)) {
+      return NextResponse.json({ error: "Please upload a JPEG, PNG, WebP or AVIF image." }, { status: 400 });
+    }
     const maxBytes = isVideo ? MAX_VIDEO_BYTES : MAX_IMAGE_BYTES;
     if (file.size > maxBytes) {
       return NextResponse.json(
