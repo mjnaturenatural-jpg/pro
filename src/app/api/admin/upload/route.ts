@@ -50,6 +50,10 @@ export async function POST(req: Request) {
     return NextResponse.json({ url: result.url, publicId: result.publicId });
   } catch (err) {
     console.error("upload error", err);
-    return NextResponse.json({ error: "Failed to upload file" }, { status: 500 });
+    const message =
+      err instanceof Error && /cloud_name|invalid/i.test(err.message)
+        ? "Image upload is unavailable right now. Paste an image URL instead, or contact support."
+        : "Failed to upload file";
+    return NextResponse.json({ error: message }, { status: 500 });
   }
 }

@@ -2,7 +2,7 @@ import Link from "next/link";
 import { Plus, Search } from "lucide-react";
 import { guardAdmin } from "@/lib/admin-guard";
 import { connectDB } from "@/lib/db";
-import { Product } from "@/models";
+import { Category, Product } from "@/models";
 import { ProductRowActions } from "@/components/admin/ProductRowActions";
 
 export const metadata = { title: "Products" };
@@ -11,19 +11,24 @@ export const dynamic = "force-dynamic";
 export default async function AdminProductsPage({
   searchParams,
 }: {
-  searchParams: { q?: string; page?: string };
+  searchParams: { q?: string; category?: string; page?: string };
 }) {
   await guardAdmin("/admin/products");
   await connectDB();
 
   const q = searchParams.q || "";
+  const categorySlug = searchParams.category || "";
   const page = Math.max(1, Number(searchParams.page || 1));
   const limit = 20;
-  const filter = q
+  const filter: Record<string, unknown> = q
     ? { name: { $regex: q.replace(/[.*+?^${}()|[\]\\]/g, "\\$&"), $options: "i" } }
     : {};
+  if (categorySlug) {
+    const cat = await Category.findOne({ slug: categorySlug }).select("_id").lean();
+    if (cat) filter.category = cat._id;
+  }
 
-  const [products, total] = await Promise.all([
+  const [products, total, categories] = await Promise.all([
     Product.find(filter)
       .populate("category", "name slug")
       .sort({ createdAt: -1 })
@@ -31,6 +36,7 @@ export default async function AdminProductsPage({
       .limit(limit)
       .lean(),
     Product.countDocuments(filter),
+    Category.find({}).sort({ order: 1, name: 1 }).lean(),
   ]);
   const pages = Math.ceil(total / limit);
 
@@ -46,14 +52,31 @@ export default async function AdminProductsPage({
         </Link>
       </div>
 
-      <form className="flex max-w-md items-center gap-2 rounded-lg border border-bark-800/10 bg-ivory-100 px-3 py-2">
-        <Search size={15} className="text-bark-400" />
-        <input
-          name="q"
-          defaultValue={q}
-          placeholder="Search products…"
-          className="w-full bg-transparent text-sm focus:outline-none"
-        />
+      <form className="flex flex-wrap items-center gap-2">
+        <div className="flex max-w-md flex-1 items-center gap-2 rounded-lg border border-bark-800/10 bg-ivory-100 px-3 py-2">
+          <Search size={15} className="text-bark-400" />
+          <input
+            name="q"
+            defaultValue={q}
+            placeholder="Search products…"
+            className="w-full bg-transparent text-sm focus:outline-none"
+          />
+        </div>
+        <select
+          name="category"
+          defaultValue={categorySlug}
+          className="rounded-lg border border-bark-800/10 bg-ivory-100 px-3 py-2 text-sm focus:outline-none"
+        >
+          <option value="">All categories</option>
+          {categories.map((c: { _id: unknown; name: string; slug: string }) => (
+            <option key={String(c._id)} value={c.slug}>
+              {c.name}
+            </option>
+          ))}
+        </select>
+        <button type="submit" className="btn-secondary btn-sm">
+          Filter
+        </button>
       </form>
 
       <div className="card overflow-hidden">
@@ -83,6 +106,7 @@ export default async function AdminProductsPage({
                 };
                 const totalStock = p.packSizes.reduce((s, ps) => s + ps.stock, 0);
                 const minPrice = Math.min(...p.packSizes.map((ps) => ps.price));
+                const minMrp = Math.min(...p.packSizes.map((ps) => ps.mrp));
                 return (
                   <tr key={p._id} className="hover:bg-ivory-50">
                     <td className="px-4 py-3">
@@ -94,7 +118,10 @@ export default async function AdminProductsPage({
                     <td className="px-4 py-3 text-bark-600">
                       {(p.category as { name?: string })?.name || "—"}
                     </td>
-                    <td className="px-4 py-3 font-medium">₹{minPrice}</td>
+                    <td className="px-4 py-3 font-medium">
+                      ₹{minPrice}
+                      {minMrp > minPrice && <span className="ml-1 text-xs text-bark-400 line-through">₹{minMrp}</span>}
+                    </td>
                     <td className="px-4 py-3">
                       <span className={totalStock <= 5 ? "font-semibold text-amber-600" : "text-bark-600"}>
                         {totalStock}
@@ -137,7 +164,7 @@ export default async function AdminProductsPage({
       {pages > 1 && (
         <div className="flex items-center justify-center gap-2">
           <Link
-            href={`/admin/products?page=${page - 1}&q=${encodeURIComponent(q)}`}
+            href={`/admin/products?page=${page - 1}&q=${encodeURIComponent(q)}&category=${encodeURIComponent(categorySlug)}`}
             className={`btn-secondary btn-sm ${page <= 1 ? "pointer-events-none opacity-40" : ""}`}
           >
             Previous
@@ -146,7 +173,7 @@ export default async function AdminProductsPage({
             Page {page} of {pages}
           </span>
           <Link
-            href={`/admin/products?page=${page + 1}&q=${encodeURIComponent(q)}`}
+            href={`/admin/products?page=${page + 1}&q=${encodeURIComponent(q)}&category=${encodeURIComponent(categorySlug)}`}
             className={`btn-secondary btn-sm ${page >= pages ? "pointer-events-none opacity-40" : ""}`}
           >
             Next
